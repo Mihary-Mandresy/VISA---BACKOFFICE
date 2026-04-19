@@ -7,8 +7,8 @@
     [ ] : Demande
         [ ] : Affichage (Valisoa)
             [ ] : Formualaire Demande (Valisoa)
-        [ ] : Fonction (Mihary)
-            [ ] :  Demande save(Connection c, Demandeur demandeur, Passport passport, Visatransformable visa, List<String> dossiersStandard, List<String> dossiersSup, String idTypeDemande, String idTypeVisa,LocalDate date) throws Exception
+        [x] : Fonction (Mihary)
+            [x] :  Demande save(Connection c, Demandeur demandeur, Passport passport, Visatransformable visa, List<String> dossiersStandard, List<String> dossiersSup, String idTypeDemande, String idTypeVisa,LocalDate date) throws Exception
                 - Fonction qui sauvegarde une demande mais dans cette fonction, avant l'insertion du demande il sauvegarde d'abord l'etat civil, le passport, le visa
         [ ] : Integration (Mihary)
             [ ] : Controller : 
