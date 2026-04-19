@@ -1,9 +1,9 @@
 [ ] Sprint 1
     [x] : Conception (Ensemble)
-    [ ] : Creation des models (Mihary)
-    [ ] : Donné
-        [ ] : Script insertion et reinitialisation (Mihary)
-        [ ] : Données utiles
+    [x] : Creation des models (Mihary)
+    [x] : Donné
+        [x] : Script insertion et reinitialisation (Mihary)
+        [x] : Données utiles
     [ ] : Demande
         [ ] : Affichage (Valisoa)
             [ ] : Formualaire Demande (Valisoa)
