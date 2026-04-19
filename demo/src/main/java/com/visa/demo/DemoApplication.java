@@ -17,26 +17,26 @@ import com.visa.demo.models.Visatransformable;
 public class DemoApplication {
 
 	public static void main(String[] args) throws Exception {
-		// SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 
-		DbConnexe dbConnexe = new DbConnexe();
+		// DbConnexe dbConnexe = new DbConnexe();
 
-		Demandeur demandeur = new Demandeur("Deraman", null, "Etudiant", "Lot Baba", "0333333333", null, "SITF000001", "NAT000001");
-		Passport passport = new Passport("1234", LocalDate.of(2015, 5, 12), LocalDate.of(2027, 6, 25), null);
-		Visatransformable visatransformable = new Visatransformable("1234", LocalDate.of(2024, 12, 2), LocalDate.of(2027, 6, 25), null, null, "Ivato");
+		// Demandeur demandeur = new Demandeur("Deraman", null, "Etudiant", "Lot Baba", "0333333333", null, "SITF000001", "NAT000001");
+		// Passport passport = new Passport("1234", LocalDate.of(2015, 5, 12), LocalDate.of(2027, 6, 25), null);
+		// Visatransformable visatransformable = new Visatransformable("1234", LocalDate.of(2024, 12, 2), LocalDate.of(2027, 6, 25), null, null, "Ivato");
 
-		List<String> dossierStandars = List.of("DST000001");
-		List<String> dossierSupplementaire = List.of("DSU000001");
+		// List<String> dossierStandars = List.of("DST000001");
+		// List<String> dossierSupplementaire = List.of("DSU000001");
 
-		String typeDemande = "TYPDMD000001", typeVisa = "TYPV000001";
+		// String typeDemande = "TYPDMD000001", typeVisa = "TYPV000001";
 
-		Demande dmd = new Demande();
+		// Demande dmd = new Demande();
 		
-		try {
-			dmd.save(dbConnexe.getConnection(), demandeur, passport, visatransformable, dossierStandars, dossierSupplementaire, typeDemande, typeVisa, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// 	dmd.save(dbConnexe.getConnection(), demandeur, passport, visatransformable, dossierStandars, dossierSupplementaire, typeDemande, typeVisa, null);
+		// } catch (Exception e) {
+		// 	e.printStackTrace();
+		// }
 	}
 
 }
