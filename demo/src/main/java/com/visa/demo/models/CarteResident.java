@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.nojpa.bd.entity.Entity;
 
-public class CarteResident extends Entity {
+public class CarteResident extends Entity<CarteResident> {
 
     private String reference;
     private LocalDate datedebut;

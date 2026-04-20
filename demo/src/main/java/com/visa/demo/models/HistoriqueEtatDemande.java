@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.nojpa.bd.entity.Entity;
 
-public class HistoriqueEtatDemande extends Entity {
+public class HistoriqueEtatDemande extends Entity<HistoriqueEtatDemande> {
 
     private LocalDate daty;
     private String idetatdemande;

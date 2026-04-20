@@ -2,7 +2,7 @@ package com.visa.demo.models;
 
 import com.nojpa.bd.entity.Entity;
 
-public class DossierSupplementaire extends Entity {
+public class DossierSupplementaire extends Entity<DossierSupplementaire> {
 
     private String libelle;
     private String idtypevisa;

@@ -2,7 +2,7 @@ package com.visa.demo.models;
 
 import com.nojpa.bd.entity.Entity;
 
-public class TypeVisa extends Entity {
+public class TypeVisa extends Entity<TypeVisa> {
 
     private String libelle;
 

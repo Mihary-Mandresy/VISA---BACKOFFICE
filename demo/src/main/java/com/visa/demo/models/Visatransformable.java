@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.nojpa.bd.entity.Entity;
 
-public class Visatransformable extends Entity {
+public class Visatransformable extends Entity<Visatransformable> {
 
     private String reference;
     private LocalDate dateentreemada;
