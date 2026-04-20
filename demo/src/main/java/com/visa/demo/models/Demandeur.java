@@ -2,7 +2,7 @@ package com.visa.demo.models;
 
 import com.nojpa.bd.entity.Entity;
 
-public class Demandeur extends Entity {
+public class Demandeur extends Entity<Demandeur> {
 
     private String nom;
     private String prenom;

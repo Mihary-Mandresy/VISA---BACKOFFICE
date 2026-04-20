@@ -2,7 +2,7 @@ package com.visa.demo.models;
 
 import com.nojpa.bd.entity.Entity;
 
-public class DossierStandard extends Entity {
+public class DossierStandard extends Entity<DossierStandard> {
 
     private String libelle;
     private boolean obligatoire;

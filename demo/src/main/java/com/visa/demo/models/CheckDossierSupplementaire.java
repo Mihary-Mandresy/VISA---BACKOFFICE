@@ -2,7 +2,7 @@ package com.visa.demo.models;
 
 import com.nojpa.bd.entity.Entity;
 
-public class CheckDossierSupplementaire extends Entity {
+public class CheckDossierSupplementaire extends Entity<CheckDossierSupplementaire> {
 
     private boolean exist;
     private String iddemande;

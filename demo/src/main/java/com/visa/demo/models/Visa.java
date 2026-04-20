@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.nojpa.bd.entity.Entity;
 
-public class Visa extends Entity {
+public class Visa extends Entity<Visa> {
 
     private String reference;
     private LocalDate datedebut;

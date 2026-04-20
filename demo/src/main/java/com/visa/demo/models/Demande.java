@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.nojpa.bd.entity.Entity;
 
-public class Demande extends Entity {
+public class Demande extends Entity<Demande> {
 
     private String idtypedemande;
     private String idvisatransformable;
@@ -98,13 +98,11 @@ public class Demande extends Entity {
 
     public boolean isFullStandard(Connection c, List<String> idStandard) throws Exception {
         return new DossierStandard().findAll(c).stream()
-                .map(e -> (DossierStandard) e)
                 .allMatch(e -> idStandard.contains(e.getId()));
     }
 
     public boolean isFullSup(Connection c, List<String> idSup, String idStatut) throws Exception {
         return new DossierSupplementaire().select(c, String.format("idstatutvisa like \"%s\"", idStatut), null).stream()
-                .map(e -> (DossierSupplementaire) e)
                 .allMatch(e -> idSup.contains(e.getId()));
     }
 

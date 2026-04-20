@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.nojpa.bd.entity.Entity;
 
-public class Passport extends Entity {
+public class Passport extends Entity<Passport> {
 
     private String numero;
     private LocalDate datedelivrance;
