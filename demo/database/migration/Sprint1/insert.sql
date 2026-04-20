@@ -1,4 +1,3 @@
--- Active: 1773163328439@@127.0.0.1@5432@visa@public
 
 -- ============= Dossier Standard =============
 INSERT INTO dossierstandard VALUES
@@ -10,11 +9,6 @@ INSERT INTO dossierstandard VALUES
 ('DST' || LPAD(nextval('seq_dossierstandard')::TEXT,6,'0'), 'Photocopie certifiee de la carte resident en cours de validite'),
 ('DST' || LPAD(nextval('seq_dossierstandard')::TEXT,6,'0'), 'Certificat de residence a Madagascar'),
 ('DST' || LPAD(nextval('seq_dossierstandard')::TEXT,6,'0'), 'Extrait de casier judiciaire moins de 3 moins');
-
-
-SELECT * FROM dossierstandard;
-
-SELECT * FROM dossiersupplementaire;
 
 -- ! ============= Statut Visa =============
 INSERT INTO typevisa VALUES
