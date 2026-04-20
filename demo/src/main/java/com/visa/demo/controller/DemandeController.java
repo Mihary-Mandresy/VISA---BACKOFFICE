@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nojpa.bd.connexion.DbConnexe;
-import com.visa.demo.Utils.Caster;
 import com.visa.demo.models.Demande;
 import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
@@ -36,12 +35,12 @@ public class DemandeController {
             DbConnexe dbConnexe = new DbConnexe();
             Connection c = dbConnexe.getConnection();
 
-            modelAndView.addObject("nationalites", new Caster<Nationalite>().casteListe(new Nationalite().findAll(c)));
-            modelAndView.addObject("situationdefamilles", new Caster<SituationDeFamille>().casteListe(new SituationDeFamille().findAll(c)));
-            modelAndView.addObject("typedemandes", new Caster<TypeDemande>().casteListe(new TypeDemande().findAll(c)));
-            modelAndView.addObject("typevisas", new Caster<TypeVisa>().casteListe(new TypeVisa().findAll(c)));
-            modelAndView.addObject("dossierstandards", new Caster<DossierStandard>().casteListe(new DossierStandard().findAll(c)));
-            modelAndView.addObject("dossiersupplementaires", new Caster<DossierSupplementaire>().casteListe(new DossierSupplementaire().findAll(c)));
+            modelAndView.addObject("nationalites", new Nationalite().findAll(c));
+            modelAndView.addObject("situationdefamilles", new SituationDeFamille().findAll(c));
+            modelAndView.addObject("typedemandes", new TypeDemande().findAll(c));
+            modelAndView.addObject("typevisas", new TypeVisa().findAll(c));
+            modelAndView.addObject("dossierstandards", new DossierStandard().findAll(c));
+            modelAndView.addObject("dossiersupplementaires", new DossierSupplementaire().findAll(c));
 
         } catch (Exception e) {
             e.printStackTrace();
