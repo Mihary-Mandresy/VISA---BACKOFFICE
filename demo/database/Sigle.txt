@@ -1,0 +1,16 @@
+DSU : dossiersupplementaire
+TYPV : typevisa
+CDST : checkdossierstandard
+HISTED : historiqueetatdemande
+NAT : nationalite
+ETATDMD : etatdemande
+DMDR : demandeur
+CDSU : checkdossiersupplementaire
+PASS : passport
+SITF : situationdefamille
+DST : dossierstandard
+VISA : visatransformable
+DMD : demande
+VISA : visa
+CRTR : carteresident
+TYPDMD : typedemande

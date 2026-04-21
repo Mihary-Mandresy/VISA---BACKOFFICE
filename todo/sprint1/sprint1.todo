@@ -1,0 +1,16 @@
+[ ] Sprint 1
+    [x] : Conception (Ensemble)
+    [x] : Creation des models (Mihary)
+    [x] : Donné
+        [x] : Script insertion et reinitialisation (Mihary)
+        [x] : Données utiles
+    [ ] : Demande
+        [x] : Affichage (Valisoa)
+            [x] : Formualaire Demande (Valisoa)
+        [x] : Fonction (Mihary)
+            [x] :  Demande save(Connection c, Demandeur demandeur, Passport passport, Visatransformable visa, List<String> dossiersStandard, List<String> dossiersSup, String idTypeDemande, String idTypeVisa,LocalDate date) throws Exception
+                - Fonction qui sauvegarde une demande mais dans cette fonction, avant l'insertion du demande il sauvegarde d'abord l'etat civil, le passport, le visa
+        [x] : Integration (Mihary)
+            [x] : Controller : 
+                [x] : methode du controlleur pour acceder la formulaire de demmande
+                [x] : Appele a la fonction save dans le DemandeController
