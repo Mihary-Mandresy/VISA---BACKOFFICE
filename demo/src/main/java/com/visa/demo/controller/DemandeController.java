@@ -6,12 +6,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nojpa.bd.connexion.DbConnexe;
+import com.visa.demo.dto.DemandeDto;
 import com.visa.demo.models.Demande;
 import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
@@ -25,8 +27,7 @@ import com.visa.demo.models.Visatransformable;
 
 @Controller
 @RequestMapping("/demande")
-public class DemandeController {
-
+public class DemandeController {    
     @GetMapping
     private ModelAndView form() throws Exception {
         ModelAndView modelAndView = new ModelAndView("pages/demande/form");
@@ -41,6 +42,7 @@ public class DemandeController {
             modelAndView.addObject("typevisas", new TypeVisa().findAll(c));
             modelAndView.addObject("dossierstandards", new DossierStandard().findAll(c));
             modelAndView.addObject("dossiersupplementaires", new DossierSupplementaire().findAll(c));
+            modelAndView.addObject("formulaire", new DemandeDto());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,16 +51,16 @@ public class DemandeController {
     }
 
     @PostMapping
-    private String save(RedirectAttributes redirectAttributes, Demandeur demandeur, Passport passport,
-            Visatransformable visatransformable, List<String> dossiersStandard, List<String> dossiersSup,
-            String idTypeDemande, String idTypeVisa,
-            LocalDate date) throws Exception {
+    private String save(RedirectAttributes redirectAttributes, @ModelAttribute("formulaire")DemandeDto dto) throws Exception {
         DbConnexe dbConnexe = new DbConnexe();
         Connection c = dbConnexe.getConnection();
         try {
             Demande demande = new Demande();
-            demande.save(c, demandeur, passport, visatransformable, dossiersStandard, dossiersSup, idTypeDemande,
-                    idTypeVisa, date);
+            if(dto.getVisatransformable().getDateentreemada() instanceof LocalDate){
+                
+            }
+            demande.save(c, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(), dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(),
+                    dto.getIdTypeVisa(), dto.getDate());
 
             redirectAttributes.addFlashAttribute("message", "Demande Crée avec succes !");
         } catch (Exception e) {
@@ -69,7 +71,7 @@ public class DemandeController {
                 c.close();
             }
         }
-        return "redirect:/";
+        return "redirect:/demande";
     }
 
 }

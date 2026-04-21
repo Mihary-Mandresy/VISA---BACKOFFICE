@@ -2,12 +2,16 @@ package com.visa.demo.models;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.nojpa.bd.entity.Entity;
 
 public class Passport extends Entity<Passport> {
 
     private String numero;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate datedelivrance;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateexpiration;
     private String iddemandeur;
 

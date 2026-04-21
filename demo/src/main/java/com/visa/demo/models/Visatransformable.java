@@ -2,12 +2,16 @@ package com.visa.demo.models;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.nojpa.bd.entity.Entity;
 
 public class Visatransformable extends Entity<Visatransformable> {
 
     private String reference;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateentreemada;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dateexpiration;
     private String iddemandeur;
     private String idpassport;
