@@ -1,11 +1,14 @@
 package com.visa.demo.models;
 
+import java.time.LocalDate;
+
 import com.nojpa.bd.entity.Entity;
 
 public class Demandeur extends Entity<Demandeur> {
 
     private String nom;
     private String prenom;
+    private LocalDate dtn;
     private String profession;
     private String adressemada;
     private String tel;
@@ -13,12 +16,13 @@ public class Demandeur extends Entity<Demandeur> {
     private String idsituationdefamille;
     private String idnationalite;
 
-    public Demandeur(String nom, String prenom, String profession, String adressemada, String tel, String email,
+    public Demandeur(String nom, String prenom, LocalDate dtn, String profession, String adressemada, String tel, String email,
             String idsituationdefamille, String idnationalite) {
         this();
 
         this.nom = nom;
         this.prenom = prenom;
+        this.dtn = dtn;
         this.profession = profession;
         this.adressemada = adressemada;
         this.tel = tel;
@@ -94,6 +98,14 @@ public class Demandeur extends Entity<Demandeur> {
 
     public void setAdressemada(String adressemada) {
         this.adressemada = adressemada;
+    }
+
+    public LocalDate getDtn() {
+        return dtn;
+    }
+
+    public void setDtn(LocalDate dtn) {
+        this.dtn = dtn;
     }
 
 }
