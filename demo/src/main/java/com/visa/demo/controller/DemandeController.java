@@ -2,9 +2,9 @@ package com.visa.demo.controller;
 
 import java.sql.Connection;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,20 +15,26 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.nojpa.bd.connexion.DbConnexe;
 import com.visa.demo.dto.DemandeDto;
 import com.visa.demo.models.Demande;
-import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
 import com.visa.demo.models.Nationalite;
-import com.visa.demo.models.Passport;
 import com.visa.demo.models.SituationDeFamille;
 import com.visa.demo.models.TypeDemande;
 import com.visa.demo.models.TypeVisa;
-import com.visa.demo.models.Visatransformable;
 
 @Controller
 @RequestMapping("/demande")
-public class DemandeController {    
+public class DemandeController {
+
     @GetMapping
+    private String getAll(Model model) throws Exception {
+        Connection c = new DbConnexe().getConnection();
+        model.addAttribute(new Demande().findAll(c));
+        c.close();
+        return "pages/list";
+    }
+
+    @GetMapping("/form")
     private ModelAndView form() throws Exception {
         ModelAndView modelAndView = new ModelAndView("pages/demande/form");
 
