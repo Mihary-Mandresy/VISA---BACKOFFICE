@@ -1,21 +1,12 @@
 /* =========================
    IMPORT VARIABLES
 ========================= */
+@use "root" as *;
+
 /* =========================
    BASE
 ========================= */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: system-ui, sans-serif;
-  background: #f5f5f5;
-  color: #1a1a1a;
-  padding: 2rem 1rem;
-}
+@import "base" ;
 
 /* =========================
    FORM WRAPPER
@@ -26,7 +17,7 @@ body {
   background-color: #fff;
   border-radius: 12px;
   padding: 2rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid $border-color-2;
 }
 
 /* =========================
@@ -34,32 +25,35 @@ body {
 ========================= */
 .groupe-infos {
   display: grid;
-  grid-template: repeat(2, 1fr)/repeat(2, 1fr);
+  grid-template: repeat(2, 1fr) / repeat(2, 1fr);
   gap: 1.5rem;
 }
 
 .info-card-item {
-  border: 2px solid #888;
+  border: 2px solid $label-and-text-secondary-color-2;
   border-radius: 12px;
   padding: 2rem 1rem;
 }
 
 .folder {
-  border: 2px solid #888;
+  border: 2px solid $label-and-text-secondary-color-2;
   border-radius: 12px;
-  grid-column: 1/span 2;
+  grid-column: 1 / span 2;
   padding: 2rem 1rem;
-}
-.folder .folder-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
-.folder .subfolder-list {
-  display: flex;
-  flex-direction: column;
-}
-.folder .subfolder-title {
-  color: #888;
+
+  .folder-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .subfolder-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .subfolder-title {
+    color: $label-and-text-secondary-color-2;
+  }
 }
 
 /* =========================
@@ -67,15 +61,17 @@ body {
 ========================= */
 .form-header {
   margin-bottom: 1.5rem;
-}
-.form-header h2 {
-  font-size: 20px;
-  font-weight: 500;
-  margin-bottom: 6px;
-}
-.form-header p {
-  font-size: 14px;
-  color: #666;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 14px;
+    color: $label-and-text-secondary-color-1;
+  }
 }
 
 /* =========================
@@ -94,12 +90,12 @@ body {
 .section-title {
   font-size: 13px;
   font-weight: 500;
-  color: #888;
+  color: $label-and-text-secondary-color-2;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin: 1.5rem 0 0.75rem;
   padding-bottom: 6px;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid $border-color-3;
 }
 
 /* =========================
@@ -108,46 +104,45 @@ body {
 .field-group {
   display: grid;
   gap: 12px;
-}
-.field-group.col2 {
-  grid-template-columns: 1fr 1fr;
-}
-.field-group.col3 {
-  grid-template-columns: 1fr 1fr 1fr;
+
+  &.col2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  &.col3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 
 label.field-label {
   display: block;
   font-size: 13px;
-  color: #666;
+  color: $label-and-text-secondary-color-1;
   margin-bottom: 4px;
 }
 
 /* =========================
    INPUTS
 ========================= */
-input[type=text],
-input[type=email],
-input[type=tel],
-input[type=date],
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
 select {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid $border-color-1;
   border-radius: 8px;
   font-size: 14px;
-  color: #1a1a1a;
+  color: $main-text-main-color;
   background: #fff;
   outline: none;
   height: 36px;
-}
-input[type=text]:focus,
-input[type=email]:focus,
-input[type=tel]:focus,
-input[type=date]:focus,
-select:focus {
-  border-color: #378ADD;
-  box-shadow: 0 0 0 2px rgba(55, 138, 221, 0.15);
+
+  &:focus {
+    border-color: $main-color;
+    box-shadow: 0 0 0 2px rgba($main-color, 0.15);
+  }
 }
 
 /* =========================
@@ -158,14 +153,14 @@ select:focus {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-.radio-group label,
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  cursor: pointer;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
 }
 
 /* =========================
@@ -178,41 +173,46 @@ select:focus {
 
 .visa-card {
   flex: 1;
-  border: 1px solid #ddd;
+  border: 1px solid $border-color-1;
   border-radius: 8px;
   padding: 12px 14px;
   cursor: pointer;
   transition: 0.15s;
-}
-.visa-card input[type=radio] {
-  display: none;
-}
-.visa-card .label {
-  font-size: 14px;
-  font-weight: 500;
-}
-.visa-card .desc {
-  font-size: 12px;
-  color: #888;
-  margin-top: 3px;
-}
-.visa-card.selected {
-  border-color: #378ADD;
-  background: #E6F1FB;
-}
-.visa-card.selected .label {
-  color: rgb(28.9871794872, 99.75, 170.5128205128);
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  .label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .desc {
+    font-size: 12px;
+    color: $label-and-text-secondary-color-2;
+    margin-top: 3px;
+  }
+
+  &.selected {
+    border-color: $main-color;
+    background: $selected-card-color;
+
+    .label {
+      color: darken($main-color, 15%);
+    }
+  }
 }
 
 /* =========================
    INFO NOTE
 ========================= */
 .info-note {
-  background: #E6F1FB;
-  border-left: 3px solid #378ADD;
+  background: $selected-card-color;
+  border-left: 3px solid $main-color;
   padding: 10px 14px;
   font-size: 13px;
-  color: rgb(25.2820512821, 87, 148.7179487179);
+  color: darken($main-color, 20%);
   margin: 1rem 0;
 }
 
@@ -227,34 +227,38 @@ select:focus {
   position: relative;
   animation: fadeIn 0.4s ease-in-out;
   white-space: pre-line;
-}
-.alert:hover {
-  transform: scale(1.01);
-  transition: 0.2s;
-}
-.alert .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.alert-success {
-  background-color: rgb(195.7028985507, 240.7971014493, 206);
-  border-left: 5px solid #28a745;
-  color: #1e7e34;
-}
-.alert-danger {
-  background-color: rgb(253.8924050633, 248.6075949367, 249.1139240506);
-  border-left: 5px solid #dc3545;
-  color: #a71d2a;
+
+  &:hover {
+    transform: scale(1.01);
+    transition: 0.2s;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  &-success {
+    background-color: lighten(#28a745, 45%);
+    border-left: 5px solid #28a745;
+    color: #1e7e34;
+  }
+
+  &-danger {
+    background-color: lighten(#dc3545, 45%);
+    border-left: 5px solid #dc3545;
+    color: #a71d2a;
+  }
 }
 
 /* =========================
    BUTTON
 ========================= */
 .submit-btn {
-  background: #1a1a1a;
+  background: $main-text-main-color;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -262,19 +266,24 @@ select:focus {
   font-size: 15px;
   cursor: pointer;
   width: 100%;
-}
-.submit-btn:hover {
-  background: rgb(0.5, 0.5, 0.5);
+
+  &:hover {
+    background: darken($main-text-main-color, 10%);
+  }
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 520px) {
-  .field-group.col2, .field-group.col3 {
-    grid-template-columns: 1fr;
+  .field-group {
+    &.col2,
+    &.col3 {
+      grid-template-columns: 1fr;
+    }
   }
+
   .visa-type-cards {
     flex-direction: column;
   }
-}/*# sourceMappingURL=form-visa.css.map */
+}

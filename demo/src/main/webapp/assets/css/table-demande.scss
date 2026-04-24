@@ -1,0 +1,59 @@
+/* =========================
+   IMPORT VARIABLES
+========================= */
+@use "root" as *;
+
+/* =========================
+   BASE
+========================= */
+@import "base" ;
+
+/* =========================
+utilisation fonction.scss
+========================= */
+@import "fonction" ;
+table{
+    background: #fff;
+    margin-left: 20%;
+    margin-top: 20%;
+    width:60%;
+    height:60%;
+    border-collapse:collapse;
+    tr{
+        th{
+            text-align: center;
+            @include borderStyle(1px,solid,black,false,false);
+        }
+        td{
+            text-align: center;
+            @include borderStyle(1px,solid,black,false,false);
+        }
+    }
+
+}
+.btn-edit {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #007bff; /* Bleu classique (style Bootstrap) */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Effet au survol */
+.btn-edit:hover {
+    background-color: #0056b3; /* Bleu plus foncé */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Effet au clic */
+.btn-edit:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
