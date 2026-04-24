@@ -2,7 +2,10 @@ package com.visa.demo.models;
 
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nojpa.bd.entity.Entity;
 
@@ -24,7 +27,7 @@ public class Demande extends Entity<Demande> {
     }
 
     /**
-     * 
+     *
      * @param c
      * @param etatCivil
      * @param passport
@@ -33,7 +36,8 @@ public class Demande extends Entity<Demande> {
      * @throws Exception
      */
     public Demande save(Connection c, Demandeur demandeur, Passport passport, Visatransformable visa,
-            List<String> dossiersStandard, List<String> dossiersSup, String idTypeDemande, String idTypeVisa,
+            List<String> dossiersStandard, List<String> dossiersSup, String idTypeDemande,
+            String idTypeVisa,
             LocalDate date)
             throws Exception {
         try {
@@ -176,4 +180,158 @@ public class Demande extends Entity<Demande> {
         this.idetatdemande = idetatdemande;
     }
 
+    /**
+     *
+     * @param c
+     * @param etatCivil
+     * @param passport
+     * @param visa
+     * @return
+     * @throws Exception
+     */
+    public Demande update(Connection c, String iddemande,Demandeur demandeur, Passport passport, Visatransformable visa,
+            List<String> dossiersStandard, List<String> dossiersSup,List<String>dossiersStandardConcatIdChecks, List<String> dossiersSupConcatIdCheck, String idTypeDemande, String idTypeVisa,String idTypeVisaPrecedent,
+            LocalDate date)
+            throws Exception {
+        try {
+            c.setAutoCommit(false);
+
+            // update demandeur
+            demandeur.update(c);
+
+            passport.setIddemandeur(demandeur.getId());
+            passport.update(c);
+
+            visa.setIddemandeur(demandeur.getId());
+            visa.setIdpassport(passport.getId());
+            visa.update(c);
+
+            // update Demande
+            Demande demande = new Demande();
+            demande.setId(iddemande);
+            demande.setIddemandeur(demandeur.getId());
+            demande.setIdpassport(passport.getId());
+            demande.setIdvisatransformable(visa.getId());
+            demande.setDatecreation(date);
+            demande.setIdetatdemande("ETATDMD000001");
+
+            // DANGER mila ovaina
+            demande.setIdtypedemande(idTypeDemande);
+            demande.setIdtypevisa(idTypeVisa);
+
+            demande.update(c);
+
+            // update dossier fourni
+            insertAfterCheck(c, new CheckDossierStandard(), iddemande, dossiersStandard,dossiersStandardConcatIdChecks);
+            updateAfterCheck(c,new CheckDossierStandard(), iddemande, dossiersStandard,dossiersStandardConcatIdChecks,idTypeVisaPrecedent,idTypeVisa);
+
+            insertAfterCheck(c, new CheckDossierSupplementaire(), iddemande, dossiersSup, dossiersSupConcatIdCheck);
+            updateAfterCheck(c,new CheckDossierSupplementaire(), iddemande, dossiersSup, dossiersSupConcatIdCheck ,idTypeVisaPrecedent,idTypeVisa);
+            c.commit();
+
+            c.setAutoCommit(true);
+
+            return demande;
+        } catch (Exception e) {
+            c.rollback();
+            throw e;
+        }
+    }
+
+    public Map<String, String> separateIdCheckDossierAndIdDossier(List<String> idDossierConcatidCheckDossiers)
+            throws Exception {
+        Map<String, String> result = new LinkedHashMap<String, String>();
+        if (idDossierConcatidCheckDossiers == null || idDossierConcatidCheckDossiers.size() == 0) {
+            throw new Exception("on ne peut pas extraire les id check car l'argument est vide ou null");
+        }
+        for (String idDossierConcatidCheck : idDossierConcatidCheckDossiers) {
+            result.put(idDossierConcatidCheck.split("-")[0], idDossierConcatidCheck.split("-")[1]);
+        }
+        return result;
+    }
+
+    public void insertAfterCheck(Connection c, Object obj, String iddemande, List<String> iddossiers,
+            List<String> idDossierConcatidCheckDossiers) throws Exception {
+        if (obj == null) {
+            throw new Exception("l'objet est requis");
+        }
+        if (obj instanceof CheckDossierStandard checkDossierStandard) {
+            if (iddossiers != null && idDossierConcatidCheckDossiers != null) {
+                Map<String, String> idChecksandIdDossiers = separateIdCheckDossierAndIdDossier(
+                        idDossierConcatidCheckDossiers);
+                List<String> idDossiersCheckes = new ArrayList<String>(idChecksandIdDossiers.values());
+                for (String iddossier : iddossiers) {
+                    if (!idDossiersCheckes.contains(iddossier)) {
+                        checkDossierStandard.setIddemande(iddemande);
+                        checkDossierStandard.setIddossierstandard(iddossier);
+                        checkDossierStandard.setExist(true);
+                        checkDossierStandard.insert(c);
+                    }
+                }
+            }
+        } else if (obj instanceof CheckDossierSupplementaire checkDossierSupplementaire) {
+            if (iddossiers != null && idDossierConcatidCheckDossiers != null) {
+                Map<String, String> idChecksandIdDossiers = separateIdCheckDossierAndIdDossier(
+                        idDossierConcatidCheckDossiers);
+
+                List<String> idDossiersCheckes = new ArrayList<String>(idChecksandIdDossiers.values());
+                for (String iddossier : iddossiers) {
+                    if (!idDossiersCheckes.contains(iddossier)) {
+                        checkDossierSupplementaire.setIddemande(iddemande);
+                        checkDossierSupplementaire.setIddossiersupplementaire(iddossier);
+                        checkDossierSupplementaire.setExist(true);
+                        checkDossierSupplementaire.insert(c);
+                    }
+                }
+            }
+        }
+    }
+
+    public void updateAfterCheck(Connection c, Object obj, String iddemande, List<String> iddossiers,
+            List<String> idDossierConcatidCheckDossiers,String idTypeVisaPrecedent,String idTypeVisa) throws Exception {
+        if (obj == null) {
+            throw new Exception("l'objet est requis");
+        }
+        if (iddossiers != null && idDossierConcatidCheckDossiers != null) {
+            Map<String, String> idChecksandIdDossiers = separateIdCheckDossierAndIdDossier(
+                    idDossierConcatidCheckDossiers);
+            List<String> idDossiersCheckes = new ArrayList<String>(idChecksandIdDossiers.values());
+            List<String> idCheckDossiers = new ArrayList<String>(idChecksandIdDossiers.keySet());
+            if (obj instanceof CheckDossierStandard checkDossierStandard) {
+                for (int i = 0; i < idDossiersCheckes.size(); i++) {
+                    if (!iddossiers.contains(idDossiersCheckes.get(i))) {
+                        checkDossierStandard.setIddemande(iddemande);
+                        checkDossierStandard.setIddossierstandard(idDossiersCheckes.get(i));
+                        checkDossierStandard.setExist(false);
+                        checkDossierStandard.setId(idCheckDossiers.get(i));
+                        checkDossierStandard.update(c);
+                    }
+                }
+            } else if (obj instanceof CheckDossierSupplementaire checkDossierSupplementaire) {
+                List<CheckDossierSupplementaire> dossierSupplementairesVaovao = new ArrayList<>();
+                for (int i = 0; i < idDossiersCheckes.size(); i++) {
+                    if (!iddossiers.contains(idDossiersCheckes.get(i))) {
+                        checkDossierSupplementaire.setIddemande(iddemande);
+                        checkDossierSupplementaire.setIddossiersupplementaire(idDossiersCheckes.get(i));
+                        checkDossierSupplementaire.setExist(false);
+                        checkDossierSupplementaire.setId(idCheckDossiers.get(i));
+                        dossierSupplementairesVaovao.add(checkDossierSupplementaire);
+                    }
+                }
+                if(!idTypeVisaPrecedent.equals(idTypeVisa)){
+                    for(int i = 0; i < idDossiersCheckes.size(); i++){
+                        CheckDossierSupplementaire cds = new CheckDossierSupplementaire();
+                        cds.setId(idCheckDossiers.get(i));
+                        cds.delete(c);
+                    }
+                }
+                else{
+                    for(CheckDossierSupplementaire cds : dossierSupplementairesVaovao){
+                        cds.update(c);
+                    }
+                }
+                
+            }
+        }
+    }
 }

@@ -2,12 +2,15 @@ package com.visa.demo.models;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.nojpa.bd.entity.Entity;
 
 public class Demandeur extends Entity<Demandeur> {
 
     private String nom;
     private String prenom;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dtn;
     private String profession;
     private String adressemada;

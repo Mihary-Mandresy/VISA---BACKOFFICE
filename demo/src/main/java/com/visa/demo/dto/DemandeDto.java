@@ -9,13 +9,19 @@ import com.visa.demo.models.Passport;
 import com.visa.demo.models.Visatransformable;
 
 public class DemandeDto {
+    private String iddemande;
     Demandeur demandeur;
     Passport passport;
     Visatransformable visatransformable;
     List<String> dossiersStandard;
     List<String> dossiersSup;
+    List<String> dossiersStandardConcatIdChecks ;
+    List<String> dossiersSupplementairesConcatIdChecks;
     String idTypeDemande;
     String idTypeVisa;
+    String idTypeVisaPrecedent;
+
+
     LocalDate date;
 
     public DemandeDto() {
@@ -62,7 +68,7 @@ public class DemandeDto {
         return dossiersSup;
     }
 
-    public void setDossiersSup(List<String> dossiersSup) {
+    public void setDossiersSup(List<String   > dossiersSup) {
         this.dossiersSup = dossiersSup;
     }
 
@@ -89,4 +95,35 @@ public class DemandeDto {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+    public String getIddemande() {
+        return iddemande;
+    }
+
+    public void setIddemande(String iddemande) {
+        this.iddemande = iddemande;
+    }
+        public List<String> getDossiersStandardConcatIdChecks() {
+        return dossiersStandardConcatIdChecks;
+    }
+
+    public void setDossiersStandardConcatIdChecks(List<String> dossiersStandardConcatIdChecks) {
+        this.dossiersStandardConcatIdChecks = dossiersStandardConcatIdChecks;
+    }
+
+    public List<String> getDossiersSupplementairesConcatIdChecks() {
+        return dossiersSupplementairesConcatIdChecks;
+    }
+
+    public void setDossiersSupplementairesConcatIdChecks(List<String> dossiersSupplementairesConcatIdChecks) {
+        this.dossiersSupplementairesConcatIdChecks = dossiersSupplementairesConcatIdChecks;
+    }
+        public String getIdTypeVisaPrecedent() {
+        return idTypeVisaPrecedent;
+    }
+
+    public void setIdTypeVisaPrecedent(String idTypeVisaPrecedent) {
+        this.idTypeVisaPrecedent = idTypeVisaPrecedent;
+    }
+
 }
