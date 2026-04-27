@@ -65,7 +65,7 @@ $(document).ready(function () {
         })
         form.append(input)
         
-        $.get('/demande/api/demandeur?id=DMDR000002').then(function(response){
+        $.get(`/demande/api/demandeur?id=${demandeurSelected}`).then(function(response){
             demandeurAPI = response
             console.log(demandeurAPI);
             
