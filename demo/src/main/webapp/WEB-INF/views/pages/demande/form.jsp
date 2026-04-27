@@ -137,7 +137,7 @@
                                 </div>
                             </div>
                             <div class="info-card-item">
-                                <div class="section-title">Passeport</div>
+                                <div class="section-title title-passport">Passeport</div>
                                 <div class="field-group">
                                     <div>
                                         <label class="field-label">Numéro de passeport</label>

@@ -38,11 +38,9 @@ public class DemandeAPIController {
     public DemandeObj getByIdDemandeur(@RequestParam(required = false) String id) throws Exception {
         Connection c = null;
         DemandeObj d = null;
-        System.out.println("eto eeeh");
         try {
             c = new DbConnexe().getConnection();
             d = Demande.getByIdDemandeur(id, c);
-            System.out.println("eto ooo");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

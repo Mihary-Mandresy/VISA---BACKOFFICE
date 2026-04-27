@@ -26,6 +26,34 @@ $(document).ready(function () {
         $('.lieuentree').val(null)
         $('.dateentreemada').val(null)
         $('.dateexpirationvisa').val(null)
+
+        $('.types-visas').prop('disabled', false);
+            $('.situationFamiliale').prop('disabled', false);
+            $('.nom').prop('disabled', false);
+            $('.prenom').prop('disabled', false);
+            $('.dtn').prop('disabled', false);
+            $('.profession').prop('disabled', false);
+            $('.nationalite').prop('disabled', false);
+            $('.adressemada').prop('disabled', false);
+            $('.email').prop('disabled', false);
+            $('.tel').prop('disabled', false);
+
+            $('.passport').prop('disabled', false);
+            $('.datedelivrance').prop('disabled', false);
+            $('.dateexpiration').prop('disabled', false);
+
+            $('.reference').prop('disabled', false);
+            $('.lieuentree').prop('disabled', false);
+            $('.dateentreemada').prop('disabled', false);
+            $('.dateexpirationvisa').prop('disabled', false);
+
+            $('input[name="idTypeDemande"]').each(function () {
+                if ($(this).val() === 'TYPDMD000001') {
+                    $(this).parent().show(); // cache le label complet
+                }
+            });
+
+            $('.title-passport').text('Passeport');
         
     }else {
         divFolder.hide();
@@ -76,8 +104,65 @@ $(document).ready(function () {
             $('.lieuentree').val(lieuentree).change();
             $('.dateentreemada').val(dateentreemada).change();
             $('.dateexpirationvisa').val(dateexpirationvisa).change();
+
+
+            $('.types-visas').prop('disabled', true);
+            $('.situationFamiliale').prop('disabled', true);
+            $('.nom').prop('disabled', true);
+            $('.prenom').prop('disabled', true);
+            $('.dtn').prop('disabled', true);
+            $('.profession').prop('disabled', true);
+            $('.nationalite').prop('disabled', true);
+            $('.adressemada').prop('disabled', true);
+            $('.email').prop('disabled', true);
+            $('.tel').prop('disabled', true);
+
+            $('.passport').prop('disabled', true);
+            $('.datedelivrance').prop('disabled', true);
+            $('.dateexpiration').prop('disabled', true);
+
+            $('.reference').prop('disabled', true);
+            $('.lieuentree').prop('disabled', true);
+            $('.dateentreemada').prop('disabled', true);
+            $('.dateexpirationvisa').prop('disabled', true);
+
+            $('input[name="idTypeDemande"]').each(function () {
+                if ($(this).val() === 'TYPDMD000001') {
+                    $(this).parent().hide(); // cache le label complet
+                }
+            });
+
+            $('.title-passport').text('Passeport');
         })
     }
 
   });
+
+
+  $('input[name="idTypeDemande"]').change(function () {
+    let valeur = $('input[name="idTypeDemande"]:checked').val();
+    console.log(valeur);
+    
+    if (valeur == "TYPDMD000002" && $(".demandeurs").val() != "") {
+        $('.passport').prop('disabled', true);
+        $('.datedelivrance').prop('disabled', true);
+        $('.dateexpiration').prop('disabled', true);
+
+        $('.title-passport').text('Passeport');
+    }
+    if (valeur == "TYPDMD000003" && $(".demandeurs").val() != "") {
+        $('.passport').prop('disabled', false);
+        $('.datedelivrance').prop('disabled', false);
+        $('.dateexpiration').prop('disabled', false);
+        $('.title-passport').text('Nouvelle passeport');
+    }
+
+    if (valeur == "TYPDMD000001" && $(".demandeurs").val() != "") {
+        $('.passport').prop('disabled', true);
+        $('.datedelivrance').prop('disabled', true);
+        $('.dateexpiration').prop('disabled', true);
+        $('.title-passport').text('Passeport');
+    }
+    
+});
 });
