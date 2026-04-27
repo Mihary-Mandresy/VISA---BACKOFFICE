@@ -19,6 +19,7 @@ import com.visa.demo.dto.DemandeDto;
 import com.visa.demo.models.CheckDossierStandard;
 import com.visa.demo.models.CheckDossierSupplementaire;
 import com.visa.demo.models.Demande;
+import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
 import com.visa.demo.models.Nationalite;
@@ -55,8 +56,8 @@ public class DemandeController {
 
         try {
             DbConnexe dbConnexe = new DbConnexe();
-            Connection c = dbConnexe.getConnection();
-
+            Connection c = dbConnexe.getConnection(); 
+            modelAndView.addObject("demandeurs", new Demandeur().findAll(c));
             modelAndView.addObject("nationalites", new Nationalite().findAll(c));
             modelAndView.addObject("situationdefamilles", new SituationDeFamille().findAll(c));
             modelAndView.addObject("typedemandes", new TypeDemande().findAll(c));
