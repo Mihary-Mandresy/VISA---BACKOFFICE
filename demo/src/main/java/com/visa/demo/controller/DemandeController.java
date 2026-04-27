@@ -75,6 +75,7 @@ public class DemandeController {
     private String save(RedirectAttributes redirectAttributes, @ModelAttribute("formulaire") DemandeDto dto)
             throws Exception {
         StringBuilder messageErreur = new StringBuilder();
+        
         if (dto.getDemandeur().getNom() == null || dto.getDemandeur().getNom().isEmpty()) {
             messageErreur.append("le nom est requis").append(System.lineSeparator());
         }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.nojpa.bd.entity.Entity;
+import com.visa.demo.models.obj.DemandeObj;
 
 public class Demande extends Entity<Demande> {
 
@@ -333,5 +334,34 @@ public class Demande extends Entity<Demande> {
                 
             }
         }
+    }
+
+    public static DemandeObj getByIdDemandeur(String idDemandeur, Connection c) throws Exception{
+        Demande d = new Demande();
+        DemandeObj demandeObj = new DemandeObj();
+        List<Demande> demandes = (List<Demande>) d.select(c, " iddemandeur = '"+idDemandeur+"'", 1);
+        if (demandes.size() == 0) {
+            return null;
+        }else{
+            d = demandes.get(0);
+            TypeDemande typeDemande = new TypeDemande();
+            Visatransformable visatransformable = new Visatransformable();
+            Passport passport = new Passport();
+            Demandeur demandeur = new Demandeur();
+            TypeVisa typeVisa= new TypeVisa();
+            EtatDemande etatDemande = new EtatDemande();
+            Demande original = d; 
+            demandeObj.setTypeDemande(typeDemande.findByid(c, d.getIdtypedemande()));
+            demandeObj.setVisatransformable(visatransformable.findByid(c, d.getIdvisatransformable())); 
+            demandeObj.setPassport(passport.findByid(c, d.getIdpassport()));    
+            demandeObj.setDemandeur(demandeur.findByid(c, d.getIddemandeur()));           
+            demandeObj.setTypeVisa(typeVisa.findByid(c, d.getIdtypevisa()));           
+            demandeObj.setDatecreation(d.getDatecreation());
+            demandeObj.setEtatDemande(etatDemande.findByid(c, d.getIdetatdemande()));
+            if (d.getIdoriginal() != null) {
+                demandeObj.setOriginal(original.findByid(c, d.getIdoriginal()));
+            }
+        } 
+        return demandeObj; 
     }
 }

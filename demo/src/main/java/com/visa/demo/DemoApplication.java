@@ -16,7 +16,7 @@ import com.visa.demo.models.Visatransformable;
 public class DemoApplication {
 
 	public static void main(String[] args) throws Exception {
-		// SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 
 		// DbConnexe dbConnexe = new DbConnexe();
 
