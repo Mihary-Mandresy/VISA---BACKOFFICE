@@ -48,6 +48,7 @@ CREATE TABLE demandeur(
    id VARCHAR(20) ,
    nom VARCHAR(100)  NOT NULL,
    prenom VARCHAR(100) ,
+   dtn DATE NOT NULL,
    profession VARCHAR(100) ,
    adressemada VARCHAR(200)  NOT NULL,
    tel VARCHAR(20)  NOT NULL,

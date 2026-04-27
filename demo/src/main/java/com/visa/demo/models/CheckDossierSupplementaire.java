@@ -1,5 +1,7 @@
 package com.visa.demo.models;
 
+import java.util.List;
+
 import com.nojpa.bd.entity.Entity;
 
 public class CheckDossierSupplementaire extends Entity<CheckDossierSupplementaire> {
@@ -36,5 +38,4 @@ public class CheckDossierSupplementaire extends Entity<CheckDossierSupplementair
     public void setIddossiersupplementaire(String iddossiersupplementaire) {
         this.iddossiersupplementaire = iddossiersupplementaire;
     }
-
 }

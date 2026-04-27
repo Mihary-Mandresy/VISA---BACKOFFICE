@@ -14,3 +14,63 @@
             [x] : Controller : 
                 [x] : methode du controlleur pour acceder la formulaire de demmande
                 [x] : Appele a la fonction save dans le DemandeController
+        [] liste: 
+            [x] Affichage
+                [X]: tableau affichant la liste des demandes
+            [x] Fonctions:
+                [x] :  creation lib DemandeLib dans le dossier lib 
+            [x] Integration :
+                [x] : methode du controller String getAll(Model model) avec annotation 
+
+
+        [] Modification :
+            [] Affichage :
+                []formulaire : reception d'un objet demande et mettre des values sur les inputs si l'objet existe
+                [] mettre des inputs type hidden necessaires dnas le controller:
+                    si demande!= null :
+                    [] input:hidden{value=demande.id}
+                    [] input:hidden {value=demande.iddemandeur}
+                    [] input:hidden {value=demande.idvisatransformable}
+                    [] input:hidden {value=demande.idpassport}
+                        boucle sur dossiersuppplementairecheckes: 
+                    [] input:checkbox (display: none){value="dossierSupplementaire.id-dossierSupplementaire.iddossiersupplementaire"}
+                        boucle sur dossierstandardcheckes: 
+                    [] input:checkbox (display: none){value="dossierStandard.id-dossierSupplementaire.iddossierstandard"}
+
+
+            [x] Fonctions: 
+                [x] : ajout d' attributs iddemande List<String> dossiersStandardConcatIdChecks et List<String> dossiersSupConcatIdCheck dans la classe DemandeDto
+                [x] creation de lib : DemandeDetailSansDossierLib
+                classe Demande: 
+                    [x]: void update(Connection c, Demandeur demandeur, Passport passport, Visatransformable visa,
+                        <String> dossiersStandard, <String> dossiersSup,<String>dossiersStandardConcatIdChecks, <String> dossiersSupConcatIdCheck, String idTypeDemande, String idTypeVisa,
+                        LocalDate date):
+                        
+            
+                    [x] void updateAfterCheck(Connection c, Object obj, String iddemande, List<String> iddossiers,
+                            List<String> idDossierConcatidCheckDossiers,String idTypeVisaPrecedent,String idTypeVisa):
+                        [x] on  fait un boucle sur iddossierscheckes. 
+                        [x] on cree un objet de type CheckDossierSupplementaire ou CheckDossierStandard selon l'instance de o
+                        [x] iddossiercheckes = new ArrayList<>(separateIdCheckDossierAndIdDossier(<String> idDossierConcatidCheckDossiers).values())
+                        [x] idchecks = new ArrayList<>(separateIdCheckDossierAndIdDossier(<String> idDossierConcatidCheckDossiers).keySet())
+                        [x] Si iddossiers ne contient pas iddossierscheckes[i],  sur l'objet  cree  et ensuite update
+                        [x] si idTypeVisaPrecedent == idTypeVisa on fait update ,sinon on supprime  les idDossierCheckes
+
+                    [x] <String,String> separateIdCheckDossierAndIdDossier(<String> idDossierConcatidCheckDossiers):
+                        <String,String> result 
+                        boucle sur idDossierConcatidCheckDossiers: 
+                            variable = idDossierConcatidCheckDossiers[i]
+                            result.put(variable.split("-")[0],variable.split("-")[1])
+                        retourner result
+                    [x] void insertAfterCheck(Connection c,Object o,<String> iddossiers, <String>idDossierConcatidCheckDossiers):
+                        [x] on  fait un boucle sur iddossiers. 
+                        [x] on cree un objet de type DossierSupplementaire ou DossierStandard selon l'instance de o
+                        [x] iddossiercheckes = new ArrayList<>(separateIdCheckDossierAndIdDossier(<String> idDossierConcatidCheckDossiers).values())
+                        [x] idchecks = new ArrayList<>(separateIdCheckDossierAndIdDossier(<String> idDossierConcatidCheckDossiers).keySet())
+                        [x] Si iddossierscheckes ne contient pas iddossiers[i],on cree un  objet de type DossierSupplementaire ou DossierStandard, on appel insert
+                [] Integration
+                    [x]dans la liste on clic sur le bouton modifier 
+                    [x] redirection dans la page formulaire avec les inputs preremplis
+                    [x] texte du bouton devient modifier la demande
+                    [x] appel de la fonction update de DemandeController
+                     

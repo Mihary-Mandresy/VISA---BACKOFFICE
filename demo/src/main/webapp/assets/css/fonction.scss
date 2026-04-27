@@ -1,0 +1,29 @@
+/*
+Cette fonction sert a mettre du style pour les bordures
+les valeur par defaurt true sert a mettre a utiliser $width,$style,$color
+*/
+@mixin borderStyle(
+  $width: 1px,
+  $style: solid,
+  $color: black,
+  $left: true,
+  $right: true,
+  $top: true,
+  $bottom: true
+) {
+  @if $left {
+    border-left: $width $style $color;
+  }
+
+  @if $right {
+    border-right: $width $style $color;
+  }
+
+  @if $top {
+    border-top: $width $style $color;
+  }
+
+  @if $bottom {
+    border-bottom: $width $style $color;
+  }
+}
