@@ -18,6 +18,7 @@
   border-radius: 12px;
   padding: 2rem;
   border: 1px solid $border-color-2;
+  width: auto;
 }
 
 /* =========================
@@ -27,12 +28,17 @@
   display: grid;
   grid-template: repeat(2, 1fr) / repeat(2, 1fr);
   gap: 1.5rem;
+  
+  &.hide {
+    grid-template-rows: 530px;
+  }
 }
 
 .info-card-item {
   border: 2px solid $label-and-text-secondary-color-2;
   border-radius: 12px;
   padding: 2rem 1rem;
+  max-height: 530px;
 }
 
 .folder {

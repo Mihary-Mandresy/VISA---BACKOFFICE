@@ -8,6 +8,7 @@ $(document).ready(function () {
     
     if (demandeurSelected == "") {
         divFolder.show();
+        $('.groupe-infos').removeClass('hide')
         $('.id-demandeur-input').remove()
         $('.types-visas').val('TYPV000001').change();
         $('.situationFamiliale').val(null).change();
@@ -57,6 +58,7 @@ $(document).ready(function () {
         
     }else {
         divFolder.hide();
+        $('.groupe-infos').addClass('hide')
         const input = $('<input>', {
             type: 'hidden',
             value: demandeurSelected,
@@ -65,7 +67,7 @@ $(document).ready(function () {
         })
         form.append(input)
         
-        $.get('/demande/api/demandeur?id=DMDR000002').then(function(response){
+        $.get('/demande/api/demandeur?id='+demandeurSelected).then(function(response){
             demandeurAPI = response
             console.log(demandeurAPI);
             
