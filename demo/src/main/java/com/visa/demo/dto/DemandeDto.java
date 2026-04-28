@@ -4,23 +4,27 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.visa.demo.models.CarteResident;
 import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.Passport;
+import com.visa.demo.models.Visa;
 import com.visa.demo.models.Visatransformable;
 
 public class DemandeDto {
     private String iddemande;
     Demandeur demandeur;
     Passport passport;
+    Passport newpassport;
+    Visa visa;
+    CarteResident carte;
     Visatransformable visatransformable;
     List<String> dossiersStandard;
     List<String> dossiersSup;
-    List<String> dossiersStandardConcatIdChecks ;
+    List<String> dossiersStandardConcatIdChecks;
     List<String> dossiersSupplementairesConcatIdChecks;
     String idTypeDemande;
     String idTypeVisa;
     String idTypeVisaPrecedent;
-
 
     LocalDate date;
 
@@ -68,7 +72,7 @@ public class DemandeDto {
         return dossiersSup;
     }
 
-    public void setDossiersSup(List<String   > dossiersSup) {
+    public void setDossiersSup(List<String> dossiersSup) {
         this.dossiersSup = dossiersSup;
     }
 
@@ -103,7 +107,8 @@ public class DemandeDto {
     public void setIddemande(String iddemande) {
         this.iddemande = iddemande;
     }
-        public List<String> getDossiersStandardConcatIdChecks() {
+
+    public List<String> getDossiersStandardConcatIdChecks() {
         return dossiersStandardConcatIdChecks;
     }
 
@@ -118,14 +123,40 @@ public class DemandeDto {
     public void setDossiersSupplementairesConcatIdChecks(List<String> dossiersSupplementairesConcatIdChecks) {
         this.dossiersSupplementairesConcatIdChecks = dossiersSupplementairesConcatIdChecks;
     }
-        public String getIdTypeVisaPrecedent() {
+
+    public String getIdTypeVisaPrecedent() {
         return idTypeVisaPrecedent;
     }
 
     public void setIdTypeVisaPrecedent(String idTypeVisaPrecedent) {
         this.idTypeVisaPrecedent = idTypeVisaPrecedent;
     }
-    public String  controleDtoDemande(){
+
+    public Visa getVisa() { 
+        return visa;
+    }
+
+    public void setVisa(Visa visa) {
+        this.visa = visa;
+    }
+
+    public CarteResident getCarte() {
+        return carte;
+    }
+
+    public void setCarte(CarteResident carte) {
+        this.carte = carte;
+    }
+
+    public Passport getNewpassport() {
+        return newpassport;
+    }
+
+    public void setNewpassport(Passport newpassport) {
+        this.newpassport = newpassport;
+    }
+
+    public String controleDtoDemande() {
         StringBuilder messageErreur = new StringBuilder();
         try {
             if (this.getDemandeur().getNom() == null || this.getDemandeur().getNom().isEmpty()) {
@@ -143,7 +174,8 @@ public class DemandeDto {
             if (this.getDemandeur().getTel() == null || this.getDemandeur().getTel().isEmpty()) {
                 messageErreur.append("le numero telephonique est requis").append(System.lineSeparator());
             }
-            if(messageErreur.toString()!= null){}
+            if (messageErreur.toString() != null) {
+            }
         } catch (Exception e) {
             // TODO: handle exception
         }

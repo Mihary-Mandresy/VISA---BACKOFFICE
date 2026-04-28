@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.bd.entity.Entity;
 import com.visa.demo.models.obj.DemandeObj;
 
@@ -41,8 +42,13 @@ public class Demande extends Entity<Demande> {
             String idTypeVisa,String etatdemande,
             LocalDate date)
             throws Exception {
+            boolean isCloseable = false;
         try {
-            c.setAutoCommit(false);
+            if(c == null){
+                c = new DbConnexe().getConnection();
+                isCloseable = true;
+                c.setAutoCommit(false);
+            }
             boolean demandeurExist = false;
             if(demandeur.getId() != null && !demandeur.getId().isEmpty()){
                 demandeurExist =true;
@@ -95,15 +101,19 @@ public class Demande extends Entity<Demande> {
                     checkdossier.insert(c);
                 }
             }
-
-            c.commit();
-
-            c.setAutoCommit(true);
-
+            if(isCloseable){
+                c.commit();
+            }
             return demande;
         } catch (Exception e) {
             c.rollback();
             throw e;
+        }
+        finally{
+            if(isCloseable){
+                c.setAutoCommit(true);
+                c.close();
+            }
         }
     }
 
@@ -198,8 +208,10 @@ public class Demande extends Entity<Demande> {
      * @return
      * @throws Exception
      */
-    public Demande update(Connection c, String iddemande,Demandeur demandeur, Passport passport, Visatransformable visa,
-            List<String> dossiersStandard, List<String> dossiersSup,List<String>dossiersStandardConcatIdChecks, List<String> dossiersSupConcatIdCheck, String idTypeDemande, String idTypeVisa,String idTypeVisaPrecedent,
+    public Demande update(Connection c, String iddemande, Demandeur demandeur, Passport passport,
+            Visatransformable visa,
+            List<String> dossiersStandard, List<String> dossiersSup, List<String> dossiersStandardConcatIdChecks,
+            List<String> dossiersSupConcatIdCheck, String idTypeDemande, String idTypeVisa, String idTypeVisaPrecedent,
             LocalDate date)
             throws Exception {
         try {
@@ -231,11 +243,14 @@ public class Demande extends Entity<Demande> {
             demande.update(c);
 
             // update dossier fourni
-            insertAfterCheck(c, new CheckDossierStandard(), iddemande, dossiersStandard,dossiersStandardConcatIdChecks);
-            updateAfterCheck(c,new CheckDossierStandard(), iddemande, dossiersStandard,dossiersStandardConcatIdChecks,idTypeVisaPrecedent,idTypeVisa);
+            insertAfterCheck(c, new CheckDossierStandard(), iddemande, dossiersStandard,
+                    dossiersStandardConcatIdChecks);
+            updateAfterCheck(c, new CheckDossierStandard(), iddemande, dossiersStandard, dossiersStandardConcatIdChecks,
+                    idTypeVisaPrecedent, idTypeVisa);
 
             insertAfterCheck(c, new CheckDossierSupplementaire(), iddemande, dossiersSup, dossiersSupConcatIdCheck);
-            updateAfterCheck(c,new CheckDossierSupplementaire(), iddemande, dossiersSup, dossiersSupConcatIdCheck ,idTypeVisaPrecedent,idTypeVisa);
+            updateAfterCheck(c, new CheckDossierSupplementaire(), iddemande, dossiersSup, dossiersSupConcatIdCheck,
+                    idTypeVisaPrecedent, idTypeVisa);
             c.commit();
 
             c.setAutoCommit(true);
@@ -297,7 +312,8 @@ public class Demande extends Entity<Demande> {
     }
 
     public void updateAfterCheck(Connection c, Object obj, String iddemande, List<String> iddossiers,
-            List<String> idDossierConcatidCheckDossiers,String idTypeVisaPrecedent,String idTypeVisa) throws Exception {
+            List<String> idDossierConcatidCheckDossiers, String idTypeVisaPrecedent, String idTypeVisa)
+            throws Exception {
         if (obj == null) {
             throw new Exception("l'objet est requis");
         }
@@ -327,76 +343,78 @@ public class Demande extends Entity<Demande> {
                         dossierSupplementairesVaovao.add(checkDossierSupplementaire);
                     }
                 }
-                if(!idTypeVisaPrecedent.equals(idTypeVisa)){
-                    for(int i = 0; i < idDossiersCheckes.size(); i++){
+                if (!idTypeVisaPrecedent.equals(idTypeVisa)) {
+                    for (int i = 0; i < idDossiersCheckes.size(); i++) {
                         CheckDossierSupplementaire cds = new CheckDossierSupplementaire();
                         cds.setId(idCheckDossiers.get(i));
                         cds.delete(c);
                     }
-                }
-                else{
-                    for(CheckDossierSupplementaire cds : dossierSupplementairesVaovao){
+                } else {
+                    for (CheckDossierSupplementaire cds : dossierSupplementairesVaovao) {
                         cds.update(c);
                     }
                 }
-                
+
             }
         }
     }
 
-    public static DemandeObj getByIdDemandeur(String idDemandeur, Connection c) throws Exception{
+    public static DemandeObj getByIdDemandeur(String idDemandeur, Connection c) throws Exception {
         Demande d = new Demande();
         DemandeObj demandeObj = new DemandeObj();
-        List<Demande> demandes = (List<Demande>) d.select(c, " iddemandeur = '"+idDemandeur+"' and idtypedemande='TYPDMD000001' order by datecreation desc", 1);
+        System.out.println("id demandeur ho ah: "+ idDemandeur);
+        List<Demande> demandes = (List<Demande>) d.select(c,
+                " iddemandeur = '" + idDemandeur + "' and idtypedemande='TYPDMD000001' order by datecreation desc", 1);
         if (demandes.size() == 0) {
             return null;
-        }else{
+        } else {
             d = demandes.get(0);
             TypeDemande typeDemande = new TypeDemande();
             Visatransformable visatransformable = new Visatransformable();
             Passport passport = new Passport();
             Demandeur demandeur = new Demandeur();
-            TypeVisa typeVisa= new TypeVisa();
+            TypeVisa typeVisa = new TypeVisa();
             EtatDemande etatDemande = new EtatDemande();
-            Demande original = d; 
+            Demande original = d;
             demandeObj.setId(d.getId());
             demandeObj.setTypeDemande(typeDemande.findByid(c, d.getIdtypedemande()));
-            demandeObj.setVisatransformable(visatransformable.findByid(c, d.getIdvisatransformable())); 
-            demandeObj.setPassport(passport.findByid(c, d.getIdpassport()));    
-            demandeObj.setDemandeur(demandeur.findByid(c, d.getIddemandeur()));           
-            demandeObj.setTypeVisa(typeVisa.findByid(c, d.getIdtypevisa()));           
+            demandeObj.setVisatransformable(visatransformable.findByid(c, d.getIdvisatransformable()));
+            demandeObj.setPassport(passport.findByid(c, d.getIdpassport()));
+            demandeObj.setDemandeur(demandeur.findByid(c, d.getIddemandeur()));
+            demandeObj.setTypeVisa(typeVisa.findByid(c, d.getIdtypevisa()));
             demandeObj.setDatecreation(d.getDatecreation());
             demandeObj.setEtatDemande(etatDemande.findByid(c, d.getIdetatdemande()));
             if (d.getIdoriginal() != null) {
                 demandeObj.setOriginal(original.findByid(c, d.getIdoriginal()));
             }
-        } 
-        return demandeObj; 
+        }
+        return demandeObj;
     }
-    public Demande getInstanceByDemandeObj(DemandeObj demandeObj){
+
+    public Demande getInstanceByDemandeObj(DemandeObj demandeObj) {
         Demande demande = new Demande();
-        if(demandeObj.getId() != null){
+        if (demandeObj.getId() != null) {
             demande.setId(demandeObj.getId());
         }
-        if(demandeObj.getTypeDemande()!= null){
+        if (demandeObj.getTypeDemande() != null) {
             demande.setIdtypedemande(demandeObj.getTypeDemande().getId());
         }
-        if(demandeObj.getVisatransformable()!= null){
+        if (demandeObj.getVisatransformable() != null) {
             demande.setIdvisatransformable(demandeObj.getVisatransformable().getId());
         }
-        if(demandeObj.getPassport()!= null){
+        if (demandeObj.getPassport() != null) {
             demande.setIdpassport(demandeObj.getPassport().getId());
         }
-        if(demandeObj.getDemandeur()!= null){
+        if (demandeObj.getDemandeur() != null) {
             demande.setIddemandeur(demandeObj.getDemandeur().getId());
         }
-        if(demandeObj.getTypeVisa()!= null){
+        if (demandeObj.getTypeVisa() != null) {
             demande.setIdtypevisa(demandeObj.getTypeVisa().getId());
         }
-        if(demandeObj.getDatecreation()!= null){
+        if (demandeObj.getDatecreation() != null) {
             demande.setDatecreation(demandeObj.getDatecreation());
         }
-        if(demandeObj.getEtatDemande()!= null){
+        if (demandeObj.getEtatDemande() != null) {
             demande.setIdetatdemande(demandeObj.getEtatDemande().getId());
         }
         return demande;

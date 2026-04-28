@@ -8,6 +8,9 @@ public class Comparaison {
     //retourne -1 si on n'a pas les memes instance et 1 dans le cas contraire
     public static int comparerDeuxInstances(Object obj1, Object obj2) {
         int result = 1;
+        if((obj1 == null && obj2 !=null) || (obj2 == null && obj1 != null)){
+            result=-1;
+        }
         if (obj1 instanceof Passport passport1 && obj2 instanceof Passport passport2) {
             if (passport1.getId() != null && passport2.getId() != null) {
                 if (!passport1.getId().equals(passport2.getId())) {
@@ -63,6 +66,12 @@ public class Comparaison {
             }
             if (vt1.getLieuentree() != null && vt2.getLieuentree() != null) {
                 if (!vt1.getLieuentree().equals(vt2.getLieuentree())) {
+                    result = -1;
+                }
+            }
+
+            if (vt1.getReference() != null && vt2.getReference() != null) {
+                if (!vt1.getReference().equals(vt2.getReference())) {
                     result = -1;
                 }
             }
