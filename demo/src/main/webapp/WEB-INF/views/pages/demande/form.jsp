@@ -155,7 +155,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="section-title">Carte resident d'evil</div>
+                                    <div class="section-title">Carte resident</div>
                                         <div class="field-group col6">
                                         <div>
                                             <label class="field-label">Référence du carte</label>
