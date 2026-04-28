@@ -125,5 +125,29 @@ public class DemandeDto {
     public void setIdTypeVisaPrecedent(String idTypeVisaPrecedent) {
         this.idTypeVisaPrecedent = idTypeVisaPrecedent;
     }
+    public String  controleDtoDemande(){
+        StringBuilder messageErreur = new StringBuilder();
+        try {
+            if (this.getDemandeur().getNom() == null || this.getDemandeur().getNom().isEmpty()) {
+                messageErreur.append("le nom est requis").append(System.lineSeparator());
+            }
+            if (this.getDemandeur().getDtn() == null) {
+                messageErreur.append("la date de naissance est requise").append(System.lineSeparator());
+            }
+            if (this.getDemandeur().getAdressemada() == null || this.getDemandeur().getAdressemada().isEmpty()) {
+                messageErreur.append("l'adresse a mada est requise").append(System.lineSeparator());
+            }
+            if (this.getDemandeur().getIdnationalite() == null || this.getDemandeur().getIdnationalite().isEmpty()) {
+                messageErreur.append("la nationalite est requise").append(System.lineSeparator());
+            }
+            if (this.getDemandeur().getTel() == null || this.getDemandeur().getTel().isEmpty()) {
+                messageErreur.append("le numero telephonique est requis").append(System.lineSeparator());
+            }
+            if(messageErreur.toString()!= null){}
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return messageErreur.toString();
+    }
 
 }

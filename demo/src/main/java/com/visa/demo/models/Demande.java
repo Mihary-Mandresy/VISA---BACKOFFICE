@@ -36,23 +36,34 @@ public class Demande extends Entity<Demande> {
      * @return
      * @throws Exception
      */
-    public Demande save(Connection c, Demandeur demandeur, Passport passport, Visatransformable visa,
+    public Demande save(Connection c, String idoriginal,Demandeur demandeur, Passport passport, Visatransformable visa,
             List<String> dossiersStandard, List<String> dossiersSup, String idTypeDemande,
-            String idTypeVisa,
+            String idTypeVisa,String etatdemande,
             LocalDate date)
             throws Exception {
         try {
             c.setAutoCommit(false);
-
+            boolean demandeurExist = false;
+            if(demandeur.getId() != null){
+                demandeurExist =true;
+            }
             // Insertion Detaitl
-            demandeur.insert(c);
+            if(!demandeurExist){
+                System.out.println("tsa misy lesy e");
+                demandeur.insert(c);
+            }
 
             passport.setIddemandeur(demandeur.getId());
-            passport.insert(c);
+            if(visa.getId() == null){
+                passport.insert(c);
+            }
 
             visa.setIddemandeur(demandeur.getId());
             visa.setIdpassport(passport.getId());
-            visa.insert(c);
+            if(visa.getId() == null){
+                System.out.println("efa fantatrao malala: ");
+                visa.insert(c);
+            }
 
             // Insertion Demande
             Demande demande = new Demande();
@@ -60,8 +71,8 @@ public class Demande extends Entity<Demande> {
             demande.setIdpassport(passport.getId());
             demande.setIdvisatransformable(visa.getId());
             demande.setDatecreation(date);
-            demande.setIdetatdemande("ETATDMD000001");
-
+            demande.setIdetatdemande(etatdemande);
+            demande.setIdoriginal(idoriginal);
             // DANGER mila ovaina
             demande.setIdtypedemande(idTypeDemande);
             demande.setIdtypevisa(idTypeVisa);
@@ -69,23 +80,24 @@ public class Demande extends Entity<Demande> {
             demande.insert(c);
 
             // Insertion dossier fournit
-
-            for (String idStandard : dossiersStandard) {
-                CheckDossierStandard checkdossier = new CheckDossierStandard();
-                checkdossier.setIddemande(demande.getId());
-                checkdossier.setIddossierstandard(idStandard);
-                checkdossier.setExist(true);
-
-                checkdossier.insert(c);
-            }
-
-            for (String idsupplementaire : dossiersSup) {
-                CheckDossierSupplementaire checkdossier = new CheckDossierSupplementaire();
-                checkdossier.setIddemande(demande.getId());
-                checkdossier.setIddossiersupplementaire(idsupplementaire);
-                checkdossier.setExist(true);
-
-                checkdossier.insert(c);
+            if(!demandeurExist){
+                for (String idStandard : dossiersStandard) {
+                    CheckDossierStandard checkdossier = new CheckDossierStandard();
+                    checkdossier.setIddemande(demande.getId());
+                    checkdossier.setIddossierstandard(idStandard);
+                    checkdossier.setExist(true);
+    
+                    checkdossier.insert(c);
+                }
+    
+                for (String idsupplementaire : dossiersSup) {
+                    CheckDossierSupplementaire checkdossier = new CheckDossierSupplementaire();
+                    checkdossier.setIddemande(demande.getId());
+                    checkdossier.setIddossiersupplementaire(idsupplementaire);
+                    checkdossier.setExist(true);
+    
+                    checkdossier.insert(c);
+                }
             }
 
             c.commit();
@@ -351,6 +363,7 @@ public class Demande extends Entity<Demande> {
             TypeVisa typeVisa= new TypeVisa();
             EtatDemande etatDemande = new EtatDemande();
             Demande original = d; 
+            demandeObj.setId(d.getId());
             demandeObj.setTypeDemande(typeDemande.findByid(c, d.getIdtypedemande()));
             demandeObj.setVisatransformable(visatransformable.findByid(c, d.getIdvisatransformable())); 
             demandeObj.setPassport(passport.findByid(c, d.getIdpassport()));    
@@ -363,5 +376,33 @@ public class Demande extends Entity<Demande> {
             }
         } 
         return demandeObj; 
+    }
+    public Demande getInstanceByDemandeObj(DemandeObj demandeObj){
+        Demande demande = new Demande();
+        if(demandeObj.getId() != null){
+            demande.setId(demandeObj.getId());
+        }
+        if(demandeObj.getTypeDemande()!= null){
+            demande.setIdtypedemande(demandeObj.getTypeDemande().getId());
+        }
+        if(demandeObj.getVisatransformable()!= null){
+            demande.setIdvisatransformable(demandeObj.getVisatransformable().getId());
+        }
+        if(demandeObj.getPassport()!= null){
+            demande.setIdpassport(demandeObj.getPassport().getId());
+        }
+        if(demandeObj.getDemandeur()!= null){
+            demande.setIddemandeur(demandeObj.getDemandeur().getId());
+        }
+        if(demandeObj.getTypeVisa()!= null){
+            demande.setIdtypevisa(demandeObj.getTypeVisa().getId());
+        }
+        if(demandeObj.getDatecreation()!= null){
+            demande.setDatecreation(demandeObj.getDatecreation());
+        }
+        if(demandeObj.getEtatDemande()!= null){
+            demande.setIdetatdemande(demandeObj.getEtatDemande().getId());
+        }
+        return demande;
     }
 }
