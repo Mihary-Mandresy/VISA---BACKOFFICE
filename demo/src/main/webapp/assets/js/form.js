@@ -28,25 +28,25 @@ $(document).ready(function () {
         $('.dateentreemada').val(null)
         $('.dateexpirationvisa').val(null)
 
-        $('.types-visas').prop('disabled', false);
-            $('.situationFamiliale').prop('disabled', false);
-            $('.nom').prop('disabled', false);
-            $('.prenom').prop('disabled', false);
-            $('.dtn').prop('disabled', false);
-            $('.profession').prop('disabled', false);
-            $('.nationalite').prop('disabled', false);
-            $('.adressemada').prop('disabled', false);
-            $('.email').prop('disabled', false);
-            $('.tel').prop('disabled', false);
+        $('.types-visas').prop('readonly', false);
+            $('.situationFamiliale').prop('readonly', false);
+            $('.nom').prop('readonly', false);
+            $('.prenom').prop('readonly', false);
+            $('.dtn').prop('readonly', false);
+            $('.profession').prop('readonly', false);
+            $('.nationalite').prop('readonly', false);
+            $('.adressemada').prop('readonly', false);
+            $('.email').prop('readonly', false);
+            $('.tel').prop('readonly', false);
 
-            $('.passport').prop('disabled', false);
-            $('.datedelivrance').prop('disabled', false);
-            $('.dateexpiration').prop('disabled', false);
+            $('.passport').prop('readonly', false);
+            $('.datedelivrance').prop('readonly', false);
+            $('.dateexpiration').prop('readonly', false);
 
-            $('.reference').prop('disabled', false);
-            $('.lieuentree').prop('disabled', false);
-            $('.dateentreemada').prop('disabled', false);
-            $('.dateexpirationvisa').prop('disabled', false);
+            $('.reference').prop('readonly', false);
+            $('.lieuentree').prop('readonly', false);
+            $('.dateentreemada').prop('readonly', false);
+            $('.dateexpirationvisa').prop('readonly', false);
 
             $('input[name="idTypeDemande"]').each(function () {
                 if ($(this).val() === 'TYPDMD000001') {
@@ -59,13 +59,13 @@ $(document).ready(function () {
     }else {
         divFolder.hide();
         $('.groupe-infos').addClass('hide')
-        const input = $('<input>', {
-            type: 'hidden',
-            value: demandeurSelected,
-            class: 'id-demandeur-input',
-            name: 'demandeur.id'
-        })
-        form.append(input)
+        // const input = $('<input>', {
+        //     type: 'hidden',
+        //     value: demandeurSelected,
+        //     class: 'id-demandeur-input',
+        //     name: 'demandeur.id'
+        // })
+        // form.append(input)
         
         $.get('/demande/api/demandeur?id='+demandeurSelected).then(function(response){
             demandeurAPI = response
@@ -108,25 +108,25 @@ $(document).ready(function () {
             $('.dateexpirationvisa').val(dateexpirationvisa).change();
 
 
-            $('.types-visas').prop('disabled', true);
-            $('.situationFamiliale').prop('disabled', true);
-            $('.nom').prop('disabled', true);
-            $('.prenom').prop('disabled', true);
-            $('.dtn').prop('disabled', true);
-            $('.profession').prop('disabled', true);
-            $('.nationalite').prop('disabled', true);
-            $('.adressemada').prop('disabled', true);
-            $('.email').prop('disabled', true);
-            $('.tel').prop('disabled', true);
+            $('.types-visas').prop('readonly', true);
+            $('.situationFamiliale').prop('readonly', true);
+            $('.nom').prop('readonly', true);
+            $('.prenom').prop('readonly', true);
+            $('.dtn').prop('readonly', true);
+            $('.profession').prop('readonly', true);
+            $('.nationalite').prop('readonly', true);
+            $('.adressemada').prop('readonly', true);
+            $('.email').prop('readonly', true);
+            $('.tel').prop('readonly', true);
 
-            $('.passport').prop('disabled', true);
-            $('.datedelivrance').prop('disabled', true);
-            $('.dateexpiration').prop('disabled', true);
+            $('.passport').prop('readonly', true);
+            $('.datedelivrance').prop('readonly', true);
+            $('.dateexpiration').prop('readonly', true);
 
-            $('.reference').prop('disabled', true);
-            $('.lieuentree').prop('disabled', true);
-            $('.dateentreemada').prop('disabled', true);
-            $('.dateexpirationvisa').prop('disabled', true);
+            $('.reference').prop('readonly', true);
+            $('.lieuentree').prop('readonly', true);
+            $('.dateentreemada').prop('readonly', true);
+            $('.dateexpirationvisa').prop('readonly', true);
 
             $('input[name="idTypeDemande"]').each(function () {
                 if ($(this).val() === 'TYPDMD000001') {
@@ -146,23 +146,23 @@ $(document).ready(function () {
     console.log(valeur);
     
     if (valeur == "TYPDMD000002" && $(".demandeurs").val() != "") {
-        $('.passport').prop('disabled', true);
-        $('.datedelivrance').prop('disabled', true);
-        $('.dateexpiration').prop('disabled', true);
+        $('.passport').prop('readonly', true);
+        $('.datedelivrance').prop('readonly', true);
+        $('.dateexpiration').prop('readonly', true);
 
         $('.title-passport').text('Passeport');
     }
     if (valeur == "TYPDMD000003" && $(".demandeurs").val() != "") {
-        $('.passport').prop('disabled', false);
-        $('.datedelivrance').prop('disabled', false);
-        $('.dateexpiration').prop('disabled', false);
+        $('.passport').prop('readonly', false);
+        $('.datedelivrance').prop('readonly', false);
+        $('.dateexpiration').prop('readonly', false);
         $('.title-passport').text('Nouvelle passeport');
     }
 
     if (valeur == "TYPDMD000001" && $(".demandeurs").val() != "") {
-        $('.passport').prop('disabled', true);
-        $('.datedelivrance').prop('disabled', true);
-        $('.dateexpiration').prop('disabled', true);
+        $('.passport').prop('readonly', true);
+        $('.datedelivrance').prop('readonly', true);
+        $('.dateexpiration').prop('readonly', true);
         $('.title-passport').text('Passeport');
     }
 
