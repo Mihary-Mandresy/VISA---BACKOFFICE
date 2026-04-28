@@ -47,7 +47,7 @@
                     <div class="field-group">
                         <div>
                             <label class="field-label">choisir un demandeur ou sans donner interieur</label>
-                            <select name="idDemandeur" class="demandeurs">
+                            <select name="demandeur.id" class="demandeurs">
                                  <option value="" selected >Sans donner interieur</option>
                                 <c:forEach items="${demandeurs}" var="demandeur">
                                     <option value="${demandeur.id}" >${demandeur.nom} - ${demandeur.prenom}</option>
