@@ -135,6 +135,45 @@
                                 <div><label class="field-label">Téléphone</label>
                                     <input class="tel"  type="tel" placeholder="+261 ..." name="demandeur.tel" value="${demande != null ? demande.tel : ''}"></div>
                                 </div>
+
+                                <div class="new-visa-carte" style="display: none;">
+                                    <div class="section-title">Visa</div>
+                                        <div class="field-group col6">
+                                        <div>
+                                            <label class="field-label">Référence visa</label>
+                                            <input type="text" class="reference" name="visa.reference" placeholder="Réf. du visa" >
+                                        </div>
+                                    </div>
+                                    <div class="field-group col2">
+                                        <div>
+                                            <label class="field-label">Date debut</label>
+                                            <input class="dateentreemada" type="date" name="visa.datedebut" >
+                                        </div>
+                                        <div>
+                                            <label class="field-label">Date d'expiration de visa</label>
+                                            <input class="dateexpirationvisa" type="date" name="visa.dateexpiration" >
+                                        </div>
+                                    </div>
+
+                                    <div class="section-title">Carte resident d'evil</div>
+                                        <div class="field-group col6">
+                                        <div>
+                                            <label class="field-label">Référence du carte</label>
+                                            <input type="text" class="reference" name="carte.reference" placeholder="Réf. du carte resident">
+                                        </div>
+                                    </div>
+                                    <div class="field-group col2">
+                                        <div>
+                                            <label class="field-label">Date debut</label>
+                                            <input class="dateentreemada" type="date" name="carte.datedebut">
+                                        </div>
+                                        <div>
+                                            <label class="field-label">Date d'expiration du carte visa</label>
+                                            <input class="dateexpirationvisa" type="date" name="carte.dateexpiration">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="info-card-item">
                                 <div class="section-title title-passport">Passeport</div>

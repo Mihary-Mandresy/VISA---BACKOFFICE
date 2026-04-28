@@ -166,10 +166,19 @@ $(document).ready(function () {
 
     if (valeur == "TYPDMD000003" && $(".demandeurs").val() == "") {
         $('.new-passport').show();
-        
+    
     }else{
         $('.new-passport').hide();
     }
+
+    if (valeur == "TYPDMD000003" && $(".demandeurs").val() == "" || valeur == "TYPDMD000002" && $(".demandeurs").val() == "") {
+        $('.new-visa-carte').show();
+    
+    }else{
+        $('.new-visa-carte').hide();
+    }
+
+    
     
 });
 });
