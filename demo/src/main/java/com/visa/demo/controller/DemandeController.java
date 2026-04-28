@@ -96,13 +96,13 @@ public class DemandeController {
             } else {
                 Demande demandeSource = new Demande();
                 DemandeObj demandeObj = new DemandeObj();
-
-                if (dto.getDemandeur().getId() == null) {
+                if (dto.getDemandeur().getId() == null || dto.getDemandeur().getId().isEmpty()) {
                     CarteResident carteResident = new CarteResident();
                     Visa visa = new Visa();
-                    demandeSource.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
-                            dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(),
-                            dto.getIdTypeVisa(), "ETATDMD000003", dto.getDate());
+                    demandeSource = demandeSource.save(c, null, dto.getDemandeur(), dto.getPassport(),
+                            dto.getVisatransformable(),
+                            dto.getDossiersStandard(), dto.getDossiersSup(), 
+                            "TYPDMD000001",dto.getIdTypeVisa(), "ETATDMD000003", dto.getDate());
                     // // creation carte resident
                     // carteResident.setIddemande(demandeSource.getId());
                     // carteResident.setIdpassport(dto.getPassport().getId());

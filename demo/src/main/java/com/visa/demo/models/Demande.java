@@ -44,24 +44,20 @@ public class Demande extends Entity<Demande> {
         try {
             c.setAutoCommit(false);
             boolean demandeurExist = false;
-            if(demandeur.getId() != null){
+            if(demandeur.getId() != null && !demandeur.getId().isEmpty()){
                 demandeurExist =true;
             }
             // Insertion Detaitl
             if(!demandeurExist){
-                System.out.println("tsa misy lesy e");
                 demandeur.insert(c);
             }
-
             passport.setIddemandeur(demandeur.getId());
             if(visa.getId() == null){
                 passport.insert(c);
             }
-
             visa.setIddemandeur(demandeur.getId());
             visa.setIdpassport(passport.getId());
             if(visa.getId() == null){
-                System.out.println("efa fantatrao malala: ");
                 visa.insert(c);
             }
 
@@ -351,7 +347,7 @@ public class Demande extends Entity<Demande> {
     public static DemandeObj getByIdDemandeur(String idDemandeur, Connection c) throws Exception{
         Demande d = new Demande();
         DemandeObj demandeObj = new DemandeObj();
-        List<Demande> demandes = (List<Demande>) d.select(c, " iddemandeur = '"+idDemandeur+"'", 1);
+        List<Demande> demandes = (List<Demande>) d.select(c, " iddemandeur = '"+idDemandeur+"' and idtypedemande='TYPDMD000001' order by datecreation desc", 1);
         if (demandes.size() == 0) {
             return null;
         }else{
