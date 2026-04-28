@@ -1,40 +1,40 @@
 [ ]Sprint 2: traitement sans donnee anterieure / avec donnee anterieure
-    [ ] Classes a creer :
-        [ ] : Comparaison 
-    [ ] Fonctions: 
-        [ ] : 
+    [x] Classes a creer :
+        [x] : Comparaison 
+    [x] Fonctions: 
+        [ X] : 
         [x] : void controleDtoDemande(dto): Dans DemandeDto
             Objectif :fonction qui sert a controler les attributs de dto
-        [] : Demandeur getLastDemande(c): dans la classe Demandeur
+        [x] : Demandeur getLastDemande(c): dans la classe Demandeur
             Objectif : fonction qui sert a recuperer la derniere demande d'un demandeur
-        [ ] : static int Demande comparerDeuxInstance(Object obj1, Object object2) dans Comparaison
+        [x] : static int Demande comparerDeuxInstance(Object obj1, Object object2) dans Comparaison
             Objectif : 
                         -comparer les valeurs des attributs de obj1 et obj2 
-                        -retourne 1 si toutes contraintes verifies false sinon
+                        -retourne 1 si toutes contraintes verifies -1 sinon
 
-            [ ]contraintes pour verifier egalite: 
-                [ ] : obj1 et obj2 doivent etre de meme instance , sinon exception
-                [ ] : tous les valeurs pour les memes attributs des deux instances doivent etre identiques
-            [ ]cas particulier:
-                [ ] : des qu'une valeur de l'un des objets est null ou 0 : on lance une exception
+            [x]contraintes pour verifier egalite: 
+                [x] : obj1 et obj2 doivent etre de meme instance , sinon exception
+                [x] : tous les valeurs pour les memes attributs des deux instances doivent etre identiques
+            [x]cas particulier:
+                [x] : des qu'une valeur de l'un des objets est null ou 0 : on lance une exception
 
-    [ ] : modification fonction save de DemandeController:
-        [ ] : appel controleDtoDemande pour le dto
-        [ ] : mettre le processus de creation de demande de type nouveau titre dans une condition 
-        [ ] : ajout d'une condition else:
-            [ ] : sans donne anterieure: 
-                [ ]: creation carte resident
-                [ ] : creation visa
-            [ ] cas 1 : type demande == transfert: 
-                [ ] : construire un nouvel objet passport  et sauvegarder 
+    [x] : modification fonction save de DemandeController:
+        [x] : appel controleDtoDemande pour le dto
+        [x] : mettre le processus de creation de demande de type nouveau titre dans une condition 
+        [x] : ajout d'une condition else:
+            [x] : sans donne anterieure: 
+                [x]: creation carte resident
+                [x] : creation visa
+            [x] cas 1 : type demande == transfert: 
+                [x] : construire un nouvel objet passport  et sauvegarder 
                 contraintes specifiques: 
-                    [ ] :verifier que le numero, date de delivrance et date d'expiration du passeport n'existe pas encore dans la base sinon Exception
-            [ ] cas 2 : duplicata
+                    [x] :verifier que le numero, date de delivrance et date d'expiration du passeport n'existe pas encore dans la base sinon Exception
+            [x] cas 2 : duplicata
 
-            contraintes communes des deux cas:
-                [ ] : verifier que les donnees du demandeur sont les memes ,sinon exception
-                [ ] : verifier que les donnees du passeport sont les memes ,sinon exception
-                [ ] : verifier que les donnees du visa transformables sont les memes ,sinon exception
+            [x]contraintes communes des deux cas:
+                [x] : verifier que les donnees du demandeur sont les memes ,sinon exception
+                [x] : verifier que les donnees du passeport sont les memes ,sinon exception
+                [x] : verifier que les donnees du visa transformables sont les memes ,sinon exception
 
 
 
