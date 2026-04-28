@@ -10,6 +10,7 @@
 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/form-visa.css">
         <script src="${pageContext.request.contextPath}/assets/js/jquery-4.0.0.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/form.js"></script>
     </head>
     <body>
 
@@ -42,6 +43,20 @@
             </div>
             <div class="form-body">
                 <div>
+                    <div class="section-title">Demandeur</div>
+                    <div class="field-group">
+                        <div>
+                            <label class="field-label">choisir un demandeur ou sans donner interieur</label>
+                            <select name="demandeur.id" class="demandeurs">
+                                 <option value="" selected >Sans donner interieur</option>
+                                <c:forEach items="${demandeurs}" var="demandeur">
+                                    <option value="${demandeur.id}" >${demandeur.nom} - ${demandeur.prenom}</option>
+                                </c:forEach>
+                            </select >
+                        </div>
+                    </div>
+                </div>
+                <div>
                     <div class="section-title">Type VISA demandé</div>
                     <div class="field-group">
                         <div>
@@ -64,6 +79,7 @@
                                 <input type="text"
                                 placeholder="Nom de famille"
                                 name="demandeur.nom"
+                                class="nom"
                                 value="${demande != null ? demande.nomdemandeur : ''}">
                             </div>
                             <div>
@@ -71,6 +87,7 @@
                                 <input type="text"
                                 placeholder="Prénoms"
                                 name="demandeur.prenom"
+                                class="prenom"
                                 value="${demande != null ? demande.prenomdemandeur : ''}">
                             </div>
                         </div>
@@ -78,18 +95,18 @@
 
                             <div>
                                 <label class="field-label">Date de naissance</label>
-                                <input type="date" placeholder="Tapez votre date de naissance" name="demandeur.dtn" value="${demande != null ? demande.dtndemandeur : ''}">
+                                <input type="date" class="dtn" placeholder="Tapez votre date de naissance" name="demandeur.dtn" value="${demande != null ? demande.dtndemandeur : ''}">
                             </div>
                             <div>
                                 <label class="field-label">profession</label>
-                                <input type="text" placeholder="Intitulé du poste" name="demandeur.profession" value="${demande != null ? demande.profession : ''}">
+                                <input type="text" class="profession" placeholder="Intitulé du poste" name="demandeur.profession" value="${demande != null ? demande.profession : ''}">
                             </div>
                         </div>
                         <div class="field-group col2">
 
                             <div>
                                 <label class="field-label">Situation familiale</label>
-                                <select name="demandeur.idsituationdefamille">
+                                <select name="demandeur.idsituationdefamille" class="situationFamiliale">
                                     <option value="">— Sélectionner —</option>
                                     <c:forEach items="${situationdefamilles}" var="sf">
                                         <option value="${sf.id}" ${demande.idsituationdefamille != null &&  demande.idsituationdefamille eq sf.id? "selected":''}>${sf.libelle}</option>
@@ -98,7 +115,7 @@
                             </div>
                             <div>
                                 <label class="field-label">Nationalite</label>
-                                <select name="demandeur.idnationalite">
+                                <select name="demandeur.idnationalite" class="nationalite">
                                     <option value="">— Sélectionner —</option>
                                     <c:forEach items="${nationalites}" var="nat">
                                         <option value="${nat.id}" ${demande.idnationalite != null &&  demande.idnationalite eq nat.id ? "selected":''}>${nat.libelle}</option>
@@ -109,32 +126,90 @@
                         <div class="field-group">
                             <div>
                                 <label class="field-label">Adresse à Madagascar</label>
-                                <input type="text" placeholder="Adresse complète" name="demandeur.adressemada" value="${demande != null ? demande.adressemada : ''}">
+                                <input type="text" class="adressemada" placeholder="Adresse complète" name="demandeur.adressemada" value="${demande != null ? demande.adressemada : ''}">
                             </div>
                         </div>
                         <div class="field-group col2">
                             <div><label class="field-label">Email</label>
-                                <input type="email" placeholder="exemple@email.com" name="demandeur.email" value="${demande != null ? demande.email : ''}"></div>
+                                <input class="email" type="email" placeholder="exemple@email.com" name="demandeur.email" value="${demande != null ? demande.email : ''}"></div>
                                 <div><label class="field-label">Téléphone</label>
-                                    <input type="tel" placeholder="+261 ..." name="demandeur.tel" value="${demande != null ? demande.tel : ''}"></div>
+                                    <input class="tel"  type="tel" placeholder="+261 ..." name="demandeur.tel" value="${demande != null ? demande.tel : ''}"></div>
                                 </div>
+
+                                <div class="new-visa-carte" style="display: none;">
+                                    <div class="section-title">Visa</div>
+                                        <div class="field-group col6">
+                                        <div>
+                                            <label class="field-label">Référence visa</label>
+                                            <input type="text" class="reference" name="visa.reference" placeholder="Réf. du visa" >
+                                        </div>
+                                    </div>
+                                    <div class="field-group col2">
+                                        <div>
+                                            <label class="field-label">Date debut</label>
+                                            <input class="dateentreemada" type="date" name="visa.datedebut" >
+                                        </div>
+                                        <div>
+                                            <label class="field-label">Date d'expiration de visa</label>
+                                            <input class="dateexpirationvisa" type="date" name="visa.dateexpiration" >
+                                        </div>
+                                    </div>
+
+                                    <div class="section-title">Carte resident</div>
+                                        <div class="field-group col6">
+                                        <div>
+                                            <label class="field-label">Référence du carte</label>
+                                            <input type="text" class="reference" name="carte.reference" placeholder="Réf. du carte resident">
+                                        </div>
+                                    </div>
+                                    <div class="field-group col2">
+                                        <div>
+                                            <label class="field-label">Date debut</label>
+                                            <input class="dateentreemada" type="date" name="carte.datedebut">
+                                        </div>
+                                        <div>
+                                            <label class="field-label">Date d'expiration du carte visa</label>
+                                            <input class="dateexpirationvisa" type="date" name="carte.dateexpiration">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="info-card-item">
-                                <div class="section-title">Passeport</div>
+                                <div class="section-title title-passport">Passeport</div>
                                 <div class="field-group">
                                     <div>
                                         <label class="field-label">Numéro de passeport</label>
-                                        <input type="text" name="passport.numero" placeholder="N° passeport" value="${demande != null ? demande.numeropassport : ''}">
+                                        <input class="passport" type="text" name="passport.numero" placeholder="N° passeport" value="${demande != null ? demande.numeropassport : ''}">
                                     </div>
                                 </div>
                                 <div class="field-group col2">
                                     <div>
                                         <label class="field-label">Date de délivrance</label>
-                                        <input type="date" name="passport.datedelivrance" value="${demande != null ? demande.datedelivrancepassport : ''}">
+                                        <input class="datedelivrance" type="date" name="passport.datedelivrance" value="${demande != null ? demande.datedelivrancepassport : ''}">
                                     </div>
                                     <div>
                                         <label class="field-label">Date d'expiration</label>
-                                        <input type="date" name="passport.dateexpiration" value="${demande != null ? demande.dateexpirationpassport : ''}">
+                                        <input class="dateexpiration" type="date" name="passport.dateexpiration" value="${demande != null ? demande.dateexpirationpassport : ''}">
+                                    </div>
+                                </div>
+                                <div class="new-passport" style="display: none;">
+                                    <div class="section-title title-passport">Nouveau passeport</div>
+                                    <div class="field-group">
+                                        <div>
+                                            <label class="field-label">Numéro de passeport</label>
+                                            <input class="passport" type="text" name="newpassport.numero" placeholder="N° passeport" >
+                                        </div>
+                                    </div>
+                                    <div class="field-group col2">
+                                        <div>
+                                            <label class="field-label">Date de délivrance</label>
+                                            <input class="datedelivrance" type="date" name="newpassport.datedelivrance" >
+                                        </div>
+                                        <div>
+                                            <label class="field-label">Date d'expiration</label>
+                                            <input class="dateexpiration" type="date" name="newpassport.dateexpiration" >
+                                        </div>
                                     </div>
                                 </div>
 
@@ -142,21 +217,21 @@
                                 <div class="field-group col2">
                                     <div>
                                         <label class="field-label">Référence visa</label>
-                                        <input type="text" name="visatransformable.reference" placeholder="Réf. du visa" value="${demande != null ? demande.referencevt : ''}">
+                                        <input type="text" class="reference" name="visatransformable.reference" placeholder="Réf. du visa" value="${demande != null ? demande.referencevt : ''}">
                                     </div>
                                     <div>
                                         <label class="field-label">Lieu d'entrée Madagascar</label>
-                                        <input type="text" name="visatransformable.lieuentree" placeholder="ex. aeroport de Nosy Be" value="${demande != null ? demande.lieuentree : ''}">
+                                        <input type="text" class="lieuentree" name="visatransformable.lieuentree" placeholder="ex. aeroport de Nosy Be" value="${demande != null ? demande.lieuentree : ''}">
                                     </div>
                                 </div>
                                 <div class="field-group col2">
                                     <div>
                                         <label class="field-label">Date d'entrée à Madagascar</label>
-                                        <input type="date" name="visatransformable.dateentreemada" value="${demande != null ? demande.dateentreemada : ''}">
+                                        <input class="dateentreemada" type="date" name="visatransformable.dateentreemada" value="${demande != null ? demande.dateentreemada : ''}">
                                     </div>
                                     <div>
                                         <label class="field-label">Date d'expiration de visa</label>
-                                        <input type="date" name="visatransformable.dateexpiration" value="${demande != null ? demande.dateexpirationvt : ''}">
+                                        <input class="dateexpirationvisa" type="date" name="visatransformable.dateexpiration" value="${demande != null ? demande.dateexpirationvt : ''}">
                                     </div>
                                 </div>
 
@@ -294,6 +369,11 @@
                                 console.log("Initialisation avec le type :", initialType);
                                 renderFolder(initialType);
                             }
+
+
+                            // ******* traitement du autocomplement du sans donne interieur **********
+
+                            
                         })
                     </script>
                 </body>

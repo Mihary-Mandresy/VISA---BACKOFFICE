@@ -16,17 +16,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nojpa.bd.connexion.DbConnexe;
 import com.visa.demo.dto.DemandeDto;
+import com.visa.demo.models.CarteResident;
 import com.visa.demo.models.CheckDossierStandard;
 import com.visa.demo.models.CheckDossierSupplementaire;
 import com.visa.demo.models.Demande;
+import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
 import com.visa.demo.models.Nationalite;
+import com.visa.demo.models.Passport;
 import com.visa.demo.models.SituationDeFamille;
 import com.visa.demo.models.TypeDemande;
 import com.visa.demo.models.TypeVisa;
+import com.visa.demo.models.Visa;
 import com.visa.demo.models.lib.DemandeDetailSansDossierLib;
 import com.visa.demo.models.lib.DemandeLib;
+import com.visa.demo.models.obj.DemandeObj;
+import com.visa.demo.utils.Comparaison;
 
 @Controller
 @RequestMapping("/demande")
@@ -56,7 +62,7 @@ public class DemandeController {
         try {
             DbConnexe dbConnexe = new DbConnexe();
             Connection c = dbConnexe.getConnection();
-
+            modelAndView.addObject("demandeurs", new Demandeur().findAll(c));
             modelAndView.addObject("nationalites", new Nationalite().findAll(c));
             modelAndView.addObject("situationdefamilles", new SituationDeFamille().findAll(c));
             modelAndView.addObject("typedemandes", new TypeDemande().findAll(c));
@@ -74,44 +80,115 @@ public class DemandeController {
     @PostMapping
     private String save(RedirectAttributes redirectAttributes, @ModelAttribute("formulaire") DemandeDto dto)
             throws Exception {
-        StringBuilder messageErreur = new StringBuilder();
-        if (dto.getDemandeur().getNom() == null || dto.getDemandeur().getNom().isEmpty()) {
-            messageErreur.append("le nom est requis").append(System.lineSeparator());
-        }
-        if (dto.getDemandeur().getDtn() == null) {
-            messageErreur.append("la date de naissance est requise").append(System.lineSeparator());
-        }
-        if (dto.getDemandeur().getAdressemada() == null || dto.getDemandeur().getAdressemada().isEmpty()) {
-            messageErreur.append("l'adresse a mada est requise").append(System.lineSeparator());
-        }
-        if (dto.getDemandeur().getIdnationalite() == null || dto.getDemandeur().getIdnationalite().isEmpty()) {
-            messageErreur.append("la nationalite est requise").append(System.lineSeparator());
-        }
-        if (dto.getDemandeur().getTel() == null || dto.getDemandeur().getTel().isEmpty()) {
-            messageErreur.append("le numero telephonique est requis").append(System.lineSeparator());
+        System.out.println("demandeur: " + dto.getDemandeur().getId());
+        StringBuilder messageErreur = new StringBuilder(dto.controleDtoDemande());
+        if (!messageErreur.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", messageErreur.toString());
+            return "redirect:/demande/form";
         }
         DbConnexe dbConnexe = new DbConnexe();
         Connection c = dbConnexe.getConnection();
         try {
-            Demande demande = new Demande();
-            if (dto.getVisatransformable().getDateentreemada() instanceof LocalDate) {
-
+            if (c != null) {
+                System.out.println("misy va :"+c);
+                c.setAutoCommit(false);
             }
-            demande.save(c, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
-                    dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(),
-                    dto.getIdTypeVisa(), dto.getDate());
+            if (dto.getIdTypeDemande().equals("TYPDMD000001")) {
+                Demande demande = new Demande();
+                demande.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
+                        dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(),
+                        dto.getIdTypeVisa(), "ETATDMD000001", dto.getDate());
+            } else {
+                Demande demandeSource = new Demande();
+                DemandeObj demandeObj = new DemandeObj();
+                if (dto.getDemandeur().getId() == null || dto.getDemandeur().getId().isEmpty()) {
+                    CarteResident carteResident = new CarteResident();
+                    Visa visa = new Visa();
+                    demandeSource = demandeSource.save(c, null, dto.getDemandeur(), dto.getPassport(),
+                            dto.getVisatransformable(),
+                            dto.getDossiersStandard(), dto.getDossiersSup(),
+                            "TYPDMD000001", dto.getIdTypeVisa(), "ETATDMD000003", dto.getDate());
+
+                    // // creation carte resident
+                    carteResident.setIddemande(demandeSource.getId());
+                    carteResident.setIdpassport(dto.getPassport().getId());
+                    carteResident.setDatedebut(dto.getCarte().getDatedebut());
+                    carteResident.setDateexpiration(dto.getCarte().getDateexpiration());
+                    carteResident.setReference(dto.getCarte().getReference());
+                    carteResident.insert(c);
+
+                    // // creation visa
+                    visa.setIddemande(demandeSource.getId());
+                    visa.setIdpassport(dto.getPassport().getId());
+                    visa.setDatedebut(dto.getVisa().getDatedebut());
+                    visa.setDateexpiration(dto.getVisa().getDateexpiration());
+                    visa.setReference(dto.getVisa().getReference());
+                    visa.setIdtypevisa(dto.getIdTypeVisa());
+                    visa.insert(c);
+
+                } else {
+                    demandeObj = Demande.getByIdDemandeur(dto.getDemandeur().getId(), c);
+                    if (dto.getIdTypeDemande().equals("TYPDMD000002")) {
+                        if (Comparaison.comparerDeuxInstances(demandeObj.getPassport(), dto.getPassport()) == -1) {
+                            messageErreur.append("on n'a pas besoin de nouveau passport pour ce type demande")
+                                    .append(System.lineSeparator());
+                        }
+                    }
+                    if (Comparaison.comparerDeuxInstances(demandeObj.getVisatransformable(),
+                            dto.getVisatransformable()) == -1) {
+                        messageErreur.append("aucun nouveau visa transformable n'est requis")
+                                .append(System.lineSeparator());
+                    }
+                    if (Comparaison.comparerDeuxInstances(demandeObj.getDemandeur(), dto.getDemandeur()) == -1) {
+                        messageErreur.append(
+                                "aucune nouvelle information de demandeur n'est necessaire pour ce type de demande")
+                                .append(System.lineSeparator());
+                    }
+                    demandeSource = demandeSource.getInstanceByDemandeObj(demandeObj);
+                    if (messageErreur.toString() != null && !messageErreur.toString().isEmpty()) {
+                        throw new Exception("");
+                    }
+                }
+                Demande demande = new Demande();
+                System.out.println("eto aho: " + dto.getNewpassport().getDatedelivrance());
+                System.out.println("eto ihany aho: " + dto.getPassport().getDatedelivrance());
+                Passport p = dto.getNewpassport() != null ? dto.getNewpassport() : dto.getPassport();
+                System.out.println("mitovy ve: " + (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1));
+                if (dto.getIdTypeDemande().equals("TYPDMD000003")) {
+                    if (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1) {
+                        p.setIddemandeur(dto.getDemandeur().getId());
+                        p.insert(c);
+                    } else {
+                        messageErreur.append("un nouveau passport est requis")
+                                .append(System.lineSeparator());
+                        throw new Exception(messageErreur.toString());
+                    }
+                }
+                demande.save(c, demandeSource.getId(), dto.getDemandeur(), p,
+                        dto.getVisatransformable(),
+                        dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(), dto.getIdTypeVisa(),
+                        "ETATDMD000001", dto.getDate());
+            }
+            if (c != null) {
+                c.commit();
+            }
 
             redirectAttributes.addFlashAttribute("message", "Demande Crée avec succes !");
         } catch (Exception e) {
             e.printStackTrace();
-            if(!messageErreur.toString().isEmpty()){
-                redirectAttributes.addFlashAttribute("error",messageErreur.toString());
+            System.out.println("connection e : "+c);
+            if (c != null) {
+                System.out.println("mankato rollback");
+                c.rollback();
             }
-            else{
+            if (!messageErreur.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", messageErreur.toString());
+            } else {
                 redirectAttributes.addFlashAttribute("error", e.getMessage());
             }
         } finally {
             if (c != null) {
+                c.setAutoCommit(true);
                 c.close();
             }
         }
@@ -163,7 +240,7 @@ public class DemandeController {
             demande.update(c, dto.getIddemande(), dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
                     dto.getDossiersStandard(), dto.getDossiersSup(), dto.getDossiersStandardConcatIdChecks(),
                     dto.getDossiersSupplementairesConcatIdChecks(), dto.getIdTypeDemande(),
-                    dto.getIdTypeVisa(),dto.getIdTypeVisaPrecedent(), dto.getDate());
+                    dto.getIdTypeVisa(), dto.getIdTypeVisaPrecedent(), dto.getDate());
 
             redirectAttributes.addFlashAttribute("message", "Demande modifiée avec succes !");
         } catch (Exception e) {
