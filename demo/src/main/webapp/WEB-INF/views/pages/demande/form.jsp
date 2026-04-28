@@ -154,6 +154,25 @@
                                         <input class="dateexpiration" type="date" name="passport.dateexpiration" value="${demande != null ? demande.dateexpirationpassport : ''}">
                                     </div>
                                 </div>
+                                <div class="new-passport" style="display: none;">
+                                    <div class="section-title title-passport">Nouveau passeport</div>
+                                    <div class="field-group">
+                                        <div>
+                                            <label class="field-label">Numéro de passeport</label>
+                                            <input class="passport" type="text" name="newpassport.numero" placeholder="N° passeport" >
+                                        </div>
+                                    </div>
+                                    <div class="field-group col2">
+                                        <div>
+                                            <label class="field-label">Date de délivrance</label>
+                                            <input class="datedelivrance" type="date" name="newpassport.datedelivrance" >
+                                        </div>
+                                        <div>
+                                            <label class="field-label">Date d'expiration</label>
+                                            <input class="dateexpiration" type="date" name="newpassport.dateexpiration" >
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="section-title">Visa transformable</div>
                                 <div class="field-group col2">

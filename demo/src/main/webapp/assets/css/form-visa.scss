@@ -147,13 +147,13 @@ select {
 
 input,
 select {
-  &:disabled {
+  &:read-only {
     background-color: #e0e0e0;
     color: #777;
     cursor: not-allowed;
     opacity: 0.8;
   }
-}
+} 
 /* =========================
    RADIO / CHECKBOX
 ========================= */
