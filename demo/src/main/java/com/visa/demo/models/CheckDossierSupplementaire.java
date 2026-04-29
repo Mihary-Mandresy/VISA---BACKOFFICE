@@ -1,7 +1,5 @@
 package com.visa.demo.models;
 
-import java.util.List;
-
 import com.nojpa.bd.entity.Entity;
 
 public class CheckDossierSupplementaire extends Entity<CheckDossierSupplementaire> {
