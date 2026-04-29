@@ -29,7 +29,7 @@
                 [ ] : Visa approveScan(Connection c, String iddemande)
                     - Cree une carte residence et une visa a partir d'une demande et change l'etat du demande
             [ ] : Controller (Mihary)
-                [ ] : Get -> handleScan : iddemande
+                [x] : Get -> handleScan : iddemande
                     + DossierStandard
                     + DossierSupplementaire
                 [ ] : Post -> ScanDemande : Map<String, MultipartFile> files, iddemande
