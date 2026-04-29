@@ -20,13 +20,13 @@
                     - Recuperer tous les dossiers standard
                 [x] : List<DossierSupplementaire> getAllDossierSupplementaire(Connection c, String idtypevisa)
                     - Recuperer tous les dossiers supplementaire a l'aide d'un idtypevisa
-                [ ] : boolean isFullFolder(Connection c, String iddemande)
+                [ ] : boolean isFullFolder(Connection c)
                     - Fonction qui checker si tous les dossier du demande sont Ok
                 [x] : void changeEtatDemande(String idetat)
                     - Changer l'Etat du demande a l'aide d'un Id Demande
-                [ ] : void scanVisa(Connection c, String iddemande)
+                [ ] : void scanVisa(Connection c)
                     - Fonction qui scan une demande et si tous les dossiers sont Ok, il modifier l'etat du demande par visa scanne
-                [ ] : Visa approveScan(Connection c, String iddemande)
+                [ ] : Visa approveScan(Connection c)
                     - Cree une carte residence et une visa a partir d'une demande et change l'etat du demande
             [ ] : Controller (Mihary)
                 [x] : Get -> handleScan : iddemande
