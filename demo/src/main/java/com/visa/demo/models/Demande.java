@@ -10,6 +10,7 @@ import java.util.Map;
 import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.bd.entity.Entity;
 import com.visa.demo.models.obj.DemandeObj;
+import com.visa.demo.utils.konst.C_EtatDemande;
 
 public class Demande extends Entity<Demande> {
 
@@ -30,6 +31,13 @@ public class Demande extends Entity<Demande> {
 
     public void changeEtatDemande(String idetatdemande) {
         setIdetatdemande(idetatdemande);
+    }
+
+    public void scanVisa(Connection c) throws Exception {
+        if (isFullFolder(c)) {
+            setIdetatdemande(C_EtatDemande.REQUEST_SCANNED);
+            save(c);
+        }
     }
 
     public boolean isFullFolder(Connection c) throws Exception {

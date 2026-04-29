@@ -24,7 +24,7 @@
                     - Fonction qui checker si tous les dossier du demande sont Ok
                 [x] : void changeEtatDemande(String idetat)
                     - Changer l'Etat du demande a l'aide d'un Id Demande
-                [ ] : void scanVisa(Connection c)
+                [x] : void scanVisa(Connection c)
                     - Fonction qui scan une demande et si tous les dossiers sont Ok, il modifier l'etat du demande par visa scanne
                 [ ] : Visa approveScan(Connection c)
                     - Cree une carte residence et une visa a partir d'une demande et change l'etat du demande
