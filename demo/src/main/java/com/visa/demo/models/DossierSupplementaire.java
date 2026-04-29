@@ -1,5 +1,8 @@
 package com.visa.demo.models;
 
+import java.sql.Connection;
+import java.util.List;
+
 import com.nojpa.bd.entity.Entity;
 
 public class DossierSupplementaire extends Entity<DossierSupplementaire> {
@@ -11,6 +14,10 @@ public class DossierSupplementaire extends Entity<DossierSupplementaire> {
     public DossierSupplementaire() {
         setNomTable("dossiersupplementaire");
         setSigle("DSU");
+    }
+
+    public List<DossierSupplementaire> getAllByIdTypeVisa(Connection c, String idtypevisa) throws Exception {
+        return select(c, "idtypevisa = '" + idtypevisa + "'", null);
     }
 
     public String getLibelle() {

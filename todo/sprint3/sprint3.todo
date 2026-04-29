@@ -16,9 +16,9 @@
         [x] : Synchronise les entites
         [ ] : Fonctionnalite
             [ ] : Fonction (Mihary)
-                [ ] : List<DossierStandard> getAllDossierStandard(Connection c)
+                [x] : List<DossierStandard> getAllDossierStandard(Connection c)
                     - Recuperer tous les dossiers standard
-                [ ] : List<DossierSupplementaire> getAllDossierSupplementaire(Connection c, String idtypevisa)
+                [x] : List<DossierSupplementaire> getAllDossierSupplementaire(Connection c, String idtypevisa)
                     - Recuperer tous les dossiers supplementaire a l'aide d'un idtypevisa
                 [ ] : boolean isFullFolder(Connection c, String iddemande)
                     - Fonction qui checker si tous les dossier du demande sont Ok
