@@ -362,7 +362,6 @@ public class Demande extends Entity<Demande> {
     public static DemandeObj getByIdDemandeur(String idDemandeur, Connection c) throws Exception {
         Demande d = new Demande();
         DemandeObj demandeObj = new DemandeObj();
-        System.out.println("id demandeur ho ah: "+ idDemandeur);
         List<Demande> demandes = (List<Demande>) d.select(c,
                 " iddemandeur = '" + idDemandeur + "' and idtypedemande='TYPDMD000001' order by datecreation desc", 1);
         if (demandes.size() == 0) {

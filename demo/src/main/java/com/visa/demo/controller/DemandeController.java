@@ -79,7 +79,6 @@ public class DemandeController {
     @PostMapping
     private String save(RedirectAttributes redirectAttributes, @ModelAttribute("formulaire") DemandeDto dto)
             throws Exception {
-        System.out.println("demandeur: " + dto.getDemandeur().getId());
         StringBuilder messageErreur = new StringBuilder(dto.controleDtoDemande());
         if (!messageErreur.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", messageErreur.toString());
@@ -89,7 +88,6 @@ public class DemandeController {
         Connection c = dbConnexe.getConnection();
         try {
             if (c != null) {
-                System.out.println("misy va :"+c);
                 c.setAutoCommit(false);
             }
             if (dto.getIdTypeDemande().equals("TYPDMD000001")) {
@@ -149,10 +147,7 @@ public class DemandeController {
                     }
                 }
                 Demande demande = new Demande();
-                System.out.println("eto aho: " + dto.getNewpassport().getDatedelivrance());
-                System.out.println("eto ihany aho: " + dto.getPassport().getDatedelivrance());
                 Passport p = dto.getNewpassport() != null ? dto.getNewpassport() : dto.getPassport();
-                System.out.println("mitovy ve: " + (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1));
                 if (dto.getIdTypeDemande().equals("TYPDMD000003")) {
                     if (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1) {
                         p.setIddemandeur(dto.getDemandeur().getId());
@@ -175,9 +170,7 @@ public class DemandeController {
             redirectAttributes.addFlashAttribute("message", "Demande Crée avec succes !");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("connection e : "+c);
             if (c != null) {
-                System.out.println("mankato rollback");
                 c.rollback();
             }
             if (!messageErreur.isEmpty()) {
@@ -233,7 +226,6 @@ public class DemandeController {
         DbConnexe dbConnexe = new DbConnexe();
         Connection c = dbConnexe.getConnection();
         try {
-            System.out.println(dto.getPassport().getId());
             Demande demande = new Demande();
             demande.setId(dto.getIddemande());
             demande.update(c, dto.getIddemande(), dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
