@@ -54,6 +54,11 @@ public class DemandeController {
         return "pages/demande/list";
     }
 
+    @GetMapping("/scan")
+    private String scanDemande(Model model) throws Exception {
+        return "pages/demande/scan";
+    }
+
     @GetMapping("/form")
     private ModelAndView form() throws Exception {
         ModelAndView modelAndView = new ModelAndView("pages/demande/form");
