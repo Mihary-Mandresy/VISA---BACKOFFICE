@@ -1,6 +1,5 @@
 package com.visa.demo.controller;
 
-import java.io.File;
 import java.sql.Connection;
 import java.util.Map;
 
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.test.FilePdf;
+import com.visa.demo.dto.ApproveDto;
 import com.visa.demo.models.CheckDossierStandard;
 import com.visa.demo.models.CheckDossierSupplementaire;
 import com.visa.demo.models.Demande;
@@ -34,6 +34,26 @@ public class ScanController {
         model.addAttribute("dsups", new DossierSupplementaire().getAllByIdTypeVisa(c, id));
 
         return "pages/demande/scan/scan";
+    }
+
+    @GetMapping("/approve")
+    public String formApprove() throws Exception {
+        return "page/demande/scan/approve";
+    }
+
+    @PostMapping("/approve")
+    public String approveDemande(ApproveDto approveDto, RedirectAttributes redirectAttributes) throws Exception  {
+        Connection c = new DbConnexe().getConnection();
+        try {
+            
+            Demande d = new Demande().findByidWithThrows(c, approveDto.getIddemande());
+            d.approve(c,  approveDto.getDatedebut(), approveDto.getDatefin());
+
+            redirectAttributes.addFlashAttribute("message", "Approbation avec succes !");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/demande/scan/approve";
     }
 
     @PostMapping("/{id}")

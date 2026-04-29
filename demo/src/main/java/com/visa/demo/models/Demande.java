@@ -29,6 +29,37 @@ public class Demande extends Entity<Demande> {
         setSigle("DMD");
     }
 
+    public void approve(Connection c, LocalDate debut, LocalDate expiration) throws Exception {
+        c.setAutoCommit(false);
+        try {
+            
+            Visa visa = new Visa();
+            visa.setDatedebut(debut);
+            visa.setDateexpiration(expiration);
+            visa.setReference("REFV_" + System.currentTimeMillis());
+            visa.setIdpassport(getIdpassport());
+            visa.setIdtypevisa(getIdtypedemande());
+
+            visa.insert(c);
+
+            CarteResident carteResident = new CarteResident();
+            carteResident.setDatedebut(debut);
+            carteResident.setDateexpiration(expiration);
+            carteResident.setReference("REFC_" + System.currentTimeMillis());
+
+            carteResident.insert(c);
+
+            setIdetatdemande(C_EtatDemande.REQUEST_APPROVED);
+            c.commit();
+        } catch (Exception e) {
+            c.rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            c.setAutoCommit(true);
+        }
+    }
+
     public void changeEtatDemande(String idetatdemande) {
         setIdetatdemande(idetatdemande);
     }
