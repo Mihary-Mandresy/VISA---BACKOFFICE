@@ -20,7 +20,7 @@
                     - Recuperer tous les dossiers standard
                 [x] : List<DossierSupplementaire> getAllDossierSupplementaire(Connection c, String idtypevisa)
                     - Recuperer tous les dossiers supplementaire a l'aide d'un idtypevisa
-                [ ] : boolean isFullFolder(Connection c)
+                [x] : boolean isFullFolder(Connection c)
                     - Fonction qui checker si tous les dossier du demande sont Ok
                 [x] : void changeEtatDemande(String idetat)
                     - Changer l'Etat du demande a l'aide d'un Id Demande

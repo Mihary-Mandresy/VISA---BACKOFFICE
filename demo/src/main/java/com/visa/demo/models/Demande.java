@@ -32,6 +32,43 @@ public class Demande extends Entity<Demande> {
         setIdetatdemande(idetatdemande);
     }
 
+    public boolean isFullFolder(Connection c) throws Exception {
+
+        List<DossierStandard> dstds = new DossierStandard().select(c, "obligatoire = true",null);
+        List<DossierSupplementaire> dsups = new DossierSupplementaire().select(c, String.format("idtypevisa = '%s' and obligatoire = true", idtypevisa), null);
+
+        List<CheckDossierStandard> c_dsts = new CheckDossierStandard().select(c, String.format("iddemande = '%s'", id), null);
+        List<CheckDossierSupplementaire> c_dsups = new CheckDossierSupplementaire().select(c, String.format("iddemande = '%s'", id), null);
+        
+        for (CheckDossierStandard cdstd : c_dsts) {
+            boolean isPresent = false;
+            for (DossierStandard dstd : dstds) {
+                if (cdstd.getIddemande().equals(dstd.getId()) && cdstd.isExist() && cdstd.getIdfilepdf() != null) {
+                    isPresent = true;
+                    break;
+                }
+            }
+            if (!isPresent) {
+                return false;
+            }
+        }
+
+        for (CheckDossierSupplementaire cdsup : c_dsups) {
+            boolean isPresent = false;
+            for (DossierSupplementaire dsup : dsups) {
+                if (cdsup.getIddemande().equals(dsup.getId()) && cdsup.isExist() && cdsup.getIdfilepdf() != null) {
+                    isPresent = true;
+                    break;
+                }
+            }
+            if (!isPresent) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      *
      * @param c
@@ -120,20 +157,6 @@ public class Demande extends Entity<Demande> {
             }
         }
     }
-
-    // =========== Verification (Mbola tsy vita tsara ) ===========
-
-    public boolean isFullStandard(Connection c, List<String> idStandard) throws Exception {
-        return new DossierStandard().findAll(c).stream()
-                .allMatch(e -> idStandard.contains(e.getId()));
-    }
-
-    public boolean isFullSup(Connection c, List<String> idSup, String idStatut) throws Exception {
-        return new DossierSupplementaire().select(c, String.format("idstatutvisa like \"%s\"", idStatut), null).stream()
-                .allMatch(e -> idSup.contains(e.getId()));
-    }
-
-    // =========== Verification ===========
 
     public String getIdtypedemande() {
         return idtypedemande;
