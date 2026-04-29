@@ -10,8 +10,8 @@
             [ ] : Boucler les dossier et mettre le input type file en dynamique
     [ ] : Back
         [ ] : Base (Mihary)
-            [ ] : Cree une table filepdf
-            [ ] : Ajouter une colonne idfilepdf dans les tables checkdossiers
+            [x] : Cree une table filepdf
+            [x] : Ajouter une colonne idfilepdf dans les tables checkdossiers
             [ ] : Migration sprint 3
         [ ] : Fonctionnalite
             [ ] : Fonction (Mihary)
