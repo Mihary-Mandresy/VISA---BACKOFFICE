@@ -9,10 +9,11 @@
                 [ ] : Appeller le fonction getAllDossierSupplementaire et l'envoyer dans le view
             [ ] : Boucler les dossier et mettre le input type file en dynamique
     [ ] : Back
-        [ ] : Base (Mihary)
+        [x] : Base (Mihary)
             [x] : Cree une table filepdf
             [x] : Ajouter une colonne idfilepdf dans les tables checkdossiers
             [x] : Migration sprint 3
+        [x] : Synchronise les entites
         [ ] : Fonctionnalite
             [ ] : Fonction (Mihary)
                 [ ] : List<DossierStandard> getAllDossierStandard(Connection c)
