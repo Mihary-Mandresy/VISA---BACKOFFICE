@@ -12,7 +12,7 @@
         [ ] : Base (Mihary)
             [x] : Cree une table filepdf
             [x] : Ajouter une colonne idfilepdf dans les tables checkdossiers
-            [ ] : Migration sprint 3
+            [x] : Migration sprint 3
         [ ] : Fonctionnalite
             [ ] : Fonction (Mihary)
                 [ ] : List<DossierStandard> getAllDossierStandard(Connection c)
