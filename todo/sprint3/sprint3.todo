@@ -32,5 +32,5 @@
                 [x] : Get -> handleScan : iddemande
                     + DossierStandard
                     + DossierSupplementaire
-                [ ] : Post -> ScanDemande : Map<String, MultipartFile> files, iddemande
+                [x] : Post -> saveScan : Map<String, MultipartFile> files, iddemande
                 [ ] : Get -> ApproveScan : iddemande
