@@ -28,6 +28,10 @@ public class Demande extends Entity<Demande> {
         setSigle("DMD");
     }
 
+    public void changeEtatDemande(String idetatdemande) {
+        setIdetatdemande(idetatdemande);
+    }
+
     /**
      *
      * @param c

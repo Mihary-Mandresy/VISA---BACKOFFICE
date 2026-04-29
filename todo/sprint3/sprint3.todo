@@ -22,7 +22,7 @@
                     - Recuperer tous les dossiers supplementaire a l'aide d'un idtypevisa
                 [ ] : boolean isFullFolder(Connection c, String iddemande)
                     - Fonction qui checker si tous les dossier du demande sont Ok
-                [ ] : void changeEtatDemande(String iddemande)
+                [x] : void changeEtatDemande(String idetat)
                     - Changer l'Etat du demande a l'aide d'un Id Demande
                 [ ] : void scanVisa(Connection c, String iddemande)
                     - Fonction qui scan une demande et si tous les dossiers sont Ok, il modifier l'etat du demande par visa scanne
