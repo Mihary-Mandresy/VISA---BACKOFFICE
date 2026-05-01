@@ -40,7 +40,7 @@
                             <i  class="mdi mdi-eye"></i>
                             </a>
 
-                            <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/detail?id=${demande.id}">
+                            <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/scan/${demande.id}">
                             <i  class="mdi mdi-credit-card-scan"></i>
                             </a>
                         </td>

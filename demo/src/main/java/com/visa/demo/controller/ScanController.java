@@ -29,7 +29,8 @@ public class ScanController {
     @GetMapping("/{id}")
     public String handleScan(@PathVariable("id") String id, Model model) throws Exception {
         Connection c = new DbConnexe().getConnection();
-
+        Demande demande = new Demande().findByid(c, id);
+        // TyppeVisa typeVisa = new TyppeVisa().findByid(c, demande.getIdtypevisa());
         model.addAttribute("dstds", new DossierStandard().findAll(c));
         model.addAttribute("dsups", new DossierSupplementaire().getAllByIdTypeVisa(c, id));
 

@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -25,13 +27,15 @@
             <div class="groupe-infos">
                 <div class="info-card-item">
                     <div class="section-title">Dossier standard</div>
+                    
+                    <c:forEach items="${dstds}" var="dossierStandard">
                     <div class="field-group">
                         <div>
-                            <label class="field-label">Passport</label>
+                            <label class="field-label">${dossierStandard.libelle}</label>
                             <input type="file" name="files" multiple />
-
                         </div>
                     </div>
+                    </c:forEach>
                 </div>
                 <div class="info-card-item">
                     <div class="section-title">Dossier supplementaire</div>
