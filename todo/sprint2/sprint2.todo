@@ -1,13 +1,13 @@
 [ ]Sprint 2: traitement sans donnee anterieure / avec donnee anterieure
     [x] Classes a creer :
-        [x] : Comparaison 
+        [x] : Comparaison (Valisoa)
+        [x] : DemandeObj  (Judi)
     [x] Fonctions: 
-        [ X] : 
-        [x] : void controleDtoDemande(dto): Dans DemandeDto
+        [x] : void controleDtoDemande(dto): Dans DemandeDto (Valisoa)
             Objectif :fonction qui sert a controler les attributs de dto
-        [x] : Demandeur getLastDemande(c): dans la classe Demandeur
-            Objectif : fonction qui sert a recuperer la derniere demande d'un demandeur
-        [x] : static int Demande comparerDeuxInstance(Object obj1, Object object2) dans Comparaison
+        [x] : static DemandeObj getByIdDemandeur(String iddemandeur,Connection c): dans la classe Demande (Judi)
+            Objectif : fonction qui sert a recuperer la derniere demande de type nouveau titre d'un demandeur
+        [x] : static int Demande comparerDeuxInstance(Object obj1, Object object2) dans Comparaison (Valisoa)
             Objectif : 
                         -comparer les valeurs des attributs de obj1 et obj2 
                         -retourne 1 si toutes contraintes verifies -1 sinon
@@ -18,7 +18,7 @@
             [x]cas particulier:
                 [x] : des qu'une valeur de l'un des objets est null ou 0 : on lance une exception
 
-    [x] : modification fonction save de DemandeController:
+    [x] : modification fonction save de DemandeController: (Valisoa)
         [x] : appel controleDtoDemande pour le dto
         [x] : mettre le processus de creation de demande de type nouveau titre dans une condition 
         [x] : ajout d'une condition else:
@@ -35,6 +35,41 @@
                 [x] : verifier que les donnees du demandeur sont les memes ,sinon exception
                 [x] : verifier que les donnees du passeport sont les memes ,sinon exception
                 [x] : verifier que les donnees du visa transformables sont les memes ,sinon exception
+    [x] : modification classe DemandeDto : (Valisoa)
+        ajout d'attributs newpassport (Passport), carte (CarteResident) , visa (Visa)
+
+     
+    [x] Affichage (Judi)
+        [x] : ajout de select : 
+            -name = "demandeur.id"
+            -value = id demandeur
+            Description : il contient l'option sans donnee anterieure(ici value est '' mais pas id demandeur) et la liste des demandeurs
+        [x] : ajout d'autres inputs :
+                Cas d'existence :
+                    # Sans donnee anterieur
+                        * si on dans le select, et type de demande duplicata ou transfert
+                            + inputs pour visa a creer:
+                                -reference (text")
+                                -datedebut ("date")
+                                -dateexpiration("date)
+                            + input pour carte resident:
+                                meme chose que ceux d'en haut
+
+                            + input pour le nouveau passport:
+                                -reference ("text")
+                                -datedelivrance("date")
+                                -dateexpiration("date")
+
+                    
+                    # Avec donnee anterieure : 
+                        *on choisit un demandeur depuis l'input,
+                            tous les champs sont remplis et en mode "readonly", et les dossiers sont "caches"
+
+                        * si on choisit transfert comme type de demande
+                            les champs dates du passport devient modifiables
+
+
+                                            
 
 
 
