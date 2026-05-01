@@ -56,7 +56,7 @@ public class DemandeController {
 
     @GetMapping("/scan")
     private String scanDemande(Model model) throws Exception {
-        return "pages/demande/scan";
+        return "pages/demande/scan/scan";
     }
 
     @GetMapping("/form")
