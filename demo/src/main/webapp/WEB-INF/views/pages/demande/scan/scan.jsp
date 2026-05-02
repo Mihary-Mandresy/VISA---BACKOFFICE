@@ -18,7 +18,7 @@
     <%@ include file="../../../includes/header.jsp" %>
     <main>
     <div class="title-page"><h2>Scanner Le demande</h2></div>
-    <form class="form-wrap" action="${pageContext.request.contextPath}/upload" method="post" enctype="multipart/form-data">
+    <form class="form-wrap" action="./${id}" method="post" enctype="multipart/form-data">
 
         <div class="form-header">
             <h2>Scanner les dossiers</h2>
@@ -32,7 +32,7 @@
                     <div class="field-group">
                         <div>
                             <label class="field-label">${dossierStandard.libelle}</label>
-                            <input type="file" name="files" multiple />
+                            <input type="file" name="${dossierStandard.id}" multiple />
                         </div>
                     </div>
                     </c:forEach>

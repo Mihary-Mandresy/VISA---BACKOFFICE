@@ -44,8 +44,8 @@ public class DemandeController {
             c = new DbConnexe().getConnection();
             model.addAttribute("listeDemandes", new DemandeLib().findAll(c));
         } catch (Exception e) {
-            // TODO: handle exception
             model.addAttribute("error", e.getMessage());
+            e.printStackTrace();
         } finally {
             if (c != null) {
                 c.close();
@@ -214,7 +214,6 @@ public class DemandeController {
             mv.addObject("dossiersupplementaires", new DossierSupplementaire().findAll(c));
             mv.addObject("formulaire", new DemandeDto());
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
             mv.addObject("error", e.getMessage());
         } finally {
