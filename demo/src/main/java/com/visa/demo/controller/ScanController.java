@@ -14,13 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nojpa.bd.connexion.DbConnexe;
-import com.nojpa.test.FilePdf;
 import com.visa.demo.dto.ApproveDto;
 import com.visa.demo.models.CheckDossierStandard;
 import com.visa.demo.models.CheckDossierSupplementaire;
 import com.visa.demo.models.Demande;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
+import com.visa.demo.models.FilePdf;
 
 @Controller
 @RequestMapping("/demande/scan")
@@ -29,12 +29,11 @@ public class ScanController {
     @GetMapping("/{id}")
     public String handleScan(@PathVariable("id") String id, Model model) throws Exception {
         Connection c = new DbConnexe().getConnection();
-        Demande demande = new Demande().findByid(c, id);
-        // TyppeVisa typeVisa = new TyppeVisa().findByid(c, demande.getIdtypevisa());
         model.addAttribute("dstds", new DossierStandard().findAll(c));
 
         Demande dmd = new Demande().findByid(c, id);
         model.addAttribute("dsups", new DossierSupplementaire().getAllByIdTypeVisa(c, dmd.getIdtypevisa()));
+        model.addAttribute("id", id);
         return "pages/demande/scan/scan";
     }
 
@@ -44,12 +43,12 @@ public class ScanController {
     }
 
     @PostMapping("/approve")
-    public String approveDemande(ApproveDto approveDto, RedirectAttributes redirectAttributes) throws Exception  {
+    public String approveDemande(ApproveDto approveDto, RedirectAttributes redirectAttributes) throws Exception {
         Connection c = new DbConnexe().getConnection();
         try {
-            
+
             Demande d = new Demande().findByidWithThrows(c, approveDto.getIddemande());
-            d.approve(c,  approveDto.getDatedebut(), approveDto.getDatefin());
+            d.approve(c, approveDto.getDatedebut(), approveDto.getDatefin());
 
             redirectAttributes.addFlashAttribute("message", "Approbation avec succes !");
         } catch (Exception e) {
@@ -74,27 +73,30 @@ public class ScanController {
 
                     FilePdf filePdf = new FilePdf();
                     filePdf.setNom(id + "_" + "_" + System.currentTimeMillis() + "_" + name);
-                    filePdf.setContenu(data);
+                    filePdf.setContenue(data);
 
-                    filePdf.insert(c);
+                    if (data.length > 0) {
+                        filePdf.insert(c);
 
-                    if (name.startsWith("CDST")) {
-                        CheckDossierStandard checkDossierStandard = new CheckDossierStandard();
-                        checkDossierStandard.setExist(true);
-                        checkDossierStandard.setIdfilepdf(filePdf.getId());
-                        checkDossierStandard.setIddemande(id);
-                        checkDossierStandard.setIddossierstandard(name);
+                        if (name.startsWith("DST")) {
+                            CheckDossierStandard checkDossierStandard = new CheckDossierStandard();
+                            checkDossierStandard.setExist(true);
+                            checkDossierStandard.setIdfilepdf(filePdf.getId());
+                            checkDossierStandard.setIddemande(id);
+                            checkDossierStandard.setIddossierstandard(name);
 
-                        checkDossierStandard.insert(c);
-                    } else if (name.startsWith("CDSU")) {
-                        CheckDossierSupplementaire checkDossierSupplementaire = new CheckDossierSupplementaire();
-                        checkDossierSupplementaire.setExist(true);
-                        checkDossierSupplementaire.setIdfilepdf(filePdf.getId());
-                        checkDossierSupplementaire.setIddemande(id);
-                        checkDossierSupplementaire.setIddossiersupplementaire(name);
+                            checkDossierStandard.insert(c);
+                        } else if (name.startsWith("DSU")) {
+                            CheckDossierSupplementaire checkDossierSupplementaire = new CheckDossierSupplementaire();
+                            checkDossierSupplementaire.setExist(true);
+                            checkDossierSupplementaire.setIdfilepdf(filePdf.getId());
+                            checkDossierSupplementaire.setIddemande(id);
+                            checkDossierSupplementaire.setIddossiersupplementaire(name);
 
-                        checkDossierSupplementaire.insert(c);
+                            checkDossierSupplementaire.insert(c);
+                        }
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
