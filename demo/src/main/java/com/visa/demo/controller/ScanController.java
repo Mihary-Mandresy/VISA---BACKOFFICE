@@ -31,8 +31,9 @@ public class ScanController {
         Connection c = new DbConnexe().getConnection();
 
         model.addAttribute("dstds", new DossierStandard().findAll(c));
-        model.addAttribute("dsups", new DossierSupplementaire().getAllByIdTypeVisa(c, id));
 
+        Demande dmd = new Demande().findByid(c, id);
+        model.addAttribute("dsups", new DossierSupplementaire().getAllByIdTypeVisa(c, dmd.getIdtypevisa()));
         return "pages/demande/scan/scan";
     }
 
