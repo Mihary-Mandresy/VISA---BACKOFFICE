@@ -5,43 +5,44 @@
 
 /* =========================
    BASE
-========================= */
+========================= */ 
 @import "base" ;
 
 /* =========================
    FORM WRAPPER
 ========================= */
 .form-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: #fff;
-  border-radius: 12px;
+  // max-width: 1200px;
+  // margin: 0 auto;
+  background-color: $background-color-secondary; 
+  color: $text-color;
+  border-radius: 10px;
   padding: 2rem;
-  border: 1px solid $border-color-2;
-  width: auto;
+  width: auto; 
 }
-
-/* =========================
+   
+    
+/* ========================= 
    INFOS GRID
 ========================= */
 .groupe-infos {
   display: grid;
-  grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+  grid-template: repeat(1, 1fr) / repeat(2, 1fr); 
   gap: 1.5rem;
-  
+  margin: 0 0 20px 0px;
+     
   &.hide {
     grid-template-rows: 530px;
   }
-}
-
+} 
+ 
 .info-card-item {
   border: 2px solid $label-and-text-secondary-color-2;
   border-radius: 12px;
   padding: 2rem 1rem;
-  max-height: 530px;
-}
-
-.folder {
+} 
+ 
+.folder { 
   border: 2px solid $label-and-text-secondary-color-2;
   border-radius: 12px;
   grid-column: 1 / span 2;
@@ -52,7 +53,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .subfolder-list {
+  .subfolder-list { 
     display: flex;
     flex-direction: column;
   }
@@ -126,7 +127,7 @@ label.field-label {
   color: $label-and-text-secondary-color-1;
   margin-bottom: 4px;
 }
-
+ 
 /* =========================
    INPUTS
 ========================= */
@@ -134,32 +135,35 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="date"],
+input[type="file"],
 select {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid $border-color-1;
-  border-radius: 8px;
+  //border: 1px solid $border-color-1;
+  border-radius: 4px;
   font-size: 14px;
   color: $main-text-main-color;
-  background: #fff;
+  background: $input-color;
   outline: none;
-  height: 36px;
-
+  height: 36px; 
+ 
   &:focus {
     border-color: $main-color;
     box-shadow: 0 0 0 2px rgba($main-color, 0.15);
   }
-}
 
-input,
-select {
+  
+  
+} 
+ 
+input {
   &:read-only {
     background-color: #e0e0e0;
     color: #777;
-    cursor: not-allowed;
-    opacity: 0.8;
-  }
-} 
+    // cursor: not-allowed;
+    opacity: 0.8; 
+  } 
+}  
 /* =========================
    RADIO / CHECKBOX
 ========================= */
@@ -176,7 +180,7 @@ select {
     font-size: 14px;
     cursor: pointer;
   }
-}
+} 
 
 /* =========================
    VISA CARDS
@@ -217,7 +221,7 @@ select {
       color: darken($main-color, 15%);
     }
   }
-}
+} 
 
 /* =========================
    INFO NOTE
@@ -273,9 +277,9 @@ select {
    BUTTON
 ========================= */
 .submit-btn {
-  background: $main-text-main-color;
+  background: $btn-success-background;
   color: #fff;
-  border: none;
+  border: none; 
   border-radius: 8px;
   padding: 12px 32px;
   font-size: 15px;
@@ -283,12 +287,13 @@ select {
   width: 100%;
 
   &:hover {
-    background: darken($main-text-main-color, 10%);
-  }
+    background: $btn-success-hover-background;
+     transition: 0.2s;
+  } 
 }
 
 /* =========================
-   RESPONSIVE
+   RESPONSIVE 
 ========================= */
 @media (max-width: 520px) {
   .field-group {
@@ -302,3 +307,34 @@ select {
     flex-direction: column;
   }
 }
+
+// BADGE 
+.badge-success{
+  background-color: #c9edcc;
+  color: #56c760;
+}
+
+.badge-secondary{
+  background-color: #edc9e7;
+  color: #c156c7;  
+}
+
+.badge-info{
+  background-color: #edc9e9;
+  color: #a356c7;
+}
+
+.badge-danger{
+  background-color: #edc9c9;
+  color: #c75656;
+}
+
+.badge-warning{
+  background-color: #ebedc9;
+  color: #c1c756;
+}
+
+.badge-primary{
+  background-color: #c9ceed;
+  color: #567ac7;
+}   

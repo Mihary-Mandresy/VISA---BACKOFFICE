@@ -1,1 +1,12 @@
-/*# sourceMappingURL=root.css.map */
+@font-face {
+  font-family: "logoFont";
+  src: url("../font/Mars.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../font/Poppins-Light.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}/*# sourceMappingURL=root.css.map */
