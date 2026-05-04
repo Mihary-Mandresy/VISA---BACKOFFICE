@@ -1,13 +1,13 @@
 [ ] Sprint 3 (Upload)
-     [ ] : Front (Judi)
+     [x] : Front (Judi)
         [x] : creer le controller qui load l'affichage 
         [x] : Creer affichage qui affiche le formulaire de remplissement des dossier
         [x] : Associer l'affichage avec le liste des demandes
-        [ ] : Faire l'input type file en version dynamique
-            [ ] : Dans le controller : 
-                [ ] : Appeller le fonction getAllDossierStandard et l'envoyer dans le view
-                [ ] : Appeller le fonction getAllDossierSupplementaire et l'envoyer dans le view
-            [ ] : Boucler les dossier et mettre le input type file en dynamique
+        [x] : Faire l'input type file en version dynamique
+            [x] : Dans le controller : 
+                [x] : Appeller le fonction getAllDossierStandard et l'envoyer dans le view
+                [x] : Appeller le fonction getAllDossierSupplementaire et l'envoyer dans le view
+            [x] : Boucler les dossier et mettre le input type file en dynamique
     [ ] : Back
         [x] : Base (Mihary)
             [x] : Cree une table filepdf

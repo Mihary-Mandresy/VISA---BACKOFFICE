@@ -105,6 +105,7 @@ public class ScanController {
             Demande d = new Demande().findByid(c, id);
             d.scanVisa(c);
             c.commit();
+            redirectAttributes.addFlashAttribute("message", "Dossier envoyer avec succes"); 
         } catch (Exception e) {
             c.rollback();
             e.printStackTrace();

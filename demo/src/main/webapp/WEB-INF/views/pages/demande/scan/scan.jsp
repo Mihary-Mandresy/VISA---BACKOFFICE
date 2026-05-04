@@ -39,17 +39,31 @@
                 </div>
                 <div class="info-card-item">
                     <div class="section-title">Dossier supplementaire</div>
+                    <c:forEach items="${dsups}" var="dossierSupplementaire">
                     <div class="field-group">
                         <div>
-                            <label class="field-label">Passport</label>
-                            <input type="file" name="files" multiple />
-
+                            <label class="field-label">${dossierSupplementaire.libelle}</label>
+                            <input type="file" name="${dossierSupplementaire.id}" multiple />
                         </div>
                     </div>
+                    </c:forEach>
                 </div>
             </div>
         </div>
         <button class="submit-btn" type="submit">Envoyer le dossier</button>
+        <c:if test="${not empty message}">
+        <div class="alert alert-success">
+            ${message}
+            <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+        </div>
+    </c:if>
+
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">
+            ${error}
+            <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+        </div>
+    </c:if>
     </form>
 </main>
 
