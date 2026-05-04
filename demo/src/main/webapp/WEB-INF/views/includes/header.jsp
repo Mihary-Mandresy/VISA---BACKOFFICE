@@ -13,7 +13,7 @@
       </li>
       <li class="nav-item">
         <a href="/demande/form" class="nav-link">
-          <i class="mdi mdi-bookmark-plus"></i>
+          <i class="mdi mdi-bookmark-plus-outline"></i>
           Ajouter demande
         </a>
       </li>

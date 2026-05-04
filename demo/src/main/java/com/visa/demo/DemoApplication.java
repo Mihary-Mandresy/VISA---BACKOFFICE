@@ -26,6 +26,6 @@ public class DemoApplication {
 		// for (DossierSupplementaire d : allSupplementaires) {
 		// 	System.out.println(d.getId() + " " + d.getLibelle());
 		// }
-	}
+	} 
 
 }

@@ -44,30 +44,32 @@
                 <p>Transformation d'un visa transformable</p>
             </div>
             <div class="form-body">
-                <div>
-                    <div class="section-title">Demandeur</div>
-                    <div class="field-group">
-                        <div>
-                            <label class="field-label">choisir un demandeur ou sans donner interieur</label>
-                            <select name="demandeur.id" class="demandeurs">
-                                 <option value="" selected >Sans donner interieur</option>
-                                <c:forEach items="${demandeurs}" var="demandeur">
-                                    <option value="${demandeur.id}" >${demandeur.nom} - ${demandeur.prenom}</option>
-                                </c:forEach>
-                            </select >
+                <div class="groupe-infos">
+                    <div class="info-card-item">
+                        <div class="section-title">Demandeur</div>
+                        <div class="field-group">
+                            <div>
+                                <label class="field-label">choisir un demandeur ou sans donner interieur</label>
+                                <select name="demandeur.id" class="demandeurs">
+                                    <option value="" selected >Sans donner interieur</option>
+                                    <c:forEach items="${demandeurs}" var="demandeur">
+                                        <option value="${demandeur.id}" >${demandeur.nom} - ${demandeur.prenom}</option>
+                                    </c:forEach>
+                                </select >
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="section-title">Type VISA demandé</div>
-                    <div class="field-group">
-                        <div>
-                            <label class="field-label">type de visa</label>
-                            <select name="idTypeVisa" class="types-visas">
-                                <c:forEach items="${typevisas}" var="type">
-                                    <option value="${type.id}" ${demande.idtypevisa != null && demande.idtypevisa == type.id ? "selected":''}>${type.libelle}</option>
-                                </c:forEach>
-                            </select >
+                    <div class="info-card-item">
+                        <div class="section-title">Type VISA demandé</div>
+                        <div class="field-group">
+                            <div>
+                                <label class="field-label">type de visa</label>
+                                <select name="idTypeVisa" class="types-visas">
+                                    <c:forEach items="${typevisas}" var="type">
+                                        <option value="${type.id}" ${demande.idtypevisa != null && demande.idtypevisa == type.id ? "selected":''}>${type.libelle}</option>
+                                    </c:forEach>
+                                </select >
+                            </div>
                         </div>
                     </div>
                 </div>

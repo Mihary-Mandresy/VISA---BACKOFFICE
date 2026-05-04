@@ -14,7 +14,7 @@
 .form-wrap {
   // max-width: 1200px;
   // margin: 0 auto;
-  background-color: $background-color-secondary; 
+  background-color: $background-color-primary; 
   color: $text-color;
   border-radius: 10px;
   padding: 2rem;
@@ -32,21 +32,28 @@
   margin: 0 0 20px 0px;
      
   &.hide {
-    grid-template-rows: 530px;
+    // grid-template-rows: 530px;
   }
 } 
  
 .info-card-item {
-  border: 2px solid $label-and-text-secondary-color-2;
+  // border: 2px solid $label-and-text-secondary-color-2;
+  background-color: $background-color-secondary;
   border-radius: 12px;
-  padding: 2rem 1rem;
+  padding: 30px;
+}  
+.display-flex{
+  display: flex;
+  flex-direction: row;
+  
 } 
- 
+    
 .folder { 
-  border: 2px solid $label-and-text-secondary-color-2;
+  // border: 2px solid $label-and-text-secondary-color-2;
+  background-color: $background-color-secondary;
   border-radius: 12px;
   grid-column: 1 / span 2;
-  padding: 2rem 1rem;
+  padding: 30px;
 
   .folder-list {
     display: grid;
@@ -61,7 +68,7 @@
   .subfolder-title {
     color: $label-and-text-secondary-color-2;
   }
-}
+} 
 
 /* =========================
    FORM HEADER
@@ -71,7 +78,7 @@
 
   h2 {
     font-size: 20px;
-    font-weight: 500;
+    font-weight: $font-weigth-title-semibold;
     margin-bottom: 6px;
   }
 
@@ -96,20 +103,20 @@
 ========================= */
 .section-title {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: $font-weigth-title-semibold;
   color: $label-and-text-secondary-color-2;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin: 1.5rem 0 0.75rem;
-  padding-bottom: 6px;
-  border-bottom: 1px solid $border-color-3;
+  padding-bottom: 20px; 
+  border-bottom: 0.01vb solid $border-card-color;
 }
 
 /* =========================
    FIELD GROUPS
-========================= */
+========================= */ 
 .field-group {
-  display: grid;
+  display: grid; 
   gap: 12px;
 
   &.col2 {
@@ -122,11 +129,11 @@
 }
 
 label.field-label {
-  display: block;
+  display: block; 
   font-size: 13px;
   color: $label-and-text-secondary-color-1;
   margin-bottom: 4px;
-}
+} 
  
 /* =========================
    INPUTS
@@ -138,42 +145,55 @@ input[type="date"],
 input[type="file"],
 select {
   width: 100%;
-  padding: 8px 12px;
-  //border: 1px solid $border-color-1;
-  border-radius: 4px;
+  padding: 10px 15px;  
+  border: 1px solid $border-input-color;
   font-size: 14px;
-  color: $main-text-main-color;
-  background: $input-color;
+  color: white;
+  background: $background-color-primary;
   outline: none;
-  height: 36px; 
- 
+  // height: 36px;   
+  margin-bottom: 10px;  
+  border-radius: 10px;
   &:focus {
     border-color: $main-color;
     box-shadow: 0 0 0 2px rgba($main-color, 0.15);
   }
+     
+ 
+}  
+input[type="file"]{
+  margin-bottom: 20px;
+  font-weight: normal;
+  &::file-selector-button {
+  // display: none;
+  background-color: $background-color-third;
+  border: 0px;
+  border-right: 1px solid $border-card-color;
+  color: rgb(165, 182, 248);
+  height: 100%;
+}
 
-  
-  
-} 
+}
+
  
 input {
   &:read-only {
-    background-color: #e0e0e0;
-    color: #777;
+    background-color: $background-color-third;
+    color: #f4f2f2;
     // cursor: not-allowed;
     opacity: 0.8; 
   } 
-}  
+}   
 /* =========================
    RADIO / CHECKBOX
 ========================= */
-.radio-group,
-.checkbox-group {
+.radio-group, 
+.checkbox-group { 
   display: flex;
   flex-direction: column;
   gap: 8px;
-
-  label {
+ 
+  label { 
     display: flex;
     align-items: center;
     gap: 8px;
@@ -204,7 +224,7 @@ input {
 
   .label {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: $font-weigth-title-semibold;
   }
 
   .desc {
