@@ -29,6 +29,26 @@ public class Demande extends Entity<Demande> {
         setSigle("DMD");
     }
 
+    public List<DossierStandard> dossierStandardNotChecked(Connection c) throws Exception {
+        String req = "SELECT ds.* FROM dossierstandard ds\n" + //
+                        "JOIN (\n" + //
+                        "   SELECT * FROM checkdossierstandard WHERE iddemande = '" + id + "' AND (exist = FALSE OR idfilepdf is NULL)\n" + //
+                        ") cd\n" + //
+                        "on cd.iddossierstandard = ds.id";
+        return new DossierStandard().fromScript(c, req, null);
+    }
+
+    public List<DossierSupplementaire> dossierSupplementaireNotChecked(Connection c) throws Exception {
+        String req = "SELECT ds.* FROM dossiersupplementaire ds\n" + //
+                        "JOIN (\n" + //
+                        "   SELECT * FROM checkdossiersupplementaire WHERE iddemande = '" + id + "' AND (exist = FALSE OR idfilepdf is NULL)\n" + //
+                        ") cd\n" + //
+                        "on cd.iddossiersupplementaire = ds.id\n" + //
+                        "WHERE ds.idtypevisa = '" + idtypevisa + "'";
+        return new DossierSupplementaire().fromScript(c, req, null);
+    }
+
+
     public void approve(Connection c, LocalDate debut, LocalDate expiration) throws Exception {
         c.setAutoCommit(false);
         try {
