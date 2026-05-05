@@ -30,21 +30,33 @@ public class Demande extends Entity<Demande> {
     }
 
     public List<DossierStandard> dossierStandardNotChecked(Connection c) throws Exception {
-        String req = "SELECT ds.* FROM dossierstandard ds\n" + //
-                        "JOIN (\n" + //
-                        "   SELECT * FROM checkdossierstandard WHERE iddemande = '" + id + "' AND (exist = FALSE OR idfilepdf is NULL)\n" + //
-                        ") cd\n" + //
-                        "on cd.iddossierstandard = ds.id";
+        String req = "SELECT ds.*\n" + //
+                        "FROM dossierstandard ds\n" + //
+                        "WHERE\n" + //
+                        "    id NOT IN (\n" + //
+                        "        SELECT *\n" + //
+                        "        FROM checkdossierstandard\n" + //
+                        "        WHERE\n" + //
+                        "            iddemande = '" + id +"'\n" + //
+                        "            AND exist = TRUE\n" + //
+                        "            and idfilepdf is not NULL\n" + //
+                        "    )";
         return new DossierStandard().fromScript(c, req, null);
     }
 
     public List<DossierSupplementaire> dossierSupplementaireNotChecked(Connection c) throws Exception {
-        String req = "SELECT ds.* FROM dossiersupplementaire ds\n" + //
-                        "JOIN (\n" + //
-                        "   SELECT * FROM checkdossiersupplementaire WHERE iddemande = '" + id + "' AND (exist = FALSE OR idfilepdf is NULL)\n" + //
-                        ") cd\n" + //
-                        "on cd.iddossiersupplementaire = ds.id\n" + //
-                        "WHERE ds.idtypevisa = '" + idtypevisa + "'";
+        String req = "SELECT ds.*\n" + //
+                        "FROM dossiersupplementaire ds\n" + //
+                        "WHERE\n" + //
+                        "    ds.idtypevisa = '" + idtypevisa + "'\n" + //
+                        "    and ds.id not IN (\n" + //
+                        "        SELECT iddossiersupplementaire\n" + //
+                        "        FROM checkdossiersupplementaire\n" + //
+                        "        WHERE\n" + //
+                        "            iddemande = '" + id + "'\n" + //
+                        "            AND exist = TRUE\n" + //
+                        "            and idfilepdf is not NULL\n" + //
+                        "    )";
         return new DossierSupplementaire().fromScript(c, req, null);
     }
 
