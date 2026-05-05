@@ -80,6 +80,7 @@ public class Demande extends Entity<Demande> {
             carteResident.setDateexpiration(expiration);
             carteResident.setReference("REFC_" + System.currentTimeMillis());
             carteResident.setIddemande(id);
+            carteResident.setIdpassport(getIdpassport());
 
             carteResident.insert(c);
 
