@@ -85,6 +85,9 @@ public class Demande extends Entity<Demande> {
             carteResident.insert(c);
 
             setIdetatdemande(C_EtatDemande.REQUEST_APPROVED);
+
+            update(c);
+
             c.commit();
         } catch (Exception e) {
             c.rollback();
