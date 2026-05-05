@@ -3,6 +3,7 @@
         [x] : creer le controller qui load l'affichage 
         [x] : Creer affichage qui affiche le formulaire de remplissement des dossier
         [x] : Associer l'affichage avec le liste des demandes
+            [ ] : Modifier le bouton scanner en approuver si le dossier est complet
         [x] : Faire l'input type file en version dynamique
             [x] : Dans le controller : 
                 [x] : Appeller le fonction getAllDossierStandard et l'envoyer dans le view

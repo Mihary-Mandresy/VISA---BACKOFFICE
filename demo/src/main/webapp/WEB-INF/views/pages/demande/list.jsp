@@ -28,7 +28,17 @@
                         <td>${demande.id}</td>
                         <td>${demande.nomdemandeur} ${demande.prenomdemandeur}</td>
                         <td>${demande.datecreation}</td>
-                        <td><span class="badge badge-primary">${demande.libelleetatdemande}</span></td>
+                        <td>
+                            <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000001') == 0}">
+                               <span class="badge badge-primary">
+                            </c:if>
+                            <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000002') == 0}">
+                               <span class="badge badge-secondary">
+                            </c:if>
+                            <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000003') == 0}">
+                               <span class="badge badge-success">
+                            </c:if>
+                            ${demande.libelleetatdemande}</span></td>
                         <td>${demande.libelletypedemande}</td>
                         <td>${demande.libelletypevisa}</td>
                         <td style="display: flex; gap: 5px;">
@@ -39,10 +49,16 @@
                             <a class="btn btn-warning"  href="${pageContext.request.contextPath}/demande/detail?id=${demande.id}">
                             <i  class="mdi mdi-eye"></i>
                             </a>
-
-                            <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/scan/${demande.id}">
-                            <i  class="mdi mdi-credit-card-scan"></i>
-                            </a>
+                            <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000001') == 0}">
+                                <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/scan/${demande.id}">
+                                <i  class="mdi mdi-credit-card-scan"></i>
+                                </a>
+                            </c:if>
+                            <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000002') == 0}">
+                                <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/scan/approve/${demande.id}">
+                                <i  class="mdi mdi-check"></i>
+                                </a> 
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>

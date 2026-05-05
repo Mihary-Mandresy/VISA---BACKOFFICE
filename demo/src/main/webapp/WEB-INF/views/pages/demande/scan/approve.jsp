@@ -17,44 +17,33 @@
 <body>
     <%@ include file="../../../includes/header.jsp" %>
     <main>
-    <div class="title-page"><h2>Scanner Le demande</h2></div>
-    <form class="form-wrap" action="./${id}" method="post" enctype="multipart/form-data">
+    <div class="title-page"><h2>Approuver le demande</h2></div>
+    <form class="form-wrap" action="${pageContext.request.contextPath}/demande/scan/approver" method="post" >
 
         <div class="form-header">
-            <h2>Scanner les dossiers</h2>
+            <h2>Entrer le date de validite du carte resident</h2>
         </div>
         <div class="form-body">
             <div class="groupe-infos">
                 <div class="info-card-item">
-                    <div class="section-title">Dossier standard</div>
-                    <c:if test="${dstds.size() == 0}">
-                        <div class="info-note">Dossier complet</div>
-                    </c:if>
-                    <c:forEach items="${dstds}" var="dossierStandard">
+                    <div class="section-title">Date debut</div>
                     <div class="field-group">
                         <div>
-                            <label class="field-label">${dossierStandard.libelle}</label>
-                            <input type="file" name="${dossierStandard.id}" multiple />
+                            <input class="dateexpirationvisa" type="date" name="datedebut">
                         </div>
                     </div>
-                    </c:forEach>
                 </div>
                 <div class="info-card-item">
-                    <div class="section-title">Dossier supplementaire</div>
-                    <c:if test="${dsups.size() == 0}">
-                        <div class="info-note">Dossier complet</div>
-                    </c:if>
-                    <c:forEach items="${dsups}" var="dossierSupplementaire">
+                    <div class="section-title">Date d'expiration</div>
                     <div class="field-group">
                         <div>
-                            <label class="field-label">${dossierSupplementaire.libelle}</label>
-                            <input type="file" name="${dossierSupplementaire.id}" multiple />
+                            <input class="dateexpirationvisa" type="date" name="datefin">
                         </div>
                     </div>
-                    </c:forEach>
                 </div>
             </div>
         </div>
+        <input type="hidden" name="iddemande" value="${id}">
         <button class="submit-btn" type="submit">Envoyer le dossier</button>
         <c:if test="${not empty message}">
         <div class="alert alert-success">

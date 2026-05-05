@@ -30,3 +30,27 @@ Foreign Key (idfilepdf) REFERENCES filepdf(id);
 ALTER TABLE checkdossiersupplementaire
 ADD CONSTRAINT uq_checkdossiersupplementaire_idfilepdf
 UNIQUE (idfilepdf);
+
+
+create or replace view v_liste_demande as(
+    select   
+                    dmd.id ,
+                    dmd.datecreation as datecreation ,
+                    dmd.idpassport as idpassport,
+                    dmd.idvisatransformable as  idvisatransformable,
+                    edmd.libelle as libelleetatdemande ,
+                    tdmd.libelle as libelletypedemande ,
+                    dmdr.nom as nomdemandeur,
+                    dmdr.prenom as prenomdemandeur,
+                    tv.libelle as libelletypevisa,
+                    dmd.idetatdemande as idetatdemande
+                from demande dmd
+                join etatdemande edmd 
+                on edmd.id = dmd.idetatdemande
+                join typedemande tdmd
+                on tdmd.id = dmd.idtypedemande
+                join demandeur dmdr
+                on dmdr.id = dmd.iddemandeur
+                join typevisa tv 
+                on tv.id = dmd.idtypevisa
+);
