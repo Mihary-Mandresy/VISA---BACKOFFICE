@@ -71,6 +71,7 @@ public class Demande extends Entity<Demande> {
             visa.setReference("REFV_" + System.currentTimeMillis());
             visa.setIdpassport(getIdpassport());
             visa.setIdtypevisa(getIdtypedemande());
+            visa.setIddemande(id);
 
             visa.insert(c);
 
@@ -78,6 +79,7 @@ public class Demande extends Entity<Demande> {
             carteResident.setDatedebut(debut);
             carteResident.setDateexpiration(expiration);
             carteResident.setReference("REFC_" + System.currentTimeMillis());
+            carteResident.setIddemande(id);
 
             carteResident.insert(c);
 
