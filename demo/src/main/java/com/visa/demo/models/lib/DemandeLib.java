@@ -13,11 +13,20 @@ public class DemandeLib extends Entity<DemandeLib> {
     private String nomdemandeur;
     private String prenomdemandeur;
     private String libelletypevisa;
+    private String idetatdemande;
 
+    
     public DemandeLib() {
         setNomTable("v_liste_demande");
     }
+    
+    public String getIdetatdemande() {
+        return idetatdemande;
+    }
 
+    public void setIdetatdemande(String idetatdemande) {
+        this.idetatdemande = idetatdemande;
+    }
     public LocalDate getDatecreation() {
         return datecreation;
     }
@@ -25,7 +34,7 @@ public class DemandeLib extends Entity<DemandeLib> {
     public void setDatecreation(LocalDate datecreation) {
         this.datecreation = datecreation;
     }
-
+ 
     public String getIdpassport() {
         return idpassport;
     }

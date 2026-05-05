@@ -1,6 +1,8 @@
 package com.visa.demo.controller;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -36,24 +38,28 @@ public class ScanController {
         return "pages/demande/scan/scan";
     }
 
-    @GetMapping("/approve")
-    public String formApprove() throws Exception {
-        return "page/demande/scan/approve";
+    @GetMapping("/approve/{id}")
+    public String formApprove(@PathVariable("id") String id, Model model) throws Exception {
+        model.addAttribute("id", id);
+        return "pages/demande/scan/approve";
     }
 
-    @PostMapping("/approve")
-    public String approveDemande(ApproveDto approveDto, RedirectAttributes redirectAttributes) throws Exception {
+    @PostMapping("/approver")
+    public String approveDemande(ApproveDto approveDto, Model model) throws Exception {
+        System.out.println("akory nenty eeeh ");
         Connection c = new DbConnexe().getConnection();
-        try {
+        try { 
 
             Demande d = new Demande().findByidWithThrows(c, approveDto.getIddemande());
             d.approve(c, approveDto.getDatedebut(), approveDto.getDatefin());
 
-            redirectAttributes.addFlashAttribute("message", "Approbation avec succes !");
+            model.addAttribute("message", "Approbation avec succes !");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            model.addAttribute("error", e.getMessage());
         }
-        return "redirect:/demande/scan/approve";
+        // return "redirect:/demande/scan/approve/"+approveDto.getIddemande();
+        // model.addAttribute("id", id);
+        return "pages/demande/scan/approve"; 
     }
 
     @PostMapping("/{id}")
@@ -62,7 +68,7 @@ public class ScanController {
         Connection c = new DbConnexe().getConnection();
         c.setAutoCommit(false);
         try {
-
+ 
             files.forEach((name, file) -> {
                 System.out.println("Champ : " + name);
                 System.out.println("Nom fichier : " + file.getOriginalFilename());
@@ -104,6 +110,7 @@ public class ScanController {
             Demande d = new Demande().findByid(c, id);
             d.scanVisa(c);
             c.commit();
+            redirectAttributes.addFlashAttribute("message", "Dossier envoyer avec succes"); 
         } catch (Exception e) {
             c.rollback();
             e.printStackTrace();
