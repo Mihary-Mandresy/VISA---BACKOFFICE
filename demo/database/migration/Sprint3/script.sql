@@ -8,7 +8,7 @@ SELECT ds.*
 FROM dossierstandard ds
 WHERE
     id NOT IN (
-        SELECT *
+        SELECT iddossierstandard
         FROM checkdossierstandard
         WHERE
             iddemande = 'DMD000002'

@@ -34,7 +34,7 @@ public class Demande extends Entity<Demande> {
                         "FROM dossierstandard ds\n" + //
                         "WHERE\n" + //
                         "    id NOT IN (\n" + //
-                        "        SELECT *\n" + //
+                        "        SELECT iddossierstandard\n" + //
                         "        FROM checkdossierstandard\n" + //
                         "        WHERE\n" + //
                         "            iddemande = '" + id +"'\n" + //
