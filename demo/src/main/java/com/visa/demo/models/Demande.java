@@ -70,7 +70,7 @@ public class Demande extends Entity<Demande> {
             visa.setDateexpiration(expiration);
             visa.setReference("REFV_" + System.currentTimeMillis());
             visa.setIdpassport(getIdpassport());
-            visa.setIdtypevisa(getIdtypedemande());
+            visa.setIdtypevisa(getIdtypevisa());
             visa.setIddemande(id);
 
             visa.insert(c);
