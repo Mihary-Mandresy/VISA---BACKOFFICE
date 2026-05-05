@@ -18,8 +18,6 @@ import com.visa.demo.dto.ApproveDto;
 import com.visa.demo.models.CheckDossierStandard;
 import com.visa.demo.models.CheckDossierSupplementaire;
 import com.visa.demo.models.Demande;
-import com.visa.demo.models.DossierStandard;
-import com.visa.demo.models.DossierSupplementaire;
 import com.visa.demo.models.FilePdf;
 
 @Controller
@@ -29,11 +27,12 @@ public class ScanController {
     @GetMapping("/{id}")
     public String handleScan(@PathVariable("id") String id, Model model) throws Exception {
         Connection c = new DbConnexe().getConnection();
-        model.addAttribute("dstds", new DossierStandard().findAll(c));
-
         Demande dmd = new Demande().findByid(c, id);
-        model.addAttribute("dsups", new DossierSupplementaire().getAllByIdTypeVisa(c, dmd.getIdtypevisa()));
+
+        model.addAttribute("dstds", dmd.dossierStandardNotChecked(c));
+        model.addAttribute("dsups", dmd.dossierSupplementaireNotChecked(c));
         model.addAttribute("id", id);
+        
         return "pages/demande/scan/scan";
     }
 
