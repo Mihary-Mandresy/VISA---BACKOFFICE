@@ -14,7 +14,7 @@ WHERE
             iddemande = 'DMD000002'
             AND exist = TRUE
             and idfilepdf is not NULL
-    );
+    ) AND obligatoire = TRUE;
 
 SELECT ds.*
 FROM dossiersupplementaire ds
@@ -27,4 +27,4 @@ WHERE
             iddemande = 'DMD000002'
             AND exist = TRUE
             and idfilepdf is not NULL
-    );
+    ) and obligatoire = TRUE;

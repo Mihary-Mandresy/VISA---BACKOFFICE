@@ -40,7 +40,7 @@ public class Demande extends Entity<Demande> {
                         "            iddemande = '" + id +"'\n" + //
                         "            AND exist = TRUE\n" + //
                         "            and idfilepdf is not NULL\n" + //
-                        "    )";
+                        "    ) AND obligatoire = TRUE";
         return new DossierStandard().fromScript(c, req, null);
     }
 
@@ -56,7 +56,7 @@ public class Demande extends Entity<Demande> {
                         "            iddemande = '" + id + "'\n" + //
                         "            AND exist = TRUE\n" + //
                         "            and idfilepdf is not NULL\n" + //
-                        "    )";
+                        "    ) AND obligatoire = TRUE";
         return new DossierSupplementaire().fromScript(c, req, null);
     }
 
@@ -104,40 +104,10 @@ public class Demande extends Entity<Demande> {
     }
 
     public boolean isFullFolder(Connection c) throws Exception {
+        List<DossierStandard> dStandardsNotChecked = dossierStandardNotChecked(c);
+        List<DossierSupplementaire> dSupplementairesNotCheckd = dossierSupplementaireNotChecked(c);
 
-        List<DossierStandard> dstds = new DossierStandard().select(c, "obligatoire = true",null);
-        List<DossierSupplementaire> dsups = new DossierSupplementaire().select(c, String.format("idtypevisa = '%s' and obligatoire = true", idtypevisa), null);
-
-        List<CheckDossierStandard> c_dsts = new CheckDossierStandard().select(c, String.format("iddemande = '%s'", id), null);
-        List<CheckDossierSupplementaire> c_dsups = new CheckDossierSupplementaire().select(c, String.format("iddemande = '%s'", id), null);
-        
-        for (CheckDossierStandard cdstd : c_dsts) {
-            boolean isPresent = false;
-            for (DossierStandard dstd : dstds) {
-                if (cdstd.getIddemande().equals(dstd.getId()) && cdstd.isExist() && cdstd.getIdfilepdf() != null) {
-                    isPresent = true;
-                    break;
-                }
-            }
-            if (!isPresent) {
-                return false;
-            }
-        }
-
-        for (CheckDossierSupplementaire cdsup : c_dsups) {
-            boolean isPresent = false;
-            for (DossierSupplementaire dsup : dsups) {
-                if (cdsup.getIddemande().equals(dsup.getId()) && cdsup.isExist() && cdsup.getIdfilepdf() != null) {
-                    isPresent = true;
-                    break;
-                }
-            }
-            if (!isPresent) {
-                return false;
-            }
-        }
-
-        return true;
+        return dStandardsNotChecked.isEmpty() && dSupplementairesNotCheckd.isEmpty();
     }
 
     /**
