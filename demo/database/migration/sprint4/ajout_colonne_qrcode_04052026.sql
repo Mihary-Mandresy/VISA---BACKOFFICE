@@ -1,0 +1,1 @@
+alter table demande ADD COLUMN qrcode BYTEA ;
