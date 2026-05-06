@@ -1,6 +1,7 @@
 package com.visa.demo.controller;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import com.visa.demo.models.Demande;
 import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
+import com.visa.demo.models.HistoriqueEtatDemande;
 import com.visa.demo.models.Nationalite;
 import com.visa.demo.models.Passport;
 import com.visa.demo.models.SituationDeFamille;
@@ -76,10 +78,9 @@ public class DemandeController {
         return modelAndView;
     }
 
-    @PostMapping
+     @PostMapping
     private String save(RedirectAttributes redirectAttributes, @ModelAttribute("formulaire") DemandeDto dto)
             throws Exception {
-        System.out.println("demandeur: " + dto.getDemandeur().getId());
         StringBuilder messageErreur = new StringBuilder(dto.controleDtoDemande());
         if (!messageErreur.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", messageErreur.toString());
@@ -87,16 +88,22 @@ public class DemandeController {
         }
         DbConnexe dbConnexe = new DbConnexe();
         Connection c = dbConnexe.getConnection();
+        HistoriqueEtatDemande hedmd = new HistoriqueEtatDemande();
         try {
             if (c != null) {
-                System.out.println("misy va :"+c);
                 c.setAutoCommit(false);
             }
             if (dto.getIdTypeDemande().equals("TYPDMD000001")) {
                 Demande demande = new Demande();
-                demande.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
+                
+                demande = demande.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
                         dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(),
                         dto.getIdTypeVisa(), "ETATDMD000001", dto.getDate());
+                hedmd.setIddemande(demande.getId());
+                //possible miova
+                hedmd.setDaty(LocalDate.now());
+                hedmd.setIdetatdemande(demande.getIdetatdemande());
+                hedmd.insert(c);
             } else {
                 Demande demandeSource = new Demande();
                 DemandeObj demandeObj = new DemandeObj();
@@ -149,10 +156,8 @@ public class DemandeController {
                     }
                 }
                 Demande demande = new Demande();
-                System.out.println("eto aho: " + dto.getNewpassport().getDatedelivrance());
-                System.out.println("eto ihany aho: " + dto.getPassport().getDatedelivrance());
-                Passport p = dto.getNewpassport() != null ? dto.getNewpassport() : dto.getPassport();
-                System.out.println("mitovy ve: " + (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1));
+                Passport p = dto.getNewpassport().getDatedelivrance() != null
+                        && dto.getNewpassport().getDateexpiration() != null ? dto.getNewpassport() : dto.getPassport();
                 if (dto.getIdTypeDemande().equals("TYPDMD000003")) {
                     if (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1) {
                         p.setIddemandeur(dto.getDemandeur().getId());
@@ -163,10 +168,16 @@ public class DemandeController {
                         throw new Exception(messageErreur.toString());
                     }
                 }
-                demande.save(c, demandeSource.getId(), dto.getDemandeur(), p,
+                demande = demande.save(c, demandeSource.getId(), dto.getDemandeur(), p,
                         dto.getVisatransformable(),
                         dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(), dto.getIdTypeVisa(),
                         "ETATDMD000001", dto.getDate());
+                hedmd.setIddemande(demande.getId());
+                // possible miova
+                hedmd.setDaty(LocalDate.now());
+                hedmd.setIdetatdemande(demande.getIdetatdemande());
+                
+                hedmd.insert(c);
             }
             if (c != null) {
                 c.commit();
@@ -175,9 +186,7 @@ public class DemandeController {
             redirectAttributes.addFlashAttribute("message", "Demande Crée avec succes !");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("connection e : "+c);
             if (c != null) {
-                System.out.println("mankato rollback");
                 c.rollback();
             }
             if (!messageErreur.isEmpty()) {
