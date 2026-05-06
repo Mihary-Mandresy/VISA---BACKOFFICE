@@ -1,12 +1,15 @@
 package com.visa.demo.controller;
 
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nojpa.bd.connexion.DbConnexe;
 import com.visa.demo.dto.DemandeDto;
+import com.visa.demo.dto.DemandeFicheDto;
 import com.visa.demo.models.CarteResident;
 import com.visa.demo.models.CheckDossierStandard;
 import com.visa.demo.models.CheckDossierSupplementaire;
@@ -22,6 +26,7 @@ import com.visa.demo.models.Demande;
 import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
+import com.visa.demo.models.HistoriqueEtatDemande;
 import com.visa.demo.models.Nationalite;
 import com.visa.demo.models.Passport;
 import com.visa.demo.models.SituationDeFamille;
@@ -91,15 +96,22 @@ public class DemandeController {
         }
         DbConnexe dbConnexe = new DbConnexe();
         Connection c = dbConnexe.getConnection();
+        HistoriqueEtatDemande hedmd = new HistoriqueEtatDemande();
         try {
             if (c != null) {
                 c.setAutoCommit(false);
             }
             if (dto.getIdTypeDemande().equals("TYPDMD000001")) {
                 Demande demande = new Demande();
-                demande.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
+
+                demande = demande.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
                         dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(),
                         dto.getIdTypeVisa(), "ETATDMD000001", dto.getDate());
+                hedmd.setIddemande(demande.getId());
+                // possible miova
+                hedmd.setDaty(LocalDate.now());
+                hedmd.setIdetatdemande(demande.getIdetatdemande());
+                hedmd.save(c);
             } else {
                 Demande demandeSource = new Demande();
                 DemandeObj demandeObj = new DemandeObj();
@@ -152,7 +164,8 @@ public class DemandeController {
                     }
                 }
                 Demande demande = new Demande();
-                Passport p = dto.getNewpassport() != null ? dto.getNewpassport() : dto.getPassport();
+                Passport p = dto.getNewpassport().getDatedelivrance() != null
+                        && dto.getNewpassport().getDateexpiration() != null ? dto.getNewpassport() : dto.getPassport();
                 if (dto.getIdTypeDemande().equals("TYPDMD000003")) {
                     if (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1) {
                         p.setIddemandeur(dto.getDemandeur().getId());
@@ -167,6 +180,11 @@ public class DemandeController {
                         dto.getVisatransformable(),
                         dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(), dto.getIdTypeVisa(),
                         "ETATDMD000001", dto.getDate());
+                hedmd.setIddemande(demande.getId());
+                // possible miova
+                hedmd.setDaty(LocalDate.now());
+                hedmd.setIdetatdemande(demande.getIdetatdemande());
+                hedmd.save(c);
             }
             if (c != null) {
                 c.commit();
@@ -247,5 +265,25 @@ public class DemandeController {
             }
         }
         return "redirect:/demande/form";
+    }
+    @GetMapping("/fiche")
+    public ModelAndView getFicheDemande(@PathVariable("id") String id) throws Exception {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("pages/demande/fiche");
+        DbConnexe db = new DbConnexe();
+        try {
+            Connection c = db.getConnection();
+            DemandeFicheDto dto = new DemandeFicheDto().findByid(c, id);
+            String qrBase64 = Base64.getEncoder()
+                    .encodeToString(dto.getQrcode());
+            mav.addObject("qrcode", qrBase64);
+            mav.addObject("demande", dto);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            throw new Exception("une erreur interne est survenue, on ne peut pas afficher les details de ce demandes");
+        }
+        return mav;
     }
 }
