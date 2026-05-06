@@ -1,0 +1,111 @@
+[ ] : generation  qr code
+    [x] : classes a creer
+        [x] : DemandeFicheDto : (5 min)
+            Srting iddemande, String  demandeur, String typevisa , String typedemande, String etatdemande
+
+        [x] : NetworkUtils dans un dossier utils
+        [x] : SuiviDemandeDto:
+            id,demandeur(nom et prenom),datecreation(),typevisa(libelle typevisa),etatdemande(libelle etatdemande)
+        [x] :DemandeFicheFrontDto:
+        [x] : VisaTransformableDto:
+        [x] : PassportDto:
+        [x] : NationaliteDto
+        [x] : SituationdefamilleDto
+        [x] : DemandeurDto
+        [x] : DemandeFicheDto : 
+            infos pour le demandeur: 
+            String nomdemandeur,prenomdemandeur,
+            LocalDate dtndemandeur,String profession,
+            String adressemada,telephone
+            String email
+
+            situation familiale:
+            String idsituationfamiliale,libsituationfamiliale
+
+            nationalite:
+            String idnationalite,libnationalite
+            
+            passport:
+            String idpassport,numeropassport
+            LocalDate datedelivrancepassport,dateexpirationpassport
+
+            visatransformable : 
+            String idvisatransformable,reference,lieuentree
+            LocalDate dateentreemada,dateexpvisatransformable
+        
+        [x] : DossierStandardDto : 
+            String libelle, boolean exists
+
+        [x] : DossierSupplementaireDto : 
+            String libelle, boolean exists
+
+
+    [x] : Bases :
+        [x] : creation vue: 
+            vue pour recuperer les fiches de tous les demandes
+            vue pour le suivi des etats des demandes
+
+        [x]  : ajout de colonne qrcode dans la table demande
+
+
+    [ ] : Fonctions
+        Dans la classe NetworkUtils
+            [x] : static String getLocalIpAddress():(10 min)
+                cette fonction permet d'obtenir l'adresse ip local du pc quand il est dans un reseau local
+
+        Dans la classe Demande
+            [x] : generateQrCode():(20 min)
+                cette fonction sert a generer le qr code d'une demande
+                controle :  
+                    url doit exister sinon exception
+                appel fonction getLocalIpAddress()
+                concatener avec id demande
+                encoder dans qr code 
+
+            [x] : modification de la methode save:(10 min)
+                apres avoir insere la demande appeler la fonction generateQrCode et faire update de la demande
+
+        
+
+        Dans la classe DemandeController
+            [x] : ModelAndView getFicheDemande(@PathVariable("id") String id) : (10 min)
+                cette fonction permet d'envoyer les donnees d'une fiche de demande
+
+            [x] : modification fonction save: 
+                apres avoir enregistre une demande on doit sauvegarder dans la table historiqueetatdemande 
+
+        Dans la demandeApiController()
+            [ ] : <DemandeRechercheDT> findBySearchValue(String valeurPourRecherche) : 
+                controle : 
+                    aleurPourRecherche null ou vide , exception
+                    valeurPourRecherche est un id demande ou un numero passport,sinon exception
+
+                on recupere le demandeur pour valeurPourRecherche
+
+                cas 1 : valeurPourRecherche == numero passport
+                    lister tous les demandes du demandeur par ordre chronologique croissant 
+
+                cas 2 : valeurPourRecherche == id demande
+                    recuperer d'abord les suivis de demande pour cet id
+                    ensuite recuperer tous les autres demandes du demandeur par ordre chronologique croissant
+
+
+    [ ] : Affichage 
+        fiche demande
+            informations :
+                image du qr code
+                id de la Demande
+                typedemande
+                etatdemande
+
+                
+                
+                
+
+
+
+        [ ] : Integration:
+            Fiche Demande
+            dans la liste ,  on a un bouton voir detail
+            -> appel getFicheDemande ,url scann : /demande/fiche/{id demande}
+            redirection dans la page demande/fiche.jsp
