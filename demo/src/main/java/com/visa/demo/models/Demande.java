@@ -1,15 +1,23 @@
 package com.visa.demo.models;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.bd.entity.Entity;
 import com.visa.demo.models.obj.DemandeObj;
+import com.visa.demo.utils.NetworkUtils;
 import com.visa.demo.utils.konst.C_EtatDemande;
 
 public class Demande extends Entity<Demande> {
@@ -23,6 +31,7 @@ public class Demande extends Entity<Demande> {
     private String idetatdemande;
 
     private String idoriginal;
+    private byte[] qrcode;
 
     public Demande() {
         setNomTable("demande");
@@ -31,40 +40,39 @@ public class Demande extends Entity<Demande> {
 
     public List<DossierStandard> dossierStandardNotChecked(Connection c) throws Exception {
         String req = "SELECT ds.*\n" + //
-                        "FROM dossierstandard ds\n" + //
-                        "WHERE\n" + //
-                        "    id NOT IN (\n" + //
-                        "        SELECT iddossierstandard\n" + //
-                        "        FROM checkdossierstandard\n" + //
-                        "        WHERE\n" + //
-                        "            iddemande = '" + id +"'\n" + //
-                        "            AND exist = TRUE\n" + //
-                        "            and idfilepdf is not NULL\n" + //
-                        "    ) AND obligatoire = TRUE";
+                "FROM dossierstandard ds\n" + //
+                "WHERE\n" + //
+                "    id NOT IN (\n" + //
+                "        SELECT iddossierstandard\n" + //
+                "        FROM checkdossierstandard\n" + //
+                "        WHERE\n" + //
+                "            iddemande = '" + id + "'\n" + //
+                "            AND exist = TRUE\n" + //
+                "            and idfilepdf is not NULL\n" + //
+                "    ) AND obligatoire = TRUE";
         return new DossierStandard().fromScript(c, req, null);
     }
 
     public List<DossierSupplementaire> dossierSupplementaireNotChecked(Connection c) throws Exception {
         String req = "SELECT ds.*\n" + //
-                        "FROM dossiersupplementaire ds\n" + //
-                        "WHERE\n" + //
-                        "    ds.idtypevisa = '" + idtypevisa + "'\n" + //
-                        "    and ds.id not IN (\n" + //
-                        "        SELECT iddossiersupplementaire\n" + //
-                        "        FROM checkdossiersupplementaire\n" + //
-                        "        WHERE\n" + //
-                        "            iddemande = '" + id + "'\n" + //
-                        "            AND exist = TRUE\n" + //
-                        "            and idfilepdf is not NULL\n" + //
-                        "    ) AND obligatoire = TRUE";
+                "FROM dossiersupplementaire ds\n" + //
+                "WHERE\n" + //
+                "    ds.idtypevisa = '" + idtypevisa + "'\n" + //
+                "    and ds.id not IN (\n" + //
+                "        SELECT iddossiersupplementaire\n" + //
+                "        FROM checkdossiersupplementaire\n" + //
+                "        WHERE\n" + //
+                "            iddemande = '" + id + "'\n" + //
+                "            AND exist = TRUE\n" + //
+                "            and idfilepdf is not NULL\n" + //
+                "    ) AND obligatoire = TRUE";
         return new DossierSupplementaire().fromScript(c, req, null);
     }
-
 
     public void approve(Connection c, LocalDate debut, LocalDate expiration) throws Exception {
         c.setAutoCommit(false);
         try {
-            
+
             Visa visa = new Visa();
             visa.setDatedebut(debut);
             visa.setDateexpiration(expiration);
@@ -125,36 +133,35 @@ public class Demande extends Entity<Demande> {
      * @return
      * @throws Exception
      */
-    public Demande save(Connection c, String idoriginal,Demandeur demandeur, Passport passport, Visatransformable visa,
+    public Demande save(Connection c, String idoriginal, Demandeur demandeur, Passport passport, Visatransformable visa,
             List<String> dossiersStandard, List<String> dossiersSup, String idTypeDemande,
-            String idTypeVisa,String etatdemande,
+            String idTypeVisa, String etatdemande,
             LocalDate date)
             throws Exception {
-            boolean isCloseable = false;
+        boolean isCloseable = false;
         try {
-            if(c == null){
+            if (c == null) {
                 c = new DbConnexe().getConnection();
                 isCloseable = true;
                 c.setAutoCommit(false);
             }
             boolean demandeurExist = false;
-            if(demandeur.getId() != null && !demandeur.getId().isEmpty()){
-                demandeurExist =true;
+            if (demandeur.getId() != null && !demandeur.getId().isEmpty()) {
+                demandeurExist = true;
             }
             // Insertion Detaitl
-            if(!demandeurExist){
+            if (!demandeurExist) {
                 demandeur.insert(c);
             }
             passport.setIddemandeur(demandeur.getId());
-            if(visa.getId() == null){
+            if (visa.getId() == null) {
                 passport.insert(c);
             }
             visa.setIddemandeur(demandeur.getId());
             visa.setIdpassport(passport.getId());
-            if(visa.getId() == null){
+            if (visa.getId() == null) {
                 visa.insert(c);
             }
-
             // Insertion Demande
             Demande demande = new Demande();
             demande.setIddemandeur(demandeur.getId());
@@ -169,36 +176,38 @@ public class Demande extends Entity<Demande> {
 
             demande.insert(c);
 
+            // Generation qr code
+            demande.mettreAJourApresGenerationQrCode(c);
+
             // Insertion dossier fournit
-            if(!demandeurExist){
+            if (!demandeurExist) {
                 for (String idStandard : dossiersStandard) {
                     CheckDossierStandard checkdossier = new CheckDossierStandard();
                     checkdossier.setIddemande(demande.getId());
                     checkdossier.setIddossierstandard(idStandard);
                     checkdossier.setExist(true);
-    
+
                     checkdossier.insert(c);
                 }
-    
+
                 for (String idsupplementaire : dossiersSup) {
                     CheckDossierSupplementaire checkdossier = new CheckDossierSupplementaire();
                     checkdossier.setIddemande(demande.getId());
                     checkdossier.setIddossiersupplementaire(idsupplementaire);
                     checkdossier.setExist(true);
-    
+
                     checkdossier.insert(c);
                 }
             }
-            if(isCloseable){
+            if (isCloseable) {
                 c.commit();
             }
             return demande;
         } catch (Exception e) {
             c.rollback();
             throw e;
-        }
-        finally{
-            if(isCloseable){
+        } finally {
+            if (isCloseable) {
                 c.setAutoCommit(true);
                 c.close();
             }
@@ -263,6 +272,14 @@ public class Demande extends Entity<Demande> {
 
     public void setIdoriginal(String idoriginal) {
         this.idoriginal = idoriginal;
+    }
+
+    public byte[] getQrcode() {
+        return qrcode;
+    }
+
+    public void setQrcode(byte[] qrcode) {
+        this.qrcode = qrcode;
     }
 
     public String getIdetatdemande() {
@@ -491,5 +508,68 @@ public class Demande extends Entity<Demande> {
             demande.setIdetatdemande(demandeObj.getEtatDemande().getId());
         }
         return demande;
+    }
+
+    public void mettreAJourApresGenerationQrCode(Connection c) throws Exception {
+        if (this.getId() == null) {
+            throw new Exception("id de la demande doit etre non null");
+        }
+        boolean isClosable = false;
+        String query = "update demande set qrcode=decode(?,'hex') where id=?";
+        String url = "http://" + NetworkUtils.getLocalIpAddress() + ":5173/demandes/suivi/" + this.getId();
+        this.genererQrCode(url);
+        String hex = HexFormat.of().formatHex(this.getQrcode());
+        if (c == null) {
+            DbConnexe db = new DbConnexe();
+            c = db.getConnection();
+            isClosable = true;
+            c.setAutoCommit(false);
+        }
+        try {
+
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, hex);
+            ps.setString(2, this.getId());
+            ps.executeUpdate();
+            if (isClosable) {
+                c.commit();
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            if (isClosable) {
+                c.rollback();
+            }
+            throw new Exception("erreur lors de la mise a jour: " + e.getMessage());
+        } finally {
+            if (isClosable) {
+                c.setAutoCommit(true);
+                c.close();
+            }
+        }
+    }
+
+    public void genererQrCode(String contenu) throws Exception {
+
+        try {
+            if (contenu == null || contenu.isEmpty()) {
+                throw new Exception("le contenu doit etre existante ou vide");
+            }
+            BitMatrix matrix = new MultiFormatWriter().encode(
+                    contenu,
+                    BarcodeFormat.QR_CODE,
+                    300,
+                    300);
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            MatrixToImageWriter.writeToStream(
+                    matrix,
+                    "PNG",
+                    outputStream);
+            System.out.println(outputStream.toString());
+            this.qrcode = outputStream.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
