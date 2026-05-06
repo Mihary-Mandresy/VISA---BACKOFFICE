@@ -8,12 +8,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${demande != null ? "Modification demande de Transformation de visa": "Creation demande de transformation de visa"}</title>
 
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/form-visa.css">
         <script src="${pageContext.request.contextPath}/assets/js/jquery-4.0.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets/js/form.js"></script>
+        <%@ include file="../../includes/css.jsp" %>
     </head>
     <body>
-
+        <%@ include file="../../includes/header.jsp" %>
+        <main>
         <c:choose>
             <c:when test="${demande == null}">
                 <c:url var="formAction" value="/demande" />
@@ -22,6 +23,7 @@
                 <c:url var="formAction" value="/demande/update" />
             </c:otherwise>
         </c:choose>
+        <div class="title-page"><h2>Ajouter Un Demande</h2></div>
         <form class="form-wrap" action="${formAction}" method="post">
             <c:if test="${demande != null}">
                 <input type="hidden" name="iddemande" value="${demande.id}">
@@ -42,30 +44,32 @@
                 <p>Transformation d'un visa transformable</p>
             </div>
             <div class="form-body">
-                <div>
-                    <div class="section-title">Demandeur</div>
-                    <div class="field-group">
-                        <div>
-                            <label class="field-label">choisir un demandeur ou sans donner interieur</label>
-                            <select name="demandeur.id" class="demandeurs">
-                                 <option value="" selected >Sans donner interieur</option>
-                                <c:forEach items="${demandeurs}" var="demandeur">
-                                    <option value="${demandeur.id}" >${demandeur.nom} - ${demandeur.prenom}</option>
-                                </c:forEach>
-                            </select >
+                <div class="groupe-infos">
+                    <div class="info-card-item">
+                        <div class="section-title">Demandeur</div>
+                        <div class="field-group">
+                            <div>
+                                <label class="field-label">choisir un demandeur ou sans donner interieur</label>
+                                <select name="demandeur.id" class="demandeurs">
+                                    <option value="" selected >Sans donner interieur</option>
+                                    <c:forEach items="${demandeurs}" var="demandeur">
+                                        <option value="${demandeur.id}" >${demandeur.nom} - ${demandeur.prenom}</option>
+                                    </c:forEach>
+                                </select >
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="section-title">Type VISA demandé</div>
-                    <div class="field-group">
-                        <div>
-                            <label class="field-label">type de visa</label>
-                            <select name="idTypeVisa" class="types-visas">
-                                <c:forEach items="${typevisas}" var="type">
-                                    <option value="${type.id}" ${demande.idtypevisa != null && demande.idtypevisa == type.id ? "selected":''}>${type.libelle}</option>
-                                </c:forEach>
-                            </select >
+                    <div class="info-card-item">
+                        <div class="section-title">Type VISA demandé</div>
+                        <div class="field-group">
+                            <div>
+                                <label class="field-label">type de visa</label>
+                                <select name="idTypeVisa" class="types-visas">
+                                    <c:forEach items="${typevisas}" var="type">
+                                        <option value="${type.id}" ${demande.idtypevisa != null && demande.idtypevisa == type.id ? "selected":''}>${type.libelle}</option>
+                                    </c:forEach>
+                                </select >
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -322,7 +326,7 @@
                             <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
                         </div>
                     </c:if>
-
+                    </main>
                     <script>
                         $(document).ready(function(){
                             $('.types-visas').on('change', function() {

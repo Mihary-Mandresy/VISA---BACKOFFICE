@@ -1,0 +1,37 @@
+[ ] Sprint 3 (Upload)
+     [x] : Front (Judi)
+        [x] : creer le controller qui load l'affichage 
+        [x] : Creer affichage qui affiche le formulaire de remplissement des dossier
+        [x] : Associer l'affichage avec le liste des demandes
+            [ ] : Modifier le bouton scanner en approuver si le dossier est complet
+        [x] : Faire l'input type file en version dynamique
+            [x] : Dans le controller : 
+                [x] : Appeller le fonction getAllDossierStandard et l'envoyer dans le view
+                [x] : Appeller le fonction getAllDossierSupplementaire et l'envoyer dans le view
+            [x] : Boucler les dossier et mettre le input type file en dynamique
+    [ ] : Back
+        [x] : Base (Mihary)
+            [x] : Cree une table filepdf
+            [x] : Ajouter une colonne idfilepdf dans les tables checkdossiers
+            [x] : Migration sprint 3
+        [x] : Synchronise les entites
+        [x] : Fonctionnalite
+            [x] : Fonction (Mihary)
+                [x] : List<DossierStandard> getAllDossierStandard(Connection c)
+                    - Recuperer tous les dossiers standard
+                [x] : List<DossierSupplementaire> getAllDossierSupplementaire(Connection c, String idtypevisa)
+                    - Recuperer tous les dossiers supplementaire a l'aide d'un idtypevisa
+                [x] : boolean isFullFolder(Connection c)
+                    - Fonction qui checker si tous les dossier du demande sont Ok
+                [x] : void changeEtatDemande(String idetat)
+                    - Changer l'Etat du demande a l'aide d'un Id Demande
+                [x] : void scanVisa(Connection c)
+                    - Fonction qui scan une demande et si tous les dossiers sont Ok, il modifier l'etat du demande par visa scanne
+                [x] : void approve(Connection c, LocalDate debut, LocalDate fin)
+                    - Cree une carte residence et une visa a partir d'une demande et change l'etat du demande
+            [x] : Controller (Mihary)
+                [x] : Get -> handleScan : iddemande
+                    + DossierStandard
+                    + DossierSupplementaire
+                [x] : Post -> saveScan : Map<String, MultipartFile> files, iddemande
+                [x] : Post -> approveDemande :  date_debut, date_fin

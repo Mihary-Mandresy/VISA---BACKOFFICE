@@ -10,6 +10,7 @@ import java.util.Map;
 import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.bd.entity.Entity;
 import com.visa.demo.models.obj.DemandeObj;
+import com.visa.demo.utils.konst.C_EtatDemande;
 
 public class Demande extends Entity<Demande> {
 
@@ -26,6 +27,93 @@ public class Demande extends Entity<Demande> {
     public Demande() {
         setNomTable("demande");
         setSigle("DMD");
+    }
+
+    public List<DossierStandard> dossierStandardNotChecked(Connection c) throws Exception {
+        String req = "SELECT ds.*\n" + //
+                        "FROM dossierstandard ds\n" + //
+                        "WHERE\n" + //
+                        "    id NOT IN (\n" + //
+                        "        SELECT iddossierstandard\n" + //
+                        "        FROM checkdossierstandard\n" + //
+                        "        WHERE\n" + //
+                        "            iddemande = '" + id +"'\n" + //
+                        "            AND exist = TRUE\n" + //
+                        "            and idfilepdf is not NULL\n" + //
+                        "    ) AND obligatoire = TRUE";
+        return new DossierStandard().fromScript(c, req, null);
+    }
+
+    public List<DossierSupplementaire> dossierSupplementaireNotChecked(Connection c) throws Exception {
+        String req = "SELECT ds.*\n" + //
+                        "FROM dossiersupplementaire ds\n" + //
+                        "WHERE\n" + //
+                        "    ds.idtypevisa = '" + idtypevisa + "'\n" + //
+                        "    and ds.id not IN (\n" + //
+                        "        SELECT iddossiersupplementaire\n" + //
+                        "        FROM checkdossiersupplementaire\n" + //
+                        "        WHERE\n" + //
+                        "            iddemande = '" + id + "'\n" + //
+                        "            AND exist = TRUE\n" + //
+                        "            and idfilepdf is not NULL\n" + //
+                        "    ) AND obligatoire = TRUE";
+        return new DossierSupplementaire().fromScript(c, req, null);
+    }
+
+
+    public void approve(Connection c, LocalDate debut, LocalDate expiration) throws Exception {
+        c.setAutoCommit(false);
+        try {
+            
+            Visa visa = new Visa();
+            visa.setDatedebut(debut);
+            visa.setDateexpiration(expiration);
+            visa.setReference("REFV_" + System.currentTimeMillis());
+            visa.setIdpassport(getIdpassport());
+            visa.setIdtypevisa(getIdtypevisa());
+            visa.setIddemande(id);
+
+            visa.insert(c);
+
+            CarteResident carteResident = new CarteResident();
+            carteResident.setDatedebut(debut);
+            carteResident.setDateexpiration(expiration);
+            carteResident.setReference("REFC_" + System.currentTimeMillis());
+            carteResident.setIddemande(id);
+            carteResident.setIdpassport(getIdpassport());
+
+            carteResident.insert(c);
+
+            setIdetatdemande(C_EtatDemande.REQUEST_APPROVED);
+
+            update(c);
+
+            c.commit();
+        } catch (Exception e) {
+            c.rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            c.setAutoCommit(true);
+        }
+    }
+
+    public void changeEtatDemande(String idetatdemande) {
+        setIdetatdemande(idetatdemande);
+    }
+
+    public void scanVisa(Connection c) throws Exception {
+        if (isFullFolder(c)) {
+            setIdetatdemande(C_EtatDemande.REQUEST_SCANNED);
+            save(c);
+        }
+    }
+
+    public boolean isFullFolder(Connection c) throws Exception {
+        List<DossierStandard> dStandardsNotChecked = dossierStandardNotChecked(c);
+        List<DossierSupplementaire> dSupplementairesNotCheckd = dossierSupplementaireNotChecked(c);
+
+        return dStandardsNotChecked.isEmpty() && dSupplementairesNotCheckd.isEmpty();
     }
 
     /**
@@ -116,20 +204,6 @@ public class Demande extends Entity<Demande> {
             }
         }
     }
-
-    // =========== Verification (Mbola tsy vita tsara ) ===========
-
-    public boolean isFullStandard(Connection c, List<String> idStandard) throws Exception {
-        return new DossierStandard().findAll(c).stream()
-                .allMatch(e -> idStandard.contains(e.getId()));
-    }
-
-    public boolean isFullSup(Connection c, List<String> idSup, String idStatut) throws Exception {
-        return new DossierSupplementaire().select(c, String.format("idstatutvisa like \"%s\"", idStatut), null).stream()
-                .allMatch(e -> idSup.contains(e.getId()));
-    }
-
-    // =========== Verification ===========
 
     public String getIdtypedemande() {
         return idtypedemande;

@@ -1,10 +1,39 @@
 
     $main-color: #378ADD;
     $main-text-main-color: #1a1a1a;
-    $label-and-text-secondary-color-1: #666;
-    $label-and-text-secondary-color-2: #888;
+    $label-and-text-secondary-color-1: rgb(251,251,251);
+    $label-and-text-secondary-color-2: rgb(251,251,251);
     $border-color-1: #ddd;
     $border-color-2: #e0e0e0;
     $border-color-3: #e8e8e8;
     $page-background-color: #f5f5f5;
     $selected-card-color: #E6F1FB; 
+    $logo-font: 'logoFont'; 
+    $font: 'Outfit', sans-serif;
+    $font-weigth-semibold:600;
+    $font-weigth-title-semibold:600;
+
+    $background-color-primary: #101828;
+    $background-color-secondary: #171f2f;
+    $background-color-third: #252d3c;
+    $text-color: #eae9ec;
+    $input-color: rgb(212, 212, 212);
+    $btn-success-hover-background:linear-gradient(45deg, #28a745, #218838);
+    $btn-success-background:linear-gradient(135deg, #38ef7d, #28a745);
+    $border-input-color: #344054;
+    $border-card-color: #344054;
+    
+
+    @font-face { 
+  font-family: $logo-font;
+  src: url('../font/Mars.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal; 
+}
+
+@font-face {
+  font-family: $font;
+  src: url('../font/Outfit-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal; 
+}

@@ -5,6 +5,7 @@ import com.nojpa.bd.entity.Entity;
 public class CheckDossierSupplementaire extends Entity<CheckDossierSupplementaire> {
 
     private boolean exist;
+    private String idfilepdf;
     private String iddemande;
     private String iddossiersupplementaire;
 
@@ -36,4 +37,13 @@ public class CheckDossierSupplementaire extends Entity<CheckDossierSupplementair
     public void setIddossiersupplementaire(String iddossiersupplementaire) {
         this.iddossiersupplementaire = iddossiersupplementaire;
     }
+
+    public String getIdfilepdf() {
+        return idfilepdf;
+    }
+
+    public void setIdfilepdf(String idfilepdf) {
+        this.idfilepdf = idfilepdf;
+    }
+
 }

@@ -44,14 +44,19 @@ public class DemandeController {
             c = new DbConnexe().getConnection();
             model.addAttribute("listeDemandes", new DemandeLib().findAll(c));
         } catch (Exception e) {
-            // TODO: handle exception
             model.addAttribute("error", e.getMessage());
+            e.printStackTrace();
         } finally {
             if (c != null) {
                 c.close();
             }
         }
         return "pages/demande/list";
+    }
+
+    @GetMapping("/scan")
+    private String scanDemande(Model model) throws Exception {
+        return "pages/demande/scan/scan";
     }
 
     @GetMapping("/form")
@@ -209,7 +214,6 @@ public class DemandeController {
             mv.addObject("dossiersupplementaires", new DossierSupplementaire().findAll(c));
             mv.addObject("formulaire", new DemandeDto());
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
             mv.addObject("error", e.getMessage());
         } finally {
