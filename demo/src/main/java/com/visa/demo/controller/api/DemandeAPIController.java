@@ -3,6 +3,8 @@ package com.visa.demo.controller.api;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,7 @@ import com.visa.demo.models.obj.DemandeObj;
 
 @RestController
 @RequestMapping("/demande/api")
+@CrossOrigin(origins = "http://localhost:5173")
 public class DemandeAPIController {
 
     @GetMapping("/demandeur")
@@ -103,13 +106,16 @@ public class DemandeAPIController {
     }
     @GetMapping
     public List<DemandeRechercheDto> findBySearchValue(@RequestParam("id")String id) throws Exception{
-        if(id == null || id.isEmpty() || (!id.contains("DMD") && !id.contains("PASS"))){
+        if(id!=null && !id.isEmpty() && (!id.contains("DMD") && !id.contains("PASS"))){
             throw new Exception("il faut un id passport ou un id demande");
         }
         Connection c = null;
         Demandeur dmdr= new Demandeur();
         Demande d = new Demande();
         List<DemandeRechercheDto> resultats = new ArrayList<DemandeRechercheDto>();
+        if(id == null || id.isEmpty()){
+            resultats.addAll(new DemandeRechercheDto().findAll(c));
+        }
         try {
             c = new DbConnexe().getConnection();
             if(id.contains("DMD")){

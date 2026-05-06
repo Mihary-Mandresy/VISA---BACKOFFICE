@@ -516,7 +516,7 @@ public class Demande extends Entity<Demande> {
         }
         boolean isClosable = false;
         String query = "update demande set qrcode=decode(?,'hex') where id=?";
-        String url = "http://" + NetworkUtils.getLocalIpAddress() + ":5173/demandes/suivi/" + this.getId();
+        String url = "http://" + NetworkUtils.getLocalIpAddress() + ":5173/demande/api/" + this.getId();
         this.genererQrCode(url);
         String hex = HexFormat.of().formatHex(this.getQrcode());
         if (c == null) {
