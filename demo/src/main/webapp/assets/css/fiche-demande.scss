@@ -1,0 +1,140 @@
+@use "root" as *;
+/* ── Fond de page ── */
+body {
+    background-color: #f4f6f9;
+}
+
+/* ── Card principale ── */
+.fiche-card {
+    position: fixed;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    width: 130%;
+    
+}
+
+/* ── En-tête ── */
+.fiche-card .card-header {
+    background-color: #185FA5;
+    border-radius: 12px 12px 0 0;
+    padding: 0.9rem 1.5rem;
+}
+
+/* ── Pied de page ── */
+.fiche-card .card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    border-radius: 0 0 12px 12px;
+}
+
+/* ── Cadre QR Code ── */
+.qr-wrapper {
+    width: 150px;
+    height: 150px;
+    border: 1.5px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+
+
+/* ── Liste label / valeur ── */
+dl.info-list {
+    row-gap: 14px;
+
+    dt {
+        font-size: 13px;
+        color: $label-and-text-secondary-color-1;
+        font-weight: 400;
+        padding-top: 2px;
+    }
+
+    dd {
+        font-size: 13px;
+        color: #212529;
+        font-weight: 500;
+        margin-bottom: 0;
+    }
+
+}
+
+/* ── Badge ID ── */
+.badge-id {
+    font-family: monospace;
+    font-size: 12px;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
+/* ── Badge Type de visa (bleu) ── */
+.badge-visa {
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #E6F1FB;
+    color: #0C447C;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* ── Badge Type de demande (vert) ── */
+.badge-type {
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #EAF3DE;
+    color: #3B6D11;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* ── Badge État (ambre) ── */
+.badge-etat {
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #FAEEDA;
+    color: #633806;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-etat .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #BA7517;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* ── Avatar initiales ── */
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #B5D4F4;
+    color: #0C447C;
+    font-size: 11px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.avatar-name{
+     color: #0C447C;
+}
