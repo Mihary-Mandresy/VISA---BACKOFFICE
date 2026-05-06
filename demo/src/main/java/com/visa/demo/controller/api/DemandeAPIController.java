@@ -63,7 +63,6 @@ public class DemandeAPIController {
         try {
             c = new DbConnexe().getConnection();
             Demande d = new Demande().findByid(c, id);
-            System.out.println("idd: " + d.getId());
             Demandeur dmdr = new Demandeur().findByid(c, d.getIddemandeur());
 
             DemandeurDto dmdrDto = new DemandeurDto();
@@ -88,12 +87,12 @@ public class DemandeAPIController {
             dmdrDto.setSituationdefamille(situationfamiliale);
             dto.setId(d.getId());
             dto.setIdoriginal(d.getIdoriginal());
-            dto.setDemandeurDto(dmdrDto);
-            dto.setEtatDemande(etatDemandeDto);
-            dto.setPassportDTO(passport);
-            dto.setVisatransformableDTO(visatransformableDto);
+            dto.setDemandeur(dmdrDto);
+            dto.setEtatdemande(etatDemandeDto);
+            dto.setPassport(passport);
+            dto.setVisatransformable(visatransformableDto);
             dto.setHistoriquesEtats(historiqueEtats);
-            dto.setDossiersStandards(dossierStandard);
+            dto.setDossierStandard(dossierStandard);
             dto.setDossierSupplementaire(dossierSupplementaires);
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,14 +117,17 @@ public class DemandeAPIController {
         }
         try {
             c = new DbConnexe().getConnection();
-            if(id.contains("DMD")){
-                d = new Demande().findByid(c, id);
-                dmdr = dmdr.findByid(c,d.getIddemandeur());
-                resultats.add(new DemandeRechercheDto().findByid(c,d.getId()));
-            }
-            if(id.contains("PASS")){
-                Passport  p = new Passport().findByid(c, id);
-                dmdr = new Demandeur().findByid(c, p.getIddemandeur());
+            if(id != null){
+
+                if(id.contains("DMD")){
+                    d = new Demande().findByid(c, id);
+                    dmdr = dmdr.findByid(c,d.getIddemandeur());
+                    resultats.add(new DemandeRechercheDto().findByid(c,d.getId()));
+                }
+                if(id.contains("PASS")){
+                    Passport  p = new Passport().findByid(c, id);
+                    dmdr = new Demandeur().findByid(c, p.getIddemandeur());
+                }
             }
             if(dmdr.getId() != null){
                 String nomCompletDemandeur = dmdr.getNom().concat(" ").concat(dmdr.getPrenom());

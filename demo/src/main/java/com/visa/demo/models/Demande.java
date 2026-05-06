@@ -31,7 +31,7 @@ public class Demande extends Entity<Demande> {
     private String idetatdemande;
 
     private String idoriginal;
-    private byte[] qrcode;
+    private byte[] qrcode = new byte[0];
 
     public Demande() {
         setNomTable("demande");
@@ -526,7 +526,6 @@ public class Demande extends Entity<Demande> {
             c.setAutoCommit(false);
         }
         try {
-
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, hex);
             ps.setString(2, this.getId());
@@ -566,7 +565,6 @@ public class Demande extends Entity<Demande> {
                     matrix,
                     "PNG",
                     outputStream);
-            System.out.println(outputStream.toString());
             this.qrcode = outputStream.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException(e);

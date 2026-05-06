@@ -5,15 +5,13 @@ import java.util.List;
 public class DemandeFicheFrontDto {
     private String id;
     private String idoriginal;
-    private DemandeurDto demandeurDto;
-    private EtatDemandeDto etatDemande;
-    VisaTransformableDTO visatransformableDTO;
-    PassportDTO passportDTO;
-
-    List<HistoriqueEtatDemandeDto> historiquesEtats;
-    List<DossierStandardDto> dossiersStandards;
-    List<DossierSupplementaireDto> dossierSupplementaire;
-
+    private DemandeurDto demandeur;
+    private EtatDemandeDto etatdemande;
+    private VisaTransformableDTO visatransformable;
+    private PassportDTO passport;
+    private List<DossierStandardDto> dossierStandard;
+    private List<DossierSupplementaireDto> dossierSupplementaire;
+    private List<HistoriqueEtatDemandeDto> historiquesEtats;
     public String getIdoriginal() {
         return idoriginal;
     }
@@ -22,12 +20,12 @@ public class DemandeFicheFrontDto {
         this.idoriginal = idoriginal;
     }
 
-    public DemandeurDto getDemandeurDto() {
-        return demandeurDto;
+    public DemandeurDto getDemandeur() {
+        return demandeur;
     }
 
-    public void setDemandeurDto(DemandeurDto demandeurDto) {
-        this.demandeurDto = demandeurDto;
+    public void setDemandeur(DemandeurDto demandeur) {
+        this.demandeur = demandeur;
     }
 
     public String getId() {
@@ -38,20 +36,20 @@ public class DemandeFicheFrontDto {
         this.id = id;
     }
 
-    public VisaTransformableDTO getVisatransformableDTo() {
-        return visatransformableDTO;
+    public VisaTransformableDTO getVisatransformable() {
+        return visatransformable;
     }
 
-    public void setVisatransformableDTO(VisaTransformableDTO visatransformableDTO) {
-        this.visatransformableDTO = visatransformableDTO;
+    public void setVisatransformable(VisaTransformableDTO visatransformable) {
+        this.visatransformable = visatransformable;
     }
 
-    public PassportDTO getPassportDTO() {
-        return passportDTO;
+    public PassportDTO getPassport() {
+        return passport;
     }
 
-    public void setPassportDTO(PassportDTO passportDTO) {
-        this.passportDTO = passportDTO;
+    public void setPassport(PassportDTO passport) {
+        this.passport = passport;
     }
 
     public List<HistoriqueEtatDemandeDto> getHistoriquesEtats() {
@@ -62,12 +60,12 @@ public class DemandeFicheFrontDto {
         this.historiquesEtats = historiqueEtats;
     }
 
-    public List<DossierStandardDto> getDossiersStandards() {
-        return dossiersStandards;
+    public List<DossierStandardDto> getDossierStandard() {
+        return dossierStandard;
     }
 
-    public void setDossiersStandards(List<DossierStandardDto> dossiersStandards) {
-        this.dossiersStandards = dossiersStandards;
+    public void setDossierStandard(List<DossierStandardDto> dossierStandard) {
+        this.dossierStandard = dossierStandard;
     }
 
     public List<DossierSupplementaireDto> getDossierSupplementaire() {
@@ -78,11 +76,11 @@ public class DemandeFicheFrontDto {
         this.dossierSupplementaire = dossierSupplementaire;
     }
 
-    public EtatDemandeDto getEtatDemande() {
-        return etatDemande;
+    public EtatDemandeDto getEtatdemande() {
+        return etatdemande;
     }
 
-    public void setEtatDemande(EtatDemandeDto etatDemande) {
-        this.etatDemande = etatDemande;
+    public void setEtatdemande(EtatDemandeDto etatdemande) {
+        this.etatdemande = etatdemande;
     }
 }
