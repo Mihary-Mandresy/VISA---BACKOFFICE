@@ -12,4 +12,4 @@ Dossier de configuration pour le Helper NOJPA
 
 ## helpMd :
 
-C'est le dossier qui contient les fichiers d'aide
+C'est le dossier qui contient les fichiers d'aide pour installer l'appli
