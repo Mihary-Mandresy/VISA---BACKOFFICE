@@ -17,123 +17,237 @@
             </head>
 
             <body>
-                <div style="display: flex;flex-direction: row; justify-content: space-between;">
-                    <%@ include file="../../includes/header.jsp" %>
-                        <main>
-                            <div class="row justify-content-start py-5" style="margin-left: 0;">
-                                <div class="col-12 col-md-10 col-lg-9">
-                                    <div class="card fiche-card">
-                                        <!-- ══════════════════════════════
-                                    EN-TÊTE
-                                    ══════════════════════════════════ -->
-                                        <div class="card-header badge-primary">
-                                            <h5 class="mb-0 text-white" style="font-size:16px; font-weight:500;">
-                                                Fiche de demande
-                                            </h5>
-                                        </div>
 
-                                        <!-- ══════════════════════════════
-                                    CORPS
-                                    ══════════════════════════════════ -->
-                                        <div class="card-body p-5 bg-dark">
+                <div class="container-fluid h-100">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <%@ include file="../../includes/header.jsp" %>
+                        </div>
+                        <main class="col-12 col-md-8 col-lg-8 bg-s py-5 px-5">
+                            <div class="row mb-5">
+                                <div class="col-4 offset-4 text-center">
 
-                                            <div class="d-flex flex-column align-items-center gap-4">
+                                    <img class="img-fluid border rounded shadow-sm p-2 bg-white"
+                                        src="data:image/png;base64,${qrcode}"
+                                        alt="QR Code de la demande n°${demande.id}" />
 
-                                                <!-- ── COLONNE GAUCHE : QR Code (4/12) ── -->
-                                                <div class="col-12 col-md-4 d-flex flex-column align-items-center">
-
-                                                    <div class="qr-wrapper">
-                                                        <img src="data:image/png;base64,${qrcode}"
-                                                            alt="QR Code de la demande n°${demande.id}" />
-                                                    </div>
-
-                                                    <p class="text-center mt-2 mb-0"
-                                                        style="font-size:12px; color:#6c757d;">
-                                                        QR Code de la demande
-                                                    </p>
-
-                                                </div>
-
-                                                <!-- ── COLONNE DROITE : Informations (8/12) ── -->
-                                                <div class="col-12 col-md-8">
-
-                                                    <%-- dl.row=grille Bootstrap dt.col-5=label (largeur 5/12)
-                                                        dd.col-7=valeur (largeur 7/12) --%>
-                                                        <dl class="row info-list mb-0 ">
-
-                                                            <!-- ID -->
-                                                            <dt class="col-5">ID demande</dt>
-                                                            <dd class="col-7">
-                                                                <span class="badge-id">#${demande.id}</span>
-                                                            </dd>
-
-                                                            <!-- Demandeur -->
-                                                            <dt class="col-5">Demandeur</dt>
-                                                            <dd class="col-7">
-                                                                <div class="d-flex align-items-center gap-2">
-                                                                    <%-- Avatar initiales --%>
-                                                                        <span class="avatar">
-                                                                            ${fn:substring(demande.prenomdemandeur,0,1)}${fn:substring(demande.nomdemandeur,0,1)}
-                                                                        </span>
-                                                                        <span
-                                                                            class="avatar-name">${demande.nomdemandeur}
-                                                                            ${demande.prenomdemandeur}</span>
-
-                                                                </div>
-                                                            </dd>
-
-                                                            <!-- Type de visa -->
-                                                            <dt class="col-5">Type de visa</dt>
-                                                            <dd class="col-7">
-                                                                <span class="badge-visa">${demande.typevisa}</span>
-                                                            </dd>
-
-                                                            <!-- Type de demande -->
-                                                            <dt class="col-5">Type de demande</dt>
-                                                            <dd class="col-7">
-                                                                <span class="badge-type">${demande.typedemande}</span>
-                                                            </dd>
-
-                                                            <!-- État -->
-                                                            <dt class="col-5">État</dt>
-                                                            <dd class="col-7">
-                                                                <span class="badge-etat">
-                                                                    <span class="dot"></span>
-                                                                    ${demande.etatdemande}
-                                                                </span>
-                                                            </dd>
-
-                                                        </dl>
-
-                                                </div>
-
-                                            </div><%-- /row --%>
-
-                                        </div><%-- /card-body --%>
-
-                                            <!-- ══════════════════════════════
-                                            PIED DE PAGE : Boutons
-                                        ══════════════════════════════════ -->
-                                            <div class="card-footer d-flex gap-2 justify-content-end py-3 px-4 bg-dark">
-
-                                                <a href="${pageContext.request.contextPath}/demande/liste.jsp"
-                                                    class="btn btn-outline-light">
-                                                    &larr; Retour à la liste
-                                                </a>
-
-                                                <a href="${pageContext.request.contextPath}/demande/detail?id=${demande.id}"
-                                                    class="btn btn-primary btn-sm">
-                                                    Modifier
-                                                </a>
-
-                                            </div>
-
-                                    </div><%-- /card --%>
+                                    <p class="mt-3 text-white">
+                                        <i class="mdi mdi-qrcode-scan mdi-24px"></i>
+                                        QR Code de la demande
+                                    </p>
 
                                 </div>
                             </div>
-                </div>
-                </main>
+
+                            <div class="row mb-5">
+
+                                <!-- DEMANDEUR -->
+                                <div class="col-8">
+                                    <div class="card shadow-sm h-100 fond-card">
+
+                                        <div class="card-header bg-primary text-white">
+                                            <h3 class="mb-0">
+                                                <i class="mdi mdi-account-circle mdi-24px"></i>
+                                                Information du demandeur
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-body">
+
+                                            <p>
+                                                <i class="mdi mdi-account"></i>
+                                                <strong>Nom :</strong>
+                                                ${fichedemande.demandeur.nom}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-account-outline"></i>
+                                                <strong>Prénom :</strong>
+                                                ${fichedemande.demandeur.prenom}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-calendar"></i>
+                                                <strong>Date de naissance :</strong>
+                                                ${fichedemande.demandeur.dtn}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-briefcase"></i>
+                                                <strong>Profession :</strong>
+                                                ${fichedemande.demandeur.profession}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-map-marker"></i>
+                                                <strong>Adresse :</strong>
+                                                ${fichedemande.demandeur.adressemada}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-phone"></i>
+                                                <strong>Téléphone :</strong>
+                                                ${fichedemande.demandeur.tel}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-email"></i>
+                                                <strong>Email :</strong>
+                                                ${fichedemande.demandeur.email}
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- PASSEPORT + VISA -->
+                                <div class="col-4 d-flex flex-column">
+
+                                    <!-- PASSEPORT -->
+                                    <div class="card mb-5 shadow-sm fond-card">
+
+                                        <div class="card-header bg-success text-white">
+                                            <h3 class="mb-0">
+                                                <i class="mdi mdi-passport"></i>
+                                                Passeport
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-body">
+
+                                            <p>
+                                                <i class="mdi mdi-card-account-details"></i>
+                                                <strong>Numéro :</strong>
+                                                ${fichedemande.passport.numero}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-calendar-check"></i>
+                                                <strong>Délivrance :</strong>
+                                                ${fichedemande.passport.datedelivrance}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-calendar-remove"></i>
+                                                <strong>Expiration :</strong>
+                                                ${fichedemande.passport.dateexpiration}
+                                            </p>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- VISA -->
+                                    <div class="card shadow-sm border-0 rounded-top rounded-bottom fond-card">
+
+                                        <div class="card-header bg-warning rounded-top text-white">
+                                            <h3 class="mb-0">
+                                                <i class="mdi mdi-airplane"></i>
+                                                Visa Transformable
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-body">
+
+                                            <p>
+                                                <i class="mdi mdi-pound"></i>
+                                                <strong>Référence :</strong>
+                                                ${fichedemande.visatransformable.reference}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-calendar-import"></i>
+                                                <strong>Entrée :</strong>
+                                                ${fichedemande.visatransformable.dateentreemada}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-calendar-clock"></i>
+                                                <strong>Expiration :</strong>
+                                                ${fichedemande.visatransformable.dateexpiration}
+                                            </p>
+
+                                            <p>
+                                                <i class="mdi mdi-map-marker-radius"></i>
+                                                <strong>Lieu d'entrée :</strong>
+                                                ${fichedemande.visatransformable.lieuentree}
+                                            </p>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- DOSSIERS -->
+                            <div class="row">
+
+                                <!-- STANDARD -->
+                                <div class="col">
+                                    <div class="card shadow-sm fond-card">
+                                        <div class="card-header bg-info text-white">
+                                            <h3 class="mb-0">
+                                                <i class="mdi mdi-folder-check"></i>
+                                                Dossiers standard
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-body">
+
+                                            <c:forEach var="d" items="${fichedemande.dossierStandard}">
+                                                <p>
+                                                    <i class="mdi mdi-file-document-outline"></i>
+                                                    ${d.libelle}
+
+                                                    <c:choose>
+                                                        <c:when test="${d.exist}">
+                                                            <i class="mdi mdi-check-circle text-success ms-2"></i>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="mdi mdi-close-circle text-danger ms-2"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                            </c:forEach>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SUPPLÉMENTAIRES -->
+                                <div class="col">
+                                    <div class="card shadow-sm fond-card">
+                                        <div class="card-header bg-secondary text-white">
+                                            <h3 class="mb-0">
+                                                <i class="mdi mdi-folder-plus"></i>
+                                                Dossiers supplementaires
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-body">
+
+                                            <c:forEach var="d" items="${fichedemande.dossierSupplementaire}">
+                                                <p>
+                                                    <i class="mdi mdi-file-plus-outline"></i>
+                                                    ${d.libelle}
+
+                                                    <c:choose>
+                                                        <c:when test="${d.exist}">
+                                                            <i class="mdi mdi-check-circle text-success ms-2"></i>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="mdi mdi-close-circle text-danger ms-2"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                            </c:forEach>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </main>
+                    </div>
                 </div>
             </body>
 
