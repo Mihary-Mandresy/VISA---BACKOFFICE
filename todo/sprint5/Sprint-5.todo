@@ -1,0 +1,29 @@
+- [ ] Sprint 5
+	- [x] Conception(Valisoa)
+		- [x] information (bytea pdp, bytea signature, iddemandeur) en photo daoly
+	- [ ] Fronted (Judi)
+		- [ ] Boutoun qui mène vers la  page information en le donnant une parametre id
+			- [ ] Etapes
+				- [ ] 1 - Pdp
+				- [ ] 2 - Signature
+			* [ ] Redirection vers listse demande apres ou vers la page detail du demandeur
+		+ [ ] Affichage information
+			+ [ ] Page Details Demande
+				+ [ ] Toutes les informations en sous forme de gride
+				+ [ ] Pdp en haut a gauche et signature en bas a droite
+			* [ ] Page details demandeurs
+				* [ ] Meme pour le details demande pour le layouts
+				* [ ] avec le pdp et signature
+	* [ ] Backend
+		* [ ] Metier (Valisoa):
+			* [ ] Enregistrement de l' information du demandeur dans la table information
+		* [ ] Controller (Judi):
+			* [ ] */info*:
+				* [ ] saveInfo **GET**
+				* [ ] saveInfo **POST** , apres ca on redirect dans la liste de demandes en sous forme de tableau ou on le rediriger dans la page info demande
+			* [ ] */demandeur/detail/{id}*:
+				* [ ] getInfo(idDemandeur) GET
+			* [ ] */demande/detail/{id}*
+				* [ ] getInfo(idDemande) GET
+
+***NB:*** Deadline = 5 j (Lundi 11 Mai 2026) 

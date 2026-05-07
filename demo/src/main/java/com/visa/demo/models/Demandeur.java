@@ -18,6 +18,8 @@ public class Demandeur extends Entity<Demandeur> {
     private String email;
     private String idsituationdefamille;
     private String idnationalite;
+    private byte[] pdp = new byte[0];
+    private byte[] signatures = new byte[0];
 
     public Demandeur(String nom, String prenom, LocalDate dtn, String profession, String adressemada, String tel, String email,
             String idsituationdefamille, String idnationalite) {
@@ -42,6 +44,21 @@ public class Demandeur extends Entity<Demandeur> {
     public String getNom() {
         return nom;
     }
+
+    public void setPdp(byte[] pdp) {
+        this.pdp = pdp;
+    }
+    public void setSignatures(byte[] signatures) {
+        this.signatures = signatures;
+    }
+
+    public byte[] getPdp() {
+        return pdp;
+    }
+    public byte[] getSignatures() {
+        return signatures;
+    }
+
 
     public void setNom(String nom) {
         this.nom = nom;
