@@ -21,8 +21,8 @@
                     <div class="title-page">
                         <h2>Photo et signature</h2>
                     </div>
-                    <form class="form-wrap" action="${pageContext.request.contextPath}/demande/scan/approver"
-                        method="post">
+                    <form class="form-wrap" action="${pageContext.request.contextPath}/demande/cam/${id}"
+                        method="post" enctype="multipart/form-data">
 
                         <div class="form-header">
                             <h2>Photo et signature</h2>
@@ -61,7 +61,7 @@
                                             <button type="button" class="btn btn-primary" onclick="saveSignature()"><i class="mdi mdi-check"></i></button>
 
                                             <!-- champ caché -->
-                                            <input type="hidden" name="signature" id="signatureInput">
+                                            <input type="file" style="display:none;" name="signature" id="signatureInput">
 
                                             <br>
                                         </div>
@@ -174,8 +174,26 @@
             }
 
             function saveSignature() {
-                const dataURL = canvas.toDataURL("image/png");
-                document.getElementById("signatureInput").value = dataURL;
+
+                const signatureCanvas = document.getElementById("signature-pad");
+
+                signatureCanvas.toBlob(function(blob) {
+
+                    // création du fichier
+                    const file = new File(
+                        [blob],
+                        "signature.png",
+                        { type: "image/png" }
+                    );
+
+                    // ajout dans input file
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+
+                    document.getElementById("signatureInput").files = dataTransfer.files;
+
+
+                }, "image/png");
             }
         </script>
 

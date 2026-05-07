@@ -38,6 +38,9 @@
                             <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000003') == 0}">
                                <span class="badge badge-success">
                             </c:if>
+                            <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000004') == 0}">
+                               <span class="badge badge-primary">
+                            </c:if>
                             ${demande.libelleetatdemande}</span></td>
                         <td>${demande.libelletypedemande}</td>
                         <td>${demande.libelletypevisa}</td>
@@ -49,7 +52,13 @@
                             <a class="btn btn-warning"  href="${pageContext.request.contextPath}/demande/detail?id=${demande.id}">
                             <i  class="mdi mdi-eye"></i>
                             </a>
+                           
                             <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000001') == 0}">
+                                <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/cam/${demande.id}">
+                                <i  class="mdi mdi-camera-front-variant"></i>
+                                </a>
+                            </c:if>
+                            <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000004') == 0}">
                                 <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/scan/${demande.id}">
                                 <i  class="mdi mdi-credit-card-scan"></i>
                                 </a>
