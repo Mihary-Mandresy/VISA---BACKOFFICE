@@ -1,9 +1,10 @@
 /*vue suivi etat demande*/
+drop view v_suivis_etats_demandes;
 create or replace view v_suivis_etats_demandes as (
 select 
 hedmd.id,
 dmd.id as iddemande,
-hedmd.daty as datecreation,
+hedmd.daty,
 edmd.id as idetat,
 edmd.libelle
 from demande dmd 
@@ -14,6 +15,7 @@ on edmd.id = hedmd.idetatdemande
 );
 
 /*v  dossier_standard*/
+drop view if EXISTS v_verifications_dossiers_standards;
 create or replace view v_verifications_dossiers_standards as(
     select 
     ds.id,
@@ -28,6 +30,7 @@ create or replace view v_verifications_dossiers_standards as(
 );
 
 /*v  dossier_supplementaire*/
+drop view if exists v_verifications_dossiers_supplementaires;
 create or replace view v_verifications_dossiers_supplementaires as(
     select 
     ds.id,
@@ -41,6 +44,7 @@ create or replace view v_verifications_dossiers_supplementaires as(
     on dmd.id = cds.iddemande
 );
 
+drop view if exists v_visatransformable;
 create or replace view v_visatransformable as(
     select 
     id,
@@ -50,7 +54,7 @@ create or replace view v_visatransformable as(
     lieuentree
     from visatransformable
 );
-
+drop view if exists v_passport;
 create or replace view v_passport as(
     select 
     id,
@@ -60,7 +64,7 @@ create or replace view v_passport as(
     from passport
 );
 
-
+drop view if exists v_demande_recherche;
 create or replace view v_demande_recherche as(
     select 
     dmd.id,
