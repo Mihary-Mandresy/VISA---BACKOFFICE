@@ -7,7 +7,7 @@ import com.nojpa.bd.entity.Entity;
 public class HistoriqueEtatDemandeDto extends Entity<HistoriqueEtatDemandeDto> {
 
     private String iddemande;
-    private LocalDate datecreation;
+    private LocalDate daty;
     private String idetat;
     private String libelle;
 
@@ -23,12 +23,12 @@ public class HistoriqueEtatDemandeDto extends Entity<HistoriqueEtatDemandeDto> {
         this.iddemande = iddemande;
     }
 
-    public LocalDate getDatecreation() {
-        return datecreation;
+    public LocalDate getDaty() {
+        return daty;
     }
 
-    public void setDatecreation(LocalDate datecreation) {
-        this.datecreation = datecreation;
+    public void setDaty(LocalDate datecreation) {
+        this.daty = datecreation;
     }
 
     public String getIdetat() {
