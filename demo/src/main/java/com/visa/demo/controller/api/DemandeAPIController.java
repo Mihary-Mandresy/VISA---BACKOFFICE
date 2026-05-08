@@ -74,24 +74,21 @@ public class DemandeAPIController {
             String afterWhereHistorique = "iddemande='" + id + "'";
 
             List<HistoriqueEtatDemandeDto> historiqueEtats = new HistoriqueEtatDemandeDto().select(c,
-                    afterWhereHistorique,
-                    null);
+                    afterWhereHistorique,null);
             EtatDemande etatDemande = new EtatDemande().findByid(c, d.getIdetatdemande());
             EtatDemandeDto etatDemandeDto = new EtatDemandeDto();
             PassportDTO passport = new PassportDTO().findByid(c, d.getIdpassport());
             VisaTransformableDTO visatransformableDto = new VisaTransformableDTO().findByid(c,
                     d.getIdvisatransformable());
+
             etatDemandeDto.copierDepuisEtatDemande(etatDemande);
             List<DossierStandardDto> dossierStandard = new DossierStandardDto().select(c, afterWhereHistorique, null);
             List<DossierStandardDto> dossierStandardNonVerifies = new DossierStandardDto().getDossiersNonVerifiesByIdDemande(c, id);
-            System.out.println("dossier standard non verifie:"+dossierStandardNonVerifies.size());
-            System.out.println("verification: "+dossierStandardNonVerifies.get(0).isExist());
+    
             dossierStandard.addAll(dossierStandardNonVerifies);
             List<DossierSupplementaireDto> dossierSupplementaires = new DossierSupplementaireDto().select(c,
                     afterWhereHistorique, null);
             List<DossierSupplementaireDto> dossierSupplementairesNonVerifies = new DossierSupplementaireDto().getDossiersNonVerifiesByIdDemande(c, id);
-            System.out.println("dossier standard non verifie:"+dossierSupplementairesNonVerifies.size());
-
             dmdrDto.setNationalite(nationalite);
             dossierSupplementaires.addAll(dossierSupplementairesNonVerifies);
             dmdrDto.setSituationdefamille(situationfamiliale);
@@ -116,7 +113,8 @@ public class DemandeAPIController {
     }
 
     @GetMapping
-    public List<DemandeRechercheDto> findBySearchValue(@RequestParam(value="id",required=false) String id) throws Exception {
+    public List<DemandeRechercheDto> findBySearchValue(@RequestParam(value = "id", required = false) String id)
+            throws Exception {
         if (id != null && !id.isEmpty() && (!id.contains("DMD") && !id.contains("PASS"))) {
             throw new Exception("il faut un id passport ou un id demande");
         }

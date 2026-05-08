@@ -309,11 +309,12 @@ public class DemandeController {
             List<DossierStandardDto> dossierStandardVerifies = new DossierStandardDto().select(c, afterWhereHistorique, null);
             List<DossierStandardDto> dossierStandardNonVerifies = new DossierStandardDto().getDossiersNonVerifiesByIdDemande(c, id);
             dossierStandardVerifies.addAll(dossierStandardNonVerifies);
+            dossierStandardVerifies.addAll(dossierStandardNonVerifies);
             List<DossierSupplementaireDto> dossierSupplementairesVerifies = new DossierSupplementaireDto().select(c,
                     afterWhereHistorique, null);
             List<DossierSupplementaireDto> dossierSupplementairesNonVerifies = new DossierSupplementaireDto().getDossiersNonVerifiesByIdDemande(c, id);
             dossierSupplementairesVerifies.addAll(dossierSupplementairesNonVerifies);
-            System.out.println("dossier standard non verifie:"+dossierStandardNonVerifies.size());
+        
             // VisaTransformableDTO vtDto = new VisaTransformableDTO().findByid(c, );
             byte[] qrCode = d.getQrcode();
             String base64 = Base64.getEncoder().encodeToString(qrCode);
@@ -326,6 +327,8 @@ public class DemandeController {
             dto.setPassport(passport);
             dto.setVisatransformable(visatransformableDto);
             dto.setHistoriquesEtats(historiqueEtats);
+            dto.setDossierStandard(dossierStandardVerifies);
+            dto.setDossierSupplementaire(dossierSupplementairesVerifies);
             dto.setDossierStandard(dossierStandardVerifies);
             dto.setDossierSupplementaire(dossierSupplementairesVerifies);
             mav.addObject("qrcode", base64);
