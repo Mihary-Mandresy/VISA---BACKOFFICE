@@ -67,7 +67,7 @@ create or replace view v_demande_recherche as(
     dmdr.nom ||' '|| dmdr.prenom as "nomDemandeur",
     p.numero as numeropassport,
     tpv.libelle as typevisa,
-    edmd.libelle as etat
+    edmd.libelle as etatdemande
     from demande dmd
     join demandeur dmdr
     on  dmd.iddemandeur= dmdr.id
