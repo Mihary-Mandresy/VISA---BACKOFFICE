@@ -46,7 +46,7 @@
                             <i class="mdi mdi-pen"></i>
                             </a>
 
-                            <a class="btn btn-warning"  href="${pageContext.request.contextPath}/demande/fiche?id=${demande.id}">
+                            <a class="btn btn-warning"  href="${pageContext.request.contextPath}/demande/fiche/${demande.id}">
                             <i  class="mdi mdi-eye"></i>
                             </a>
                             <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000001') == 0}">
