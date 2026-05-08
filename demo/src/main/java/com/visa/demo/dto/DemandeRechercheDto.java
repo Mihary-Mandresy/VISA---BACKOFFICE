@@ -7,13 +7,13 @@ public class DemandeRechercheDto extends Entity<DemandeRechercheDto> {
     private String nomDemandeur;
     private String numeropassport;
     private String typevisa;
-    private String etat;
+    private String etatdemande;
 
     public DemandeRechercheDto() {
         setNomTable("v_demande_recherche");
     }
 
-    public String geNomDemandeur() {
+    public String getNomDemandeur() {
         return nomDemandeur;
     }
 
@@ -37,11 +37,11 @@ public class DemandeRechercheDto extends Entity<DemandeRechercheDto> {
         this.typevisa = typevisa;
     }
 
-    public String getEtat() {
-        return etat;
+    public String getEtatdemande() {
+        return etatdemande;
     }
 
-    public void setEtat(String etat) {
-        this.etat = etat;
+    public void setEtatdemande(String etat) {
+        this.etatdemande = etat;
     }
 }

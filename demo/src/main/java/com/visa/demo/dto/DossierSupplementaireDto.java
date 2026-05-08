@@ -1,5 +1,12 @@
 package com.visa.demo.dto;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.bd.entity.Entity;
 
 
@@ -38,4 +45,48 @@ public class DossierSupplementaireDto extends Entity<DossierSupplementaireDto>{
         public void setExist(boolean exist) {
             this.exist = exist;
         }
+    public List<DossierSupplementaireDto> getDossiersNonVerifiesByIdDemande(Connection c, String iddemande) throws Exception {
+        String query = """
+                select * from
+                (
+                SELECT ds.id, ds.libelle, COALESCE(cds.exist, false) as exists
+                FROM dossiersupplementaire ds
+                LEFT JOIN checkdossiersupplementaire cds
+                    ON cds.iddossierstandard = ds.id
+                    and cds.iddemande = ?
+                )as dnv where not dnv.exists 
+                        """;
+        List<DossierSupplementaireDto> result = new ArrayList<>();
+        Boolean isCloseable = false;
+        if (c == null) {
+            c = new DbConnexe().getConnection();
+            isCloseable = true;
+        }
+        try (PreparedStatement pstmt = c.prepareStatement(query)) {
+            pstmt.setString(1, iddemande);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    DossierSupplementaireDto dto = new DossierSupplementaireDto();
+                    dto.setId(rs.getString("id"));
+                    dto.setLibelle(rs.getString("libelle"));
+                    dto.setExist(rs.getBoolean("exist"));
+                    result.add(dto);
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+                if (isCloseable) {
+                    c.close();
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            if (isCloseable) {
+                c.close();
+            }
+        }
+
+        return result;
+
+    }
 }

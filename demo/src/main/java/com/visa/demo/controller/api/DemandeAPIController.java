@@ -71,19 +71,29 @@ public class DemandeAPIController {
             NationaliteDTO nationalite = new NationaliteDTO().findByid(c, dmdrDto.getIdnationalite());
             SituationDeFamilleDTO situationfamiliale = new SituationDeFamilleDTO().findByid(c,
                     dmdrDto.getIdsituationdefamille());
-            String afterWhereHistorique = "iddemande='" + id +"'";
-            
-            List<HistoriqueEtatDemandeDto> historiqueEtats = new HistoriqueEtatDemandeDto().select(c, afterWhereHistorique,
+            String afterWhereHistorique = "iddemande='" + id + "'";
+
+            List<HistoriqueEtatDemandeDto> historiqueEtats = new HistoriqueEtatDemandeDto().select(c,
+                    afterWhereHistorique,
                     null);
             EtatDemande etatDemande = new EtatDemande().findByid(c, d.getIdetatdemande());
             EtatDemandeDto etatDemandeDto = new EtatDemandeDto();
             PassportDTO passport = new PassportDTO().findByid(c, d.getIdpassport());
-            VisaTransformableDTO visatransformableDto = new VisaTransformableDTO().findByid(c, d.getIdvisatransformable());
+            VisaTransformableDTO visatransformableDto = new VisaTransformableDTO().findByid(c,
+                    d.getIdvisatransformable());
             etatDemandeDto.copierDepuisEtatDemande(etatDemande);
             List<DossierStandardDto> dossierStandard = new DossierStandardDto().select(c, afterWhereHistorique, null);
+            List<DossierStandardDto> dossierStandardNonVerifies = new DossierStandardDto().getDossiersNonVerifiesByIdDemande(c, id);
+            System.out.println("dossier standard non verifie:"+dossierStandardNonVerifies.size());
+            System.out.println("verification: "+dossierStandardNonVerifies.get(0).isExist());
+            dossierStandard.addAll(dossierStandardNonVerifies);
             List<DossierSupplementaireDto> dossierSupplementaires = new DossierSupplementaireDto().select(c,
                     afterWhereHistorique, null);
+            List<DossierSupplementaireDto> dossierSupplementairesNonVerifies = new DossierSupplementaireDto().getDossiersNonVerifiesByIdDemande(c, id);
+            System.out.println("dossier standard non verifie:"+dossierSupplementairesNonVerifies.size());
+
             dmdrDto.setNationalite(nationalite);
+            dossierSupplementaires.addAll(dossierSupplementairesNonVerifies);
             dmdrDto.setSituationdefamille(situationfamiliale);
             dto.setId(d.getId());
             dto.setTypevisa(new TypeVisaDto().findByid(c, d.getIdtypevisa()));
@@ -104,40 +114,42 @@ public class DemandeAPIController {
         }
         return dto;
     }
+
     @GetMapping
-    public List<DemandeRechercheDto> findBySearchValue(@RequestParam("id")String id) throws Exception{
-        if(id!=null && !id.isEmpty() && (!id.contains("DMD") && !id.contains("PASS"))){
+    public List<DemandeRechercheDto> findBySearchValue(@RequestParam(value="id",required=false) String id) throws Exception {
+        if (id != null && !id.isEmpty() && (!id.contains("DMD") && !id.contains("PASS"))) {
             throw new Exception("il faut un id passport ou un id demande");
         }
         Connection c = null;
-        Demandeur dmdr= new Demandeur();
+        Demandeur dmdr = new Demandeur();
         Demande d = new Demande();
         List<DemandeRechercheDto> resultats = new ArrayList<DemandeRechercheDto>();
-        if(id == null || id.isEmpty()){
+        if (id == null || id.isEmpty()) {
             resultats.addAll(new DemandeRechercheDto().findAll(c));
         }
         try {
             c = new DbConnexe().getConnection();
-            if(id != null){
+            if (id != null) {
 
-                if(id.contains("DMD")){
+                if (id.contains("DMD")) {
                     d = new Demande().findByid(c, id);
-                    dmdr = dmdr.findByid(c,d.getIddemandeur());
-                    resultats.add(new DemandeRechercheDto().findByid(c,d.getId()));
+                    dmdr = dmdr.findByid(c, d.getIddemandeur());
+                    resultats.add(new DemandeRechercheDto().findByid(c, d.getId()));
                 }
-                if(id.contains("PASS")){
-                    Passport  p = new Passport().findByid(c, id);
+                if (id.contains("PASS")) {
+                    Passport p = new Passport().findByid(c, id);
                     dmdr = new Demandeur().findByid(c, p.getIddemandeur());
                 }
             }
-            if(dmdr.getId() != null){
+            if (dmdr.getId() != null) {
                 String nomCompletDemandeur = dmdr.getNom().concat(" ").concat(dmdr.getPrenom());
                 String conditionIddemande = "";
-                if(d.getId()!=null){
-                    conditionIddemande = "and id!='"+d.getId()+"'";
+                if (d.getId() != null) {
+                    conditionIddemande = "and id!='" + d.getId() + "'";
                 }
-                String afterWhere = "'nomDemandeur'='"+nomCompletDemandeur+"' "+conditionIddemande;
-                resultats.addAll(new DemandeRechercheDto().select(c,afterWhere,null));
+                String afterWhere = "'nomDemandeur'='" + nomCompletDemandeur + "' " + conditionIddemande;
+                resultats.addAll(new DemandeRechercheDto().select(c, afterWhere, null));
+                // System.out.println(""+resultats.get(0).getNomdemandeur());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,8 +159,7 @@ public class DemandeAPIController {
                 c.close();
             }
         }
-        
-        
+
         return resultats;
     }
 }
