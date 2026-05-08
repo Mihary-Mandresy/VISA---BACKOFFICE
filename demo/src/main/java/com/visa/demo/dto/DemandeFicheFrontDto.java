@@ -4,20 +4,31 @@ import java.util.List;
 
 public class DemandeFicheFrontDto {
     private String id;
+    private TypeVisaDto typevisa;
+
     private String idoriginal;
     private DemandeurDto demandeur;
     private EtatDemandeDto etatdemande;
-    private VisaTransformableDTO visatransformable;
     private PassportDTO passport;
+    private VisaTransformableDTO visatransformable;
     private List<DossierStandardDto> dossierStandard;
     private List<DossierSupplementaireDto> dossierSupplementaire;
     private List<HistoriqueEtatDemandeDto> historiquesEtats;
+
     public String getIdoriginal() {
         return idoriginal;
     }
 
     public void setIdoriginal(String idoriginal) {
         this.idoriginal = idoriginal;
+    }
+
+    public TypeVisaDto getTypevisa() {
+        return typevisa;
+    }
+
+    public void setTypevisa(TypeVisaDto typevisa) {
+        this.typevisa = typevisa;
     }
 
     public DemandeurDto getDemandeur() {

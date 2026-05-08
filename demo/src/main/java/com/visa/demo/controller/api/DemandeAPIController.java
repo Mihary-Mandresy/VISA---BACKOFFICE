@@ -22,6 +22,7 @@ import com.visa.demo.dto.HistoriqueEtatDemandeDto;
 import com.visa.demo.dto.NationaliteDTO;
 import com.visa.demo.dto.PassportDTO;
 import com.visa.demo.dto.SituationDeFamilleDTO;
+import com.visa.demo.dto.TypeVisaDto;
 import com.visa.demo.dto.VisaTransformableDTO;
 import com.visa.demo.models.Demande;
 import com.visa.demo.models.Demandeur;
@@ -82,10 +83,10 @@ public class DemandeAPIController {
             List<DossierStandardDto> dossierStandard = new DossierStandardDto().select(c, afterWhereHistorique, null);
             List<DossierSupplementaireDto> dossierSupplementaires = new DossierSupplementaireDto().select(c,
                     afterWhereHistorique, null);
-            // VisaTransformableDTO vtDto = new VisaTransformableDTO().findByid(c, );
             dmdrDto.setNationalite(nationalite);
             dmdrDto.setSituationdefamille(situationfamiliale);
             dto.setId(d.getId());
+            dto.setTypevisa(new TypeVisaDto().findByid(c, d.getIdtypevisa()));
             dto.setIdoriginal(d.getIdoriginal());
             dto.setDemandeur(dmdrDto);
             dto.setEtatdemande(etatDemandeDto);
