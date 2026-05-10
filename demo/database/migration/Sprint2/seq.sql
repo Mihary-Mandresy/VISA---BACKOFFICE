@@ -1,0 +1,16 @@
+CREATE SEQUENCE seq_historiqueetatdemande START WITH 1;
+CREATE SEQUENCE seq_visa START WITH 1;
+CREATE SEQUENCE seq_carteresident START WITH 1;
+CREATE SEQUENCE seq_checkdossiersupplementaire START WITH 1;
+CREATE SEQUENCE seq_checkdossierstandard START WITH 1;
+CREATE SEQUENCE seq_demande START WITH 1;
+CREATE SEQUENCE seq_visatransformable START WITH 1;
+CREATE SEQUENCE seq_passport START WITH 1;
+CREATE SEQUENCE seq_demandeur START WITH 1;
+CREATE SEQUENCE seq_etatdemande START WITH 1;
+CREATE SEQUENCE seq_dossiersupplementaire START WITH 1;
+CREATE SEQUENCE seq_dossierstandard START WITH 1;
+CREATE SEQUENCE seq_nationalite START WITH 1;
+CREATE SEQUENCE seq_situationdefamille START WITH 1;
+CREATE SEQUENCE seq_typedemande START WITH 1;
+CREATE SEQUENCE seq_typevisa START WITH 1;
