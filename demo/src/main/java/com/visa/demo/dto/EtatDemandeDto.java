@@ -1,39 +1,26 @@
 package com.visa.demo.dto;
+import com.visa.demo.models.EtatDemande;
 
-import java.sql.Connection;
-import java.time.LocalDate;
-
-import com.nojpa.bd.entity.Entity;
-
-public class EtatDemandeDto extends Entity<EtatDemandeDto> {
-    private LocalDate datecreation;
-    private String idetat;
+public class EtatDemandeDto {
+    private String id;
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
     private String libelle;
     public String getLibelle() {
         return libelle;
     }
+     public void copierDepuisEtatDemande(EtatDemande etatDemande) {
+        if (etatDemande == null) {
+            return;
+        }
 
-    public void setLibelle(String libelle) {
-        this.libelle = libelle;
-    }
-
-    public LocalDate getDatecreation() {
-        return datecreation;
-    }
-
-    public void setDatecreation(LocalDate datecreation) {
-        this.datecreation = datecreation;
-    }
-        public String getIdetat() {
-        return idetat;
-    }
-
-    public void setIdetat(String idetat) {
-        this.idetat = idetat;
-    }
-
-    public EtatDemandeDto() {
-        setNomTable("v_suivis_etats_demandes");
+        this.id = etatDemande.getId();
+        this.libelle = etatDemande.getLibelle();
     }
 
 }
+

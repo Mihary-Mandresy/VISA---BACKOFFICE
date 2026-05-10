@@ -36,6 +36,7 @@
   font-family: "Outfit", sans-serif;
   color: #eae9ec;
   font-size: 14px;
+  font-weight: 600;
 }
 
 body {
@@ -51,12 +52,21 @@ body {
 
 .nav-link {
   color: #eae9ec;
-  padding: 15px 20px;
+  padding: 10px 20px;
   background: #f5d1d1;
   margin: 0px 0px 5px 0px;
 }
 .nav-link i::before {
   vertical-align: middle;
+  font-size: 30px;
+  font-weight: 100;
+}
+.nav-link:hover {
+  color: rgb(118, 91, 255);
+  background-color: #252d3c;
+}
+.nav-link:hover i::before {
+  color: rgb(118, 91, 255);
 }
 
 nav {
@@ -89,11 +99,18 @@ main .table {
   color: #eae9ec;
   border-radius: 10px;
 }
-main .table thead tr, main .table tbody tr {
-  border-bottom: 1px solid rgba(212, 212, 212, 0);
-}
 main .table thead tr td, main .table thead tr th, main .table tbody tr td, main .table tbody tr th {
+  border: none;
   padding: 12px;
+}
+main .table thead tr th, main .table tbody tr th {
+  padding: 20px;
+}
+main .table thead {
+  border-bottom: 1px solid #344054;
+}
+main i {
+  font-size: 20px;
 }
 
 /* =========================

@@ -1,15 +1,13 @@
-package com.visa.demo.models;
+package com.visa.demo.dto;
 
 import com.nojpa.bd.entity.Entity;
 
-public class EtatDemande  extends Entity<EtatDemande> {
-
-    String id;
-    String libelle;
-    public EtatDemande() {
-        setNomTable("etatdemande");
-        setSigle("ETATDMD");
+public class TypeVisaDto extends Entity<TypeVisaDto>{
+    public TypeVisaDto() {
+        setNomTable("typevisa");
     }
+    private String id;
+    private String libelle;
     public String getId() {
         return id;
     }

@@ -1,0 +1,30 @@
+body {
+    background-color: #101828;
+    color: #ffffff;
+}
+
+.card {
+    background-color: #ffffff;
+    color: #101828;
+}
+
+.card p {
+    color: #101828;
+}
+
+.fond-card,
+.fond-card .card-body {
+    background-color: #171F2F;
+    color: #ffffff;
+}
+
+// .fond-card .card-header {
+//     background-color: #101828;
+//     color: #ffffff;
+//     border-bottom: 1px solid rgba(255,255,255,0.1);
+// }
+.fond-card p,
+.fond-card strong,
+.fond-card i {
+    color: white;
+}
