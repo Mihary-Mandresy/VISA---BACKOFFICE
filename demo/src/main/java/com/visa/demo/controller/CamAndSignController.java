@@ -54,7 +54,7 @@ public class CamAndSignController {
                 }
             });
 
-             demandeur.save(c);
+             demandeur.savePhotoAndSignature(c);
                     demande.changeEtatDemande(C_EtatDemande.REQUEST_PHOTO_SING_FINISH);
                     demande.save(c);
             c.commit();

@@ -1,5 +1,7 @@
 package com.visa.demo.models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -126,6 +128,45 @@ public class Demandeur extends Entity<Demandeur> {
 
     public void setDtn(LocalDate dtn) {
         this.dtn = dtn;
+    }
+
+    public void savePhotoAndSignature(Connection c) throws Exception {
+
+        PreparedStatement stmt = null;
+
+        try {
+
+            String sql = """
+                UPDATE demandeur
+                SET
+                    pdp = ?,
+                    signatures = ?
+                WHERE id = ?
+            """;
+
+            stmt = c.prepareStatement(sql);
+
+            // photo
+            stmt.setBytes(1, this.getPdp());
+
+            // signature
+            stmt.setBytes(2, this.getSignatures());
+
+            // id demandeur
+            stmt.setString(3, this.getId());
+
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw e;
+
+        } finally {
+
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
     }
 
 }

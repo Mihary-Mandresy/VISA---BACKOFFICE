@@ -90,111 +90,207 @@
         </body>
 
         <script>
-            let stream;
-            const openCameraBtn = document.getElementById('openCameraBtn');
-            const takePhotoBtn = document.getElementById('takePhotoBtn');
-            function openCamera() {
-                const container = document.getElementById('cameraContainer');
-                const preview = document.getElementById('preview');
-                const video = document.getElementById('video');
+           let stream;
 
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(s => {
-                        stream = s;
-                        video.srcObject = stream;
-                        container.style.display = 'block';
-                        preview.style.display = 'none';
-                        openCameraBtn.style.display = 'none';
-                        takePhotoBtn.style.display = 'inline-block';
-                    })
-                    .catch(err => {
-                        console.error("Erreur caméra :", err);
-                    });
-            }
+const openCameraBtn = document.getElementById('openCameraBtn');
+const takePhotoBtn = document.getElementById('takePhotoBtn');
 
-            function takePhoto() {
-                const video = document.getElementById('video');
-                const canvas = document.getElementById('canvas');
-                const preview = document.getElementById('preview');
-
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0);
-
-                openCameraBtn.style.display = 'inline-block';
-                takePhotoBtn.style.display = 'none';
-            
-                // 🔴 STOP caméra
-                stream.getTracks().forEach(track => track.stop());
-                document.getElementById('cameraContainer').style.display = 'none';
-
-                // afficher preview
-                const dataURL = canvas.toDataURL('image/png');
-                preview.src = dataURL;
-                preview.style.display = 'block';
-
-                // convertir en file
-                canvas.toBlob(function (blob) {
-                    const file = new File([blob], "photo.png", { type: "image/png" });
-
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-
-                    document.getElementById('photoFile').files = dataTransfer.files;
-                }, 'image/png');
-            }
-
-            // signature pad
-            const canvas = document.getElementById("signature-pad");
-            const ctx = canvas.getContext("2d");
-
-            let drawing = false;
-
-            canvas.addEventListener("mousedown", () => drawing = true);
-            canvas.addEventListener("mouseup", () => drawing = false);
-            canvas.addEventListener("mouseleave", () => drawing = false);
-
-            canvas.addEventListener("mousemove", draw);
-
-            function draw(e) {
-                if (!drawing) return;
-                ctx.lineWidth = 2;
-                ctx.lineCap = "round";
-
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(e.offsetX, e.offsetY);
-            }
-
-            function clearPad() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
-
-            function saveSignature() {
-
-                const signatureCanvas = document.getElementById("signature-pad");
-
-                signatureCanvas.toBlob(function(blob) {
-
-                    // création du fichier
-                    const file = new File(
-                        [blob],
-                        "signature.png",
-                        { type: "image/png" }
-                    );
-
-                    // ajout dans input file
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-
-                    document.getElementById("signatureInput").files = dataTransfer.files;
+const video = document.getElementById('video');
+const photoCanvas = document.getElementById('canvas');
+const preview = document.getElementById('preview');
 
 
-                }, "image/png");
-            }
+// ==========================
+// CAMERA
+// ==========================
+
+function openCamera() {
+
+    const container = document.getElementById('cameraContainer');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(s => {
+
+            stream = s;
+
+            video.srcObject = stream;
+
+            container.style.display = 'block';
+            preview.style.display = 'none';
+
+            openCameraBtn.style.display = 'none';
+            takePhotoBtn.style.display = 'inline-block';
+        })
+        .catch(err => {
+            console.error("Erreur caméra :", err);
+        });
+}
+
+function takePhoto() {
+
+    photoCanvas.width = video.videoWidth;
+    photoCanvas.height = video.videoHeight;
+
+    const ctx = photoCanvas.getContext('2d');
+
+    ctx.drawImage(video, 0, 0);
+
+    // stop caméra
+    stream.getTracks().forEach(track => track.stop());
+
+    document.getElementById('cameraContainer').style.display = 'none';
+
+    openCameraBtn.style.display = 'inline-block';
+    takePhotoBtn.style.display = 'none';
+
+    // preview image
+    const dataURL = photoCanvas.toDataURL('image/png');
+
+    preview.src = dataURL;
+    preview.style.display = 'block';
+
+    // convertir canvas -> file
+    photoCanvas.toBlob(function(blob) {
+
+        const file = new File(
+            [blob],
+            "photo.png",
+            { type: "image/png" }
+        );
+
+        const dataTransfer = new DataTransfer();
+
+        dataTransfer.items.add(file);
+
+        document.getElementById('photoFile').files = dataTransfer.files;
+
+    }, 'image/png');
+}
+
+
+
+// ==========================
+// SIGNATURE PAD
+// ==========================
+
+const signatureCanvas = document.getElementById("signature-pad");
+
+const signatureCtx = signatureCanvas.getContext("2d");
+
+let drawing = false;
+
+
+// souris appuyée
+signatureCanvas.addEventListener("mousedown", (e) => {
+
+    drawing = true;
+
+    signatureCtx.beginPath();
+
+    signatureCtx.moveTo(e.offsetX, e.offsetY);
+});
+
+
+// souris relachée
+signatureCanvas.addEventListener("mouseup", () => {
+
+    drawing = false;
+
+    signatureCtx.beginPath();
+});
+
+
+// souris sort du canvas
+signatureCanvas.addEventListener("mouseleave", () => {
+
+    drawing = false;
+
+    signatureCtx.beginPath();
+});
+
+
+// mouvement souris
+signatureCanvas.addEventListener("mousemove", draw);
+
+
+function draw(e) {
+
+    if (!drawing) return;
+
+    signatureCtx.lineWidth = 2;
+    signatureCtx.lineCap = "round";
+
+    signatureCtx.lineTo(e.offsetX, e.offsetY);
+
+    signatureCtx.stroke();
+}
+
+
+// clear signature
+function clearPad() {
+
+    signatureCtx.clearRect(
+        0,
+        0,
+        signatureCanvas.width,
+        signatureCanvas.height
+    );
+}
+
+
+// save signature manuellement
+function saveSignature() {
+
+    generateSignatureFile();
+}
+
+
+// ==========================
+// GENERATE SIGNATURE FILE
+// ==========================
+
+function generateSignatureFile(callback = null) {
+
+    signatureCanvas.toBlob(function(blob) {
+
+        const file = new File(
+            [blob],
+            "signature.png",
+            { type: "image/png" }
+        );
+
+        const dataTransfer = new DataTransfer();
+
+        dataTransfer.items.add(file);
+
+        document.getElementById("signatureInput").files =
+            dataTransfer.files;
+
+        if (callback) {
+            callback();
+        }
+
+    }, "image/png");
+}
+
+
+
+// ==========================
+// AUTO SAVE SIGNATURE
+// BEFORE FORM SUBMIT
+// ==========================
+
+document.querySelector("form")
+    .addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        generateSignatureFile(() => {
+
+            this.submit();
+
+        });
+    });
         </script>
 
 
