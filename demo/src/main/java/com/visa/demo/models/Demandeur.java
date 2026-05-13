@@ -1,5 +1,7 @@
 package com.visa.demo.models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,6 +20,8 @@ public class Demandeur extends Entity<Demandeur> {
     private String email;
     private String idsituationdefamille;
     private String idnationalite;
+    private byte[] pdp = new byte[0];
+    private byte[] signatures = new byte[0];
 
     public Demandeur(String nom, String prenom, LocalDate dtn, String profession, String adressemada, String tel, String email,
             String idsituationdefamille, String idnationalite) {
@@ -42,6 +46,21 @@ public class Demandeur extends Entity<Demandeur> {
     public String getNom() {
         return nom;
     }
+
+    public void setPdp(byte[] pdp) {
+        this.pdp = pdp;
+    }
+    public void setSignatures(byte[] signatures) {
+        this.signatures = signatures;
+    }
+
+    public byte[] getPdp() {
+        return pdp;
+    }
+    public byte[] getSignatures() {
+        return signatures;
+    }
+
 
     public void setNom(String nom) {
         this.nom = nom;
@@ -109,6 +128,45 @@ public class Demandeur extends Entity<Demandeur> {
 
     public void setDtn(LocalDate dtn) {
         this.dtn = dtn;
+    }
+
+    public void savePhotoAndSignature(Connection c) throws Exception {
+
+        PreparedStatement stmt = null;
+
+        try {
+
+            String sql = """
+                UPDATE demandeur
+                SET
+                    pdp = ?,
+                    signatures = ?
+                WHERE id = ?
+            """;
+
+            stmt = c.prepareStatement(sql);
+
+            // photo
+            stmt.setBytes(1, this.getPdp());
+
+            // signature
+            stmt.setBytes(2, this.getSignatures());
+
+            // id demandeur
+            stmt.setString(3, this.getId());
+
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw e;
+
+        } finally {
+
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
     }
 
 }

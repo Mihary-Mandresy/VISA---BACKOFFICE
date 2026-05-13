@@ -225,7 +225,7 @@ public class DemandeController {
 
     @GetMapping("/detail")
     public ModelAndView getDemandeDetailInForm(@RequestParam("id") String identifiant) throws Exception {
-        ModelAndView mv = new ModelAndView("pages/demande/form");
+        ModelAndView mv = new ModelAndView("pages/demande/detail");
         Connection c = null;
         try {
             c = new DbConnexe().getConnection();
@@ -234,6 +234,9 @@ public class DemandeController {
             List<CheckDossierStandard> dossierStandardsCheckes = new CheckDossierStandard().select(c, apresWhere, null);
             List<CheckDossierSupplementaire> dossierSupplementairesCheckes = new CheckDossierSupplementaire().select(c,
                     apresWhere, null);
+                
+            Demandeur demandeur = new Demandeur().findByid(c, demande.getIddemandeur());
+            mv.addObject("demandeur", demandeur);
             mv.addObject("demande", demande);
             mv.addObject("dossierstandardscheckes", dossierStandardsCheckes);
             mv.addObject("dossiersupplementairescheckes", dossierSupplementairesCheckes);
@@ -244,6 +247,23 @@ public class DemandeController {
             mv.addObject("dossierstandards", new DossierStandard().findAll(c));
             mv.addObject("dossiersupplementaires", new DossierSupplementaire().findAll(c));
             mv.addObject("formulaire", new DemandeDto());
+
+            if (demandeur != null) {
+
+            String pdpBase64 = null;
+            String signatureBase64 = null;
+
+            if (demandeur.getPdp() != null && demandeur.getPdp().length > 0) {
+                pdpBase64 = Base64.getEncoder().encodeToString(demandeur.getPdp());
+            }
+
+            if (demandeur.getSignatures() != null && demandeur.getSignatures().length > 0) {
+                signatureBase64 = Base64.getEncoder().encodeToString(demandeur.getSignatures());
+            }
+
+            mv.addObject("pdpBase64", pdpBase64);
+            mv.addObject("signatureBase64", signatureBase64);
+        }
         } catch (Exception e) {
             e.printStackTrace();
             mv.addObject("error", e.getMessage());
