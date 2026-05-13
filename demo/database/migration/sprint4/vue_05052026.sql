@@ -68,7 +68,7 @@ drop view if exists v_demande_recherche;
 create or replace view v_demande_recherche as(
     select 
     dmd.id,
-    dmdr.nom ||' '|| dmdr.prenom as "nomDemandeur",
+    dmdr.nom ||' '|| dmdr.prenom as "nomdemandeur",
     p.numero as numeropassport,
     tpv.libelle as typevisa,
     edmd.libelle as etatdemande

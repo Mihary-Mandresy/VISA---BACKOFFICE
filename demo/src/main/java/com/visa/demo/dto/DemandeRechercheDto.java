@@ -4,22 +4,26 @@ import com.nojpa.bd.entity.Entity;
 
 public class DemandeRechercheDto extends Entity<DemandeRechercheDto> {
 
-    private String nomDemandeur;
+    private String nomdemandeur;
+    public String getNomdemandeur() {
+        return nomdemandeur;
+    }
+
+
+
+    public void setNomdemandeur(String nomdemandeur) {
+        this.nomdemandeur = nomdemandeur;
+    }
+
     private String numeropassport;
     private String typevisa;
-    private String etatdemande;
+    private String etatdemande; 
 
     public DemandeRechercheDto() {
         setNomTable("v_demande_recherche");
     }
 
-    public String getNomDemandeur() {
-        return nomDemandeur;
-    }
-
-    public void setNomDemandeur(String nomDemandeur) {
-        this.nomDemandeur = nomDemandeur;
-    }
+  
 
     public String getNumeropassport() {
         return numeropassport;
@@ -36,7 +40,7 @@ public class DemandeRechercheDto extends Entity<DemandeRechercheDto> {
     public void setTypevisa(String typevisa) {
         this.typevisa = typevisa;
     }
-
+ 
     public String getEtatdemande() {
         return etatdemande;
     }
