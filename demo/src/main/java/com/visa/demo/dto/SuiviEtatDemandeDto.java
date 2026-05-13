@@ -41,33 +41,4 @@ public class SuiviEtatDemandeDto {
     public void setDossierSupplementaireDtos(List<DossierSupplementaireDto> dossierSupplementaireDtos) {
         this.dossierSupplementaireDtos = dossierSupplementaireDtos;
     }
-
-    public List<SuiviEtatDemandeDto> genererListeAvecValeursAttributs(Connection c, List<DemandeDetailDto> demandesDetails) throws Exception {
-        List<SuiviEtatDemandeDto> results = new ArrayList<SuiviEtatDemandeDto>();
-        if (demandesDetails == null) {
-            throw new Exception("la liste des demandes ne doit pas etre null");
-        }
-
-        for (int i = 0; i < demandesDetails.size(); i++) {
-            SuiviEtatDemandeDto suivi = new SuiviEtatDemandeDto();
-            DemandeDetailDto demandeDetail = demandesDetails.get(i);
-
-            String valeurRecherche = demandeDetail.getId();
-
-            String apresWhereDossier = "iddemande='" + valeurRecherche + "'";
-            List<DossierStandardDto> dossierStandardsDtos = new DossierStandardDto().select(c, apresWhereDossier, null);
-
-            List<DossierSupplementaireDto> dossierSupplementaires = new DossierSupplementaireDto().select(c,
-                    apresWhereDossier, null);
-
-            List<EtatDemandeDto> etatsDemandes = new EtatDemandeDto().select(c, apresWhereDossier, null);
-            suivi.setDemandeDetail(demandeDetail);
-            suivi.setDossierStandardsDtos(dossierStandardsDtos);
-            suivi.setDossierSupplementaireDtos(dossierSupplementaires);
-            suivi.setEtatDemandes(etatsDemandes);
-            results.add(suivi);
-        }
-        return results;
-    }
-
 }

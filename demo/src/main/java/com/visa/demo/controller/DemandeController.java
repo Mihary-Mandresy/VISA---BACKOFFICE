@@ -1,13 +1,16 @@
 package com.visa.demo.controller;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 
+import org.eclipse.tags.shaded.org.apache.xpath.operations.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +19,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.nojpa.bd.connexion.DbConnexe;
 import com.visa.demo.dto.DemandeDto;
+import com.visa.demo.dto.DemandeFicheDto;
+import com.visa.demo.dto.DemandeFicheFrontDto;
+import com.visa.demo.dto.DemandeurDto;
+import com.visa.demo.dto.DossierStandardDto;
+import com.visa.demo.dto.DossierSupplementaireDto;
+import com.visa.demo.dto.EtatDemandeDto;
+import com.visa.demo.dto.HistoriqueEtatDemandeDto;
+import com.visa.demo.dto.NationaliteDTO;
+import com.visa.demo.dto.PassportDTO;
+import com.visa.demo.dto.SituationDeFamilleDTO;
+import com.visa.demo.dto.VisaTransformableDTO;
 import com.visa.demo.models.CarteResident;
 import com.visa.demo.models.CheckDossierStandard;
 import com.visa.demo.models.CheckDossierSupplementaire;
@@ -23,6 +37,8 @@ import com.visa.demo.models.Demande;
 import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
+import com.visa.demo.models.EtatDemande;
+import com.visa.demo.models.HistoriqueEtatDemande;
 import com.visa.demo.models.Nationalite;
 import com.visa.demo.models.Passport;
 import com.visa.demo.models.SituationDeFamille;
@@ -92,15 +108,22 @@ public class DemandeController {
         }
         DbConnexe dbConnexe = new DbConnexe();
         Connection c = dbConnexe.getConnection();
+        HistoriqueEtatDemande hedmd = new HistoriqueEtatDemande();
         try {
             if (c != null) {
                 c.setAutoCommit(false);
             }
             if (dto.getIdTypeDemande().equals("TYPDMD000001")) {
                 Demande demande = new Demande();
-                demande.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
+                
+                demande = demande.save(c, null, dto.getDemandeur(), dto.getPassport(), dto.getVisatransformable(),
                         dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(),
                         dto.getIdTypeVisa(), "ETATDMD000001", dto.getDate());
+                hedmd.setIddemande(demande.getId());
+                //possible miova
+                hedmd.setDaty(LocalDate.now());
+                hedmd.setIdetatdemande(demande.getIdetatdemande());
+                hedmd.save(c);
             } else {
                 Demande demandeSource = new Demande();
                 DemandeObj demandeObj = new DemandeObj();
@@ -153,7 +176,8 @@ public class DemandeController {
                     }
                 }
                 Demande demande = new Demande();
-                Passport p = dto.getNewpassport() != null ? dto.getNewpassport() : dto.getPassport();
+                Passport p = dto.getNewpassport().getDatedelivrance() != null
+                        && dto.getNewpassport().getDateexpiration() != null ? dto.getNewpassport() : dto.getPassport();
                 if (dto.getIdTypeDemande().equals("TYPDMD000003")) {
                     if (Comparaison.comparerDeuxInstances(p, dto.getPassport()) == -1) {
                         p.setIddemandeur(dto.getDemandeur().getId());
@@ -164,10 +188,16 @@ public class DemandeController {
                         throw new Exception(messageErreur.toString());
                     }
                 }
-                demande.save(c, demandeSource.getId(), dto.getDemandeur(), p,
+                demande = demande.save(c, demandeSource.getId(), dto.getDemandeur(), p,
                         dto.getVisatransformable(),
                         dto.getDossiersStandard(), dto.getDossiersSup(), dto.getIdTypeDemande(), dto.getIdTypeVisa(),
                         "ETATDMD000001", dto.getDate());
+                hedmd.setIddemande(demande.getId());
+                // possible miova
+                hedmd.setDaty(LocalDate.now());
+                hedmd.setIdetatdemande(demande.getIdetatdemande());
+                
+                hedmd.save(c);
             }
             if (c != null) {
                 c.commit();
@@ -268,5 +298,68 @@ public class DemandeController {
             }
         }
         return "redirect:/demande/form";
+    }
+    @GetMapping("/fiche/{id}")
+    public ModelAndView getFicheById(@PathVariable("id") String id) throws Exception {
+        ModelAndView mav = new ModelAndView("pages/demande/fiche");
+        Connection c = null;
+        DemandeFicheFrontDto dto = new DemandeFicheFrontDto();
+        if (id == null || id.isEmpty()) {
+            throw new Exception("le parametre id doit etre fourni");
+        }
+        try {
+            c = new DbConnexe().getConnection();
+            Demande d = new Demande().findByid(c, id);
+
+            Demandeur dmdr = new Demandeur().findByid(c, d.getIddemandeur());
+            DemandeurDto dmdrDto = new DemandeurDto();
+            dmdrDto = dmdrDto.copyToDemandeurDto(dmdr);
+            NationaliteDTO nationalite = new NationaliteDTO().findByid(c, dmdrDto.getIdnationalite());
+            SituationDeFamilleDTO situationfamiliale = new SituationDeFamilleDTO().findByid(c,
+                    dmdrDto.getIdsituationdefamille());
+            String afterWhereHistorique = "iddemande='" + id +"'";
+            
+            List<HistoriqueEtatDemandeDto> historiqueEtats = new HistoriqueEtatDemandeDto().select(c, afterWhereHistorique,
+                    null);
+            EtatDemande etatDemande = new EtatDemande().findByid(c, d.getIdetatdemande());
+            EtatDemandeDto etatDemandeDto = new EtatDemandeDto();
+            PassportDTO passport = new PassportDTO().findByid(c, d.getIdpassport());
+            VisaTransformableDTO visatransformableDto = new VisaTransformableDTO().findByid(c, d.getIdvisatransformable());
+            etatDemandeDto.copierDepuisEtatDemande(etatDemande);
+            List<DossierStandardDto> dossierStandardVerifies = new DossierStandardDto().select(c, afterWhereHistorique, null);
+            List<DossierStandardDto> dossierStandardNonVerifies = new DossierStandardDto().getDossiersNonVerifiesByIdDemande(c, id);
+            dossierStandardVerifies.addAll(dossierStandardNonVerifies);
+            dossierStandardVerifies.addAll(dossierStandardNonVerifies);
+            List<DossierSupplementaireDto> dossierSupplementairesVerifies = new DossierSupplementaireDto().select(c,
+                    afterWhereHistorique, null);
+            List<DossierSupplementaireDto> dossierSupplementairesNonVerifies = new DossierSupplementaireDto().getDossiersNonVerifiesByIdDemande(c, id);
+            dossierSupplementairesVerifies.addAll(dossierSupplementairesNonVerifies);
+        
+            // VisaTransformableDTO vtDto = new VisaTransformableDTO().findByid(c, );
+            byte[] qrCode = d.getQrcode();
+            String base64 = Base64.getEncoder().encodeToString(qrCode);
+            dmdrDto.setNationalite(nationalite);
+            dmdrDto.setSituationdefamille(situationfamiliale);
+            dto.setId(d.getId());
+            dto.setIdoriginal(d.getIdoriginal());
+            dto.setDemandeur(dmdrDto);
+            dto.setEtatdemande(etatDemandeDto);
+            dto.setPassport(passport);
+            dto.setVisatransformable(visatransformableDto);
+            dto.setHistoriquesEtats(historiqueEtats);
+            dto.setDossierStandard(dossierStandardVerifies);
+            dto.setDossierSupplementaire(dossierSupplementairesVerifies);
+            dto.setDossierStandard(dossierStandardVerifies);
+            dto.setDossierSupplementaire(dossierSupplementairesVerifies);
+            mav.addObject("qrcode", base64);
+            mav.addObject("fichedemande", dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return mav;
     }
 }
