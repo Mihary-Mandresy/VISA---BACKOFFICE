@@ -144,10 +144,9 @@ public class DemandeAPIController {
             dto.setDossierSupplementaire(dossierSupplementaires);
 
             // Retourner la réponse avec succès
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "data", dto,
-                    "message", "Demande récupérée avec succès"));
+            return ResponseEntity.ok(
+                    dto
+                    );
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -186,7 +185,7 @@ public class DemandeAPIController {
 
             c = new DbConnexe().getConnection();
             List<DemandeRechercheDto> resultats = new ArrayList<>();
-
+            System.out.println("eto e:"+id);
             // Cas 1: Pas d'ID - retourner toutes les demandes
             if (id == null || id.isEmpty()) {
                 resultats.addAll(new DemandeRechercheDto().findAll(c));
@@ -228,7 +227,7 @@ public class DemandeAPIController {
                 // Rechercher les autres demandes du même demandeur
                 if (dmdr != null && dmdr.getId() != null) {
                     String nomComplet = dmdr.getNom() + " " + dmdr.getPrenom();
-                    String condition = "nomDemandeur='" + nomComplet + "' and id!='" + id + "'";
+                    String condition = "nomdemandeur ='" + nomComplet + "' and id!='" + id + "'";
                     List<DemandeRechercheDto> autresDemandes = new DemandeRechercheDto().select(c, condition, null);
                     resultats.addAll(autresDemandes);
                 }
@@ -257,13 +256,13 @@ public class DemandeAPIController {
                 }
 
                 String nomCompletDemandeur = dmdr.getNom() + " " + dmdr.getPrenom();
-                String afterWhere = "nomDemandeur='" + nomCompletDemandeur + "'";
+                String afterWhere = "nomdemandeur='" + nomCompletDemandeur + "'";
                 resultats.addAll(new DemandeRechercheDto().select(c, afterWhere, null));
             }
 
             // Vérifier si des résultats ont été trouvés
             if (resultats.isEmpty()) {
-                return ResponseEntity
+                return ResponseEntity 
                         .status(HttpStatus.NOT_FOUND)
                         .body(Map.of(
                                 "error", "Aucune demande trouvée pour l'identifiant: " + id,
@@ -271,11 +270,9 @@ public class DemandeAPIController {
             }
 
             // Retourner les résultats
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "data", resultats,
-                    "count", resultats.size(),
-                    "message", resultats.size() + " demande(s) trouvée(s)"));
+            return ResponseEntity.ok(
+                     resultats
+                    );
 
         } catch (Exception e) {
             e.printStackTrace();
