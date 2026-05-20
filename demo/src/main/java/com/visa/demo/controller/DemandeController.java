@@ -350,9 +350,23 @@ public class DemandeController {
             dto.setDossierStandard(dossierStandardVerifies);
             dto.setDossierSupplementaire(dossierSupplementairesVerifies);
             dto.setDossierStandard(dossierStandardVerifies);
-            dto.setDossierSupplementaire(dossierSupplementairesVerifies);
+            // dto.setDossierSupplementaire(dossierSupplementairesVerifies);
             mav.addObject("qrcode", base64);
             mav.addObject("fichedemande", dto);
+
+            String pdpBase64 = null;
+            String signatureBase64 = null;
+
+            if (dmdr.getPdp() != null && dmdr.getPdp().length > 0) {
+                pdpBase64 = Base64.getEncoder().encodeToString(dmdr.getPdp());
+            }
+
+            if (dmdr.getSignatures() != null && dmdr.getSignatures().length > 0) {
+                signatureBase64 = Base64.getEncoder().encodeToString(dmdr.getSignatures());
+            }
+
+            mav.addObject("pdpBase64", pdpBase64);
+            mav.addObject("signatureBase64", signatureBase64);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

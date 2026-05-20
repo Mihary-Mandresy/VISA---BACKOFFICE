@@ -178,6 +178,63 @@
                                 </div>
 
                             </div>
+                            <div class="row mb-5">
+                                <div class="col-6">
+                                    <div class="card shadow-sm h-100 fond-card">
+
+                                        <div class="card-header bg-info text-white">
+                                            <h3 class="mb-0">
+                                                <i class="mdi mdi-image-filter-center-focus-weak mdi-24px"></i>
+                                                Photo de profil
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <c:choose>
+                                                <c:when test="${not empty pdpBase64}">
+                                                    <img
+                                                        src="data:image/png;base64,${pdpBase64}"
+                                                        alt="Photo de profil"
+                                                        class="photo-profil col-12"
+                                                    />
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    Photo de profil pas encore prise
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card shadow-sm h-100 fond-card">
+
+                                        <div class="card-header bg-info text-white">
+                                            <h3 class="mb-0">
+                                                <i class="mdi mdi-pulse mdi-24px"></i>
+                                                Signature
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <c:choose>
+                                                <c:when test="${not empty signatureBase64}">
+                                                    <img
+                                                        src="data:image/png;base64,${signatureBase64}"
+                                                        alt="Signature"
+                                                        class="signature-img col-12"
+                                                        style="background: white; border: 1px solid #ccc;" 
+                                                    />
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    Signature pas encore prise
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- DOSSIERS -->
                             <div class="row">
 

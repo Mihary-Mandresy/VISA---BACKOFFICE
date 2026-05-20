@@ -60,7 +60,6 @@
                             </c:if>
                             <c:if test="${demande.idetatdemande.compareToIgnoreCase('ETATDMD000004') == 0}">
                                 <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/scan/${demande.id}">
-                                <a class="btn btn-success" href="${pageContext.request.contextPath}/demande/detail?id=${demande.id}">
                                 <i  class="mdi mdi-credit-card-scan"></i>
                                 </a>
                             </c:if>
