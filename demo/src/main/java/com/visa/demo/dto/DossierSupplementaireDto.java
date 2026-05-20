@@ -52,7 +52,7 @@ public class DossierSupplementaireDto extends Entity<DossierSupplementaireDto>{
                 SELECT ds.id, ds.libelle, COALESCE(cds.exist, false) as exists
                 FROM dossiersupplementaire ds
                 LEFT JOIN checkdossiersupplementaire cds
-                    ON cds.iddossierstandard = ds.id
+                    ON cds.iddossiersupplementaire = ds.id
                     and cds.iddemande = ?
                 )as dnv where not dnv.exists 
                         """;
@@ -70,7 +70,7 @@ public class DossierSupplementaireDto extends Entity<DossierSupplementaireDto>{
                     DossierSupplementaireDto dto = new DossierSupplementaireDto();
                     dto.setId(rs.getString("id"));
                     dto.setLibelle(rs.getString("libelle"));
-                    dto.setExist(rs.getBoolean("exist"));
+                    dto.setExist(rs.getBoolean("exists"));
                     result.add(dto);
                 }
             } catch (Exception e) {
@@ -78,12 +78,14 @@ public class DossierSupplementaireDto extends Entity<DossierSupplementaireDto>{
                 if (isCloseable) {
                     c.close();
                 }
+                throw e;
             }
         } catch (Exception e) {
             // TODO: handle exception
             if (isCloseable) {
                 c.close();
             }
+            throw e;
         }
 
         return result;
