@@ -2,10 +2,15 @@ package com.visa.demo.controller;
 
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
 import org.eclipse.tags.shaded.org.apache.xpath.operations.Mod;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +27,7 @@ import com.visa.demo.dto.DemandeDto;
 import com.visa.demo.dto.DemandeFicheDto;
 import com.visa.demo.dto.DemandeFicheFrontDto;
 import com.visa.demo.dto.DemandeurDto;
+import com.visa.demo.dto.DossierDemandeDTO;
 import com.visa.demo.dto.DossierStandardDto;
 import com.visa.demo.dto.DossierSupplementaireDto;
 import com.visa.demo.dto.EtatDemandeDto;
@@ -38,6 +44,7 @@ import com.visa.demo.models.Demandeur;
 import com.visa.demo.models.DossierStandard;
 import com.visa.demo.models.DossierSupplementaire;
 import com.visa.demo.models.EtatDemande;
+import com.visa.demo.models.FilePdf;
 import com.visa.demo.models.HistoriqueEtatDemande;
 import com.visa.demo.models.Nationalite;
 import com.visa.demo.models.Passport;
@@ -326,13 +333,12 @@ public class DemandeController {
             PassportDTO passport = new PassportDTO().findByid(c, d.getIdpassport());
             VisaTransformableDTO visatransformableDto = new VisaTransformableDTO().findByid(c, d.getIdvisatransformable());
             etatDemandeDto.copierDepuisEtatDemande(etatDemande);
-            List<DossierStandardDto> dossierStandardVerifies = new DossierStandardDto().select(c, afterWhereHistorique, null);
+            List<DossierStandardDto> dossierStandardVerifies = new DossierStandardDto().select(c, afterWhereHistorique+ " and exist", null);
             List<DossierStandardDto> dossierStandardNonVerifies = new DossierStandardDto().getDossiersNonVerifiesByIdDemande(c, id);
             dossierStandardVerifies.addAll(dossierStandardNonVerifies);
-            dossierStandardVerifies.addAll(dossierStandardNonVerifies);
             List<DossierSupplementaireDto> dossierSupplementairesVerifies = new DossierSupplementaireDto().select(c,
-                    afterWhereHistorique, null);
-            List<DossierSupplementaireDto> dossierSupplementairesNonVerifies = new DossierSupplementaireDto().getDossiersNonVerifiesByIdDemande(c, id);
+                    afterWhereHistorique + " and exist", null);
+            List<DossierSupplementaireDto> dossierSupplementairesNonVerifies = new DossierSupplementaireDto().getDossiersNonVerifiesByIdDemande(c, id, d.getIdtypevisa());
             dossierSupplementairesVerifies.addAll(dossierSupplementairesNonVerifies);
         
             // VisaTransformableDTO vtDto = new VisaTransformableDTO().findByid(c, );
@@ -353,6 +359,8 @@ public class DemandeController {
             // dto.setDossierSupplementaire(dossierSupplementairesVerifies);
             mav.addObject("qrcode", base64);
             mav.addObject("fichedemande", dto);
+            mav.addObject("etatdemande", d.getIdetatdemande());
+            mav.addObject("iddemande", d.getId());
 
             String pdpBase64 = null;
             String signatureBase64 = null;
@@ -376,4 +384,67 @@ public class DemandeController {
         }
         return mav;
     }
+
+    @GetMapping("/fiche/dossier/{id}")
+    public ModelAndView showDossierDemande(@PathVariable("id") String id) throws Exception {
+        ModelAndView mav = new ModelAndView("pages/demande/dossier");
+        Connection c = null;
+        List<DossierDemandeDTO> dossierDemandeDTOs = new ArrayList<>();
+        if (id == null || id.isEmpty()) {
+            throw new Exception("le parametre id doit etre fourni");
+        }
+        try {
+            c = new DbConnexe().getConnection();
+            Demande d = new Demande().findByid(c, id);
+            dossierDemandeDTOs = d.getDossierSendById(c);
+            mav.addObject("dossiers", dossierDemandeDTOs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return mav;
+    }
+
+
+    @GetMapping("/afficher-pdf/{id}")
+public ResponseEntity<byte[]> afficherFichier(@PathVariable("id") String id) throws Exception {
+    Connection c = null;
+    try {
+        c = new DbConnexe().getConnection();
+        FilePdf filePdf = new FilePdf().findByid(c, id);
+        
+        if (filePdf != null && filePdf.getContenue() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            byte[] content = filePdf.getContenue();
+            
+            // Détecter le type par les bytes
+            if (content.length > 4) {
+                // PDF: %PDF (37 80 68 70)
+                if (content[0] == 0x25 && content[1] == 0x50 && content[2] == 0x44 && content[3] == 0x46) {
+                    headers.setContentType(MediaType.APPLICATION_PDF);
+                }
+                // PNG: 89 50 4E 47
+                else if ((content[0] & 0xFF) == 0x89 && content[1] == 0x50 && content[2] == 0x4E && content[3] == 0x47) {
+                    headers.setContentType(MediaType.IMAGE_PNG);
+                }
+                // JPEG: FF D8 FF
+                else if (content[0] == (byte)0xFF && content[1] == (byte)0xD8 && content[2] == (byte)0xFF) {
+                    headers.setContentType(MediaType.IMAGE_JPEG);
+                }
+                // GIF: GIF87a ou GIF89a
+                else if (content[0] == 0x47 && content[1] == 0x49 && content[2] == 0x46) {
+                    headers.setContentType(MediaType.IMAGE_GIF);
+                }
+            }
+            
+            return new ResponseEntity<>(content, headers, HttpStatus.OK);
+        }
+    } finally {
+        if (c != null) c.close();
+    }
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+}
 }

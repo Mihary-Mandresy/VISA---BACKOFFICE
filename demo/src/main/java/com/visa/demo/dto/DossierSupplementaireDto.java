@@ -45,7 +45,7 @@ public class DossierSupplementaireDto extends Entity<DossierSupplementaireDto>{
         public void setExist(boolean exist) {
             this.exist = exist;
         }
-    public List<DossierSupplementaireDto> getDossiersNonVerifiesByIdDemande(Connection c, String iddemande) throws Exception {
+    public List<DossierSupplementaireDto> getDossiersNonVerifiesByIdDemande(Connection c, String iddemande, String idtypevisa) throws Exception {
         String query = """
                 select * from
                 (
@@ -54,7 +54,8 @@ public class DossierSupplementaireDto extends Entity<DossierSupplementaireDto>{
                 LEFT JOIN checkdossiersupplementaire cds
                     ON cds.iddossiersupplementaire = ds.id
                     and cds.iddemande = ?
-                )as dnv where not dnv.exists 
+                where ds.idtypevisa = ?
+                )as dnv where not dnv.exists
                         """;
         List<DossierSupplementaireDto> result = new ArrayList<>();
         Boolean isCloseable = false;
@@ -64,6 +65,7 @@ public class DossierSupplementaireDto extends Entity<DossierSupplementaireDto>{
         }
         try (PreparedStatement pstmt = c.prepareStatement(query)) {
             pstmt.setString(1, iddemande);
+            pstmt.setString(2, idtypevisa); 
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {

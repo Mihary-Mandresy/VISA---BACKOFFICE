@@ -16,6 +16,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.bd.entity.Entity;
+import com.visa.demo.dto.DossierDemandeDTO;
 import com.visa.demo.models.obj.DemandeObj;
 import com.visa.demo.utils.NetworkUtils;
 import com.visa.demo.utils.konst.C_EtatDemande;
@@ -185,7 +186,7 @@ public class Demande extends Entity<Demande> {
                     CheckDossierStandard checkdossier = new CheckDossierStandard();
                     checkdossier.setIddemande(demande.getId());
                     checkdossier.setIddossierstandard(idStandard);
-                    checkdossier.setExist(true);
+                    checkdossier.setExist(checkdossier.isExist());
 
                     checkdossier.insert(c);
                 }
@@ -194,7 +195,7 @@ public class Demande extends Entity<Demande> {
                     CheckDossierSupplementaire checkdossier = new CheckDossierSupplementaire();
                     checkdossier.setIddemande(demande.getId());
                     checkdossier.setIddossiersupplementaire(idsupplementaire);
-                    checkdossier.setExist(true);
+                    checkdossier.setExist(checkdossier.isExist());
 
                     checkdossier.insert(c);
                 }
@@ -569,5 +570,47 @@ public class Demande extends Entity<Demande> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<DossierDemandeDTO> getDossierSendById(Connection c) throws Exception{
+        List<DossierDemandeDTO> dossierDemandeDTOs = new ArrayList<>();
+
+        List<FilePdf> dossierStandardPdfs = new ArrayList<>();
+
+        
+        List<FilePdf> dossierSupplementairePdfs = new ArrayList<>();
+
+        String apresWhere = "iddemande = '"+this.getId()+"' and idfilepdf is not null order by idfilepdf desc";
+        List<CheckDossierStandard> checkDossierStandards = new CheckDossierStandard().select(c, apresWhere, null);
+        List<CheckDossierSupplementaire> checkDossierSupplementaires = new CheckDossierSupplementaire().select(c, apresWhere, null);
+        
+        for (CheckDossierStandard checkDossierStandard : checkDossierStandards) {
+            dossierStandardPdfs.add(new FilePdf().findByid(c, checkDossierStandard.getIdfilepdf()));
+        }
+        
+        for (CheckDossierSupplementaire checkDossierSupplementaire : checkDossierSupplementaires) {
+            dossierSupplementairePdfs.add(new FilePdf().findByid(c, checkDossierSupplementaire.getIdfilepdf()));
+        }
+
+        System.out.println(dossierStandardPdfs.size()+" stand "+dossierSupplementairePdfs.size()+" suppl");
+
+        for (FilePdf filePdf : dossierStandardPdfs) {
+            DossierDemandeDTO dossierDemandeDTO = new DossierDemandeDTO();
+            dossierDemandeDTO.setFilePdf(filePdf);
+            dossierDemandeDTO.setType("Standard");
+            dossierDemandeDTO.setLibelle(null);
+            dossierDemandeDTOs.add(dossierDemandeDTO);
+            System.out.println(filePdf.getContenue());
+        }
+
+        for (FilePdf filePdf : dossierSupplementairePdfs) {
+            DossierDemandeDTO dossierDemandeDTO = new DossierDemandeDTO();
+            dossierDemandeDTO.setFilePdf(filePdf);
+            dossierDemandeDTO.setType("Supplementaire");
+            dossierDemandeDTO.setLibelle(null);
+            dossierDemandeDTOs.add(dossierDemandeDTO);
+        }
+
+        return dossierDemandeDTOs;
     }
 }
