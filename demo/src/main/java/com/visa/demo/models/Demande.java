@@ -613,4 +613,49 @@ public class Demande extends Entity<Demande> {
 
         return dossierDemandeDTOs;
     }
+
+    @Override
+    public void save(Connection c) throws Exception {
+        if (this.getId() == null) {
+            super.save(c);
+        }else{
+            boolean isClosable = false;
+            String query = "update demande set qrcode=? , datecreation = ? ,idoriginal = ? ,idpassport = ? ,idetatdemande = ? ,idtypedemande = ? ,idvisatransformable = ? ,iddemandeur = ? ,idtypevisa = ? where id=?";
+           
+            if (c == null) {
+                DbConnexe db = new DbConnexe();
+                c = db.getConnection();
+                isClosable = true;
+                c.setAutoCommit(false);
+            }
+            try {
+                PreparedStatement ps = c.prepareStatement(query);
+                ps.setBytes(1, this.getQrcode());
+                ps.setObject(2, this.getDatecreation());
+                ps.setString(3, this.getIdoriginal());
+                ps.setString(4, this.getIdpassport());
+                ps.setString(5, this.getIdetatdemande());
+                ps.setString(6, this.getIdtypedemande());
+                ps.setString(7, this.getIdvisatransformable());
+                ps.setString(8, this.getIddemandeur());
+                ps.setString(9, this.getIdtypevisa());
+                ps.setString(10, this.getId());
+                ps.executeUpdate();
+                if (isClosable) {
+                    c.commit();
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+                if (isClosable) {
+                    c.rollback();
+                }
+                throw new Exception("erreur lors de la mise a jour: " + e.getMessage());
+            } finally {
+                if (isClosable) {
+                    c.setAutoCommit(true);
+                    c.close();
+                }
+            }
+        }
+    }
 }
