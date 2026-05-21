@@ -38,7 +38,14 @@
 
                                 </div>
                             </div>
-
+                            <div class="row" style="display: flex; align-items: center; justify-content: center">
+                                    <a href="/demande/fiche/dossier/${iddemande}" style="width: 70%; margin-bottom: 10px" class="btn btn-primary">Voir les dossiers envoyer </a>
+                                    
+                                    <c:if test="${etatdemande.compareToIgnoreCase('ETATDMD000002') == 0 || etatdemande.compareToIgnoreCase('ETATDMD000003') == 0}">
+                                        <a href="/demande/export/scan-termine/${iddemande}" style="width: 70%; margin-bottom: 10px" class="btn btn-success">Avoir le lettre du fin d'envoye du dossier</a>
+                                    </c:if>
+                                    
+                            </div>
                             <div class="row mb-5">
 
                                 <!-- DEMANDEUR -->

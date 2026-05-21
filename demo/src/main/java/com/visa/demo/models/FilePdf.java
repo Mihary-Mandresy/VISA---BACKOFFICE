@@ -1,5 +1,7 @@
 package com.visa.demo.models;
 
+import java.util.Base64;
+
 import com.nojpa.bd.entity.Entity;
 
 public class FilePdf extends Entity<FilePdf> {
@@ -27,5 +29,6 @@ public class FilePdf extends Entity<FilePdf> {
     public void setContenue(byte[] contenue) {
         this.contenue = contenue;
     }
+
 
 }

@@ -16,6 +16,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.nojpa.bd.connexion.DbConnexe;
 import com.nojpa.bd.entity.Entity;
+import com.visa.demo.dto.DossierDemandeDTO;
 import com.visa.demo.models.obj.DemandeObj;
 import com.visa.demo.utils.NetworkUtils;
 import com.visa.demo.utils.konst.C_EtatDemande;
@@ -94,7 +95,7 @@ public class Demande extends Entity<Demande> {
 
             setIdetatdemande(C_EtatDemande.REQUEST_APPROVED);
 
-            update(c);
+            save(c);
 
             c.commit();
         } catch (Exception e) {
@@ -185,7 +186,7 @@ public class Demande extends Entity<Demande> {
                     CheckDossierStandard checkdossier = new CheckDossierStandard();
                     checkdossier.setIddemande(demande.getId());
                     checkdossier.setIddossierstandard(idStandard);
-                    checkdossier.setExist(true);
+                    checkdossier.setExist(checkdossier.isExist());
 
                     checkdossier.insert(c);
                 }
@@ -194,7 +195,7 @@ public class Demande extends Entity<Demande> {
                     CheckDossierSupplementaire checkdossier = new CheckDossierSupplementaire();
                     checkdossier.setIddemande(demande.getId());
                     checkdossier.setIddossiersupplementaire(idsupplementaire);
-                    checkdossier.setExist(true);
+                    checkdossier.setExist(checkdossier.isExist());
 
                     checkdossier.insert(c);
                 }
@@ -568,6 +569,102 @@ public class Demande extends Entity<Demande> {
             this.qrcode = outputStream.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public List<DossierDemandeDTO> getDossierSendById(Connection c) throws Exception{
+        List<DossierDemandeDTO> dossierDemandeDTOs = new ArrayList<>();
+
+        List<FilePdf> dossierStandardPdfs = new ArrayList<>();
+
+        
+        List<FilePdf> dossierSupplementairePdfs = new ArrayList<>();
+
+        String apresWhere = "iddemande = '"+this.getId()+"' and idfilepdf is not null order by idfilepdf desc";
+        List<CheckDossierStandard> checkDossierStandards = new CheckDossierStandard().select(c, apresWhere, null);
+        List<CheckDossierSupplementaire> checkDossierSupplementaires = new CheckDossierSupplementaire().select(c, apresWhere, null);
+        
+        List<DossierStandard> dossierStandards = new ArrayList<>();
+        List<DossierSupplementaire> dossierSupplementaires = new ArrayList<>();
+
+        for (CheckDossierStandard checkDossierStandard : checkDossierStandards) {
+            dossierStandardPdfs.add(new FilePdf().findByid(c, checkDossierStandard.getIdfilepdf()));
+            dossierStandards.add(new DossierStandard().findByid(c, checkDossierStandard.getIddossierstandard()));
+        }
+        
+        for (CheckDossierSupplementaire checkDossierSupplementaire : checkDossierSupplementaires) {
+            dossierSupplementairePdfs.add(new FilePdf().findByid(c, checkDossierSupplementaire.getIdfilepdf()));
+            dossierSupplementaires.add(new DossierSupplementaire().findByid(c, checkDossierSupplementaire.getIddossiersupplementaire()));
+        }
+
+        System.out.println(dossierStandardPdfs.size()+" stand "+dossierSupplementairePdfs.size()+" suppl");
+
+        int i = 0;
+        for (FilePdf filePdf : dossierStandardPdfs) {
+            DossierDemandeDTO dossierDemandeDTO = new DossierDemandeDTO();
+            dossierDemandeDTO.setFilePdf(filePdf);
+            dossierDemandeDTO.setType("Standard");
+            dossierDemandeDTO.setLibelle(dossierStandards.get(i).getLibelle());
+            dossierDemandeDTOs.add(dossierDemandeDTO);
+            System.out.println(filePdf.getContenue());
+            i++;
+        }
+
+        int j = 0;
+        for (FilePdf filePdf : dossierSupplementairePdfs) {
+            DossierDemandeDTO dossierDemandeDTO = new DossierDemandeDTO();
+            dossierDemandeDTO.setFilePdf(filePdf);
+            dossierDemandeDTO.setType("Supplementaire");
+            dossierDemandeDTO.setLibelle(dossierSupplementaires.get(j).getLibelle());
+            dossierDemandeDTOs.add(dossierDemandeDTO);
+            j++;
+        }
+
+        return dossierDemandeDTOs;
+    }
+
+    @Override
+    public void save(Connection c) throws Exception {
+        if (this.getId() == null) {
+            super.save(c);
+        }else{
+            boolean isClosable = false;
+            String query = "update demande set qrcode=? , datecreation = ? ,idoriginal = ? ,idpassport = ? ,idetatdemande = ? ,idtypedemande = ? ,idvisatransformable = ? ,iddemandeur = ? ,idtypevisa = ? where id=?";
+           
+            if (c == null) {
+                DbConnexe db = new DbConnexe();
+                c = db.getConnection();
+                isClosable = true;
+                c.setAutoCommit(false);
+            }
+            try {
+                PreparedStatement ps = c.prepareStatement(query);
+                ps.setBytes(1, this.getQrcode());
+                ps.setObject(2, this.getDatecreation());
+                ps.setString(3, this.getIdoriginal());
+                ps.setString(4, this.getIdpassport());
+                ps.setString(5, this.getIdetatdemande());
+                ps.setString(6, this.getIdtypedemande());
+                ps.setString(7, this.getIdvisatransformable());
+                ps.setString(8, this.getIddemandeur());
+                ps.setString(9, this.getIdtypevisa());
+                ps.setString(10, this.getId());
+                ps.executeUpdate();
+                if (isClosable) {
+                    c.commit();
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+                if (isClosable) {
+                    c.rollback();
+                }
+                throw new Exception("erreur lors de la mise a jour: " + e.getMessage());
+            } finally {
+                if (isClosable) {
+                    c.setAutoCommit(true);
+                    c.close();
+                }
+            }
         }
     }
 }

@@ -128,7 +128,7 @@ public class DemandeAPIController {
             List<DossierSupplementaireDto> dossierSupplementaires = new DossierSupplementaireDto().select(c,
                     afterWhereHistorique, null);
             List<DossierSupplementaireDto> dossierSupplementairesNonVerifies = new DossierSupplementaireDto()
-                    .getDossiersNonVerifiesByIdDemande(c, id);
+                    .getDossiersNonVerifiesByIdDemande(c, id, d.getIdtypevisa());
             dossierSupplementaires.addAll(dossierSupplementairesNonVerifies);
 
             // Assemblage final du DTO
