@@ -24,13 +24,19 @@
                             <%@ include file="../../includes/header.jsp" %>
                         </div>
                         <main class="col-12 col-md-8 col-lg-8 bg-s py-5 px-5">
-                           ${dossiers.size()}
-                           <c:forEach items="${dossiers}" var="dossier">
-                                <div>
-                                    <h3>${dossier.libelle} - ${dossier.type}</h3>
-                                    <iframe src="${pageContext.request.contextPath}/demande/afficher-pdf/${dossier.filePdf.id}" 
-                                            width="100%" 
-                                            height="500px">
+                           <c:if test="${dossiers.size() == 0}">
+                                <div class="alert alert-warning">
+                                    Aucun dossier
+                                    <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+                                </div>
+                            </c:if> 
+
+                                <c:forEach items="${dossiers}" var="dossier">
+                                    <div style="margin: 20px;">
+                                        <p>${dossier.libelle} - <span class="badge badge-primary">${dossier.type}</span> </p>
+                                        <iframe src="${pageContext.request.contextPath}/demande/afficher-pdf/${dossier.filePdf.id}" 
+                                        width="100%" 
+                                        height="500px">
                                     </iframe>
                                 </div>
                                 <hr/>

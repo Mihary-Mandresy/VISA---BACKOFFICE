@@ -95,7 +95,7 @@ public class Demande extends Entity<Demande> {
 
             setIdetatdemande(C_EtatDemande.REQUEST_APPROVED);
 
-            update(c);
+            save(c);
 
             c.commit();
         } catch (Exception e) {
@@ -584,31 +584,40 @@ public class Demande extends Entity<Demande> {
         List<CheckDossierStandard> checkDossierStandards = new CheckDossierStandard().select(c, apresWhere, null);
         List<CheckDossierSupplementaire> checkDossierSupplementaires = new CheckDossierSupplementaire().select(c, apresWhere, null);
         
+        List<DossierStandard> dossierStandards = new ArrayList<>();
+        List<DossierSupplementaire> dossierSupplementaires = new ArrayList<>();
+
         for (CheckDossierStandard checkDossierStandard : checkDossierStandards) {
             dossierStandardPdfs.add(new FilePdf().findByid(c, checkDossierStandard.getIdfilepdf()));
+            dossierStandards.add(new DossierStandard().findByid(c, checkDossierStandard.getIddossierstandard()));
         }
         
         for (CheckDossierSupplementaire checkDossierSupplementaire : checkDossierSupplementaires) {
             dossierSupplementairePdfs.add(new FilePdf().findByid(c, checkDossierSupplementaire.getIdfilepdf()));
+            dossierSupplementaires.add(new DossierSupplementaire().findByid(c, checkDossierSupplementaire.getIddossiersupplementaire()));
         }
 
         System.out.println(dossierStandardPdfs.size()+" stand "+dossierSupplementairePdfs.size()+" suppl");
 
+        int i = 0;
         for (FilePdf filePdf : dossierStandardPdfs) {
             DossierDemandeDTO dossierDemandeDTO = new DossierDemandeDTO();
             dossierDemandeDTO.setFilePdf(filePdf);
             dossierDemandeDTO.setType("Standard");
-            dossierDemandeDTO.setLibelle(null);
+            dossierDemandeDTO.setLibelle(dossierStandards.get(i).getLibelle());
             dossierDemandeDTOs.add(dossierDemandeDTO);
             System.out.println(filePdf.getContenue());
+            i++;
         }
 
+        int j = 0;
         for (FilePdf filePdf : dossierSupplementairePdfs) {
             DossierDemandeDTO dossierDemandeDTO = new DossierDemandeDTO();
             dossierDemandeDTO.setFilePdf(filePdf);
             dossierDemandeDTO.setType("Supplementaire");
-            dossierDemandeDTO.setLibelle(null);
+            dossierDemandeDTO.setLibelle(dossierSupplementaires.get(j).getLibelle());
             dossierDemandeDTOs.add(dossierDemandeDTO);
+            j++;
         }
 
         return dossierDemandeDTOs;

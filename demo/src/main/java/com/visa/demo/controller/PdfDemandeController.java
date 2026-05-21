@@ -5,6 +5,7 @@ import com.nojpa.bd.connexion.DbConnexe;
 import com.visa.demo.dto.PdfExportModel;
 import com.visa.demo.models.Demande;
 import com.visa.demo.models.Demandeur;
+import com.visa.demo.models.TypeVisa;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,9 +26,10 @@ public class PdfDemandeController {
             Connection c = dbConnexe.getConnection();
             Demande demande = new Demande().findByid(c, id);
             Demandeur demandeur = new Demandeur().findByid(c, demande.getIddemandeur());
+            TypeVisa typeVisa = new TypeVisa().findByid(c, demande.getIdtypevisa());
             // Buffer mémoire
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            String html = PdfExportModel.getHtml(demande, demandeur);
+            String html = PdfExportModel.getHtml(demande, demandeur, typeVisa);
 
             // Conversion HTML -> PDF
             HtmlConverter.convertToPdf(html, baos);
