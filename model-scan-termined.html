@@ -2,95 +2,232 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan terminé</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Bybrand | Carte de visite professionnelle</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
+            justify-content: center;
+            padding: 2rem;
         }
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            width: 400px;
-            text-align: center;
+        /* Carte principale – style épuré, moderne, inspiré du template */
+        .business-card {
+            max-width: 720px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .success-icon {
-            font-size: 50px;
-            color: #28a745;
-            margin-bottom: 10px;
+        .business-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.3);
         }
 
-        h1 {
-            margin: 10px 0;
-            font-size: 22px;
-            color: #333;
+        /* Section principale : identité + coordonnées */
+        .card-content {
+            padding: 2rem 2rem 1.8rem 2rem;
         }
 
-        p {
-            color: #666;
-            margin-bottom: 20px;
+        /* Nom et titre */
+        .name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #111827;
+            line-height: 1.2;
+            margin-bottom: 0.35rem;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
-            text-align: left;
+        .title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #4b5563;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.75rem;
+            margin-bottom: 1.75rem;
+            margin-top: 0.25rem;
         }
 
-        ul li {
-            background: #f1f3f5;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
+        /* Ligne de séparation élégante */
+        .divider-light {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 1.2rem 0 1.2rem 0;
         }
 
-        .btn {
-            margin-top: 20px;
-            padding: 10px 15px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+        /* Liste des coordonnées (style propre, sans puces) */
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            color: #1f2937;
             text-decoration: none;
-            display: inline-block;
+            transition: color 0.2s;
         }
 
-        .btn:hover {
-            background: #0056b3;
+        .contact-item a {
+            text-decoration: none;
+            color: #1f2937;
+            transition: color 0.2s;
+        }
+
+        .contact-item a:hover {
+            color: #2c7da0;
+        }
+
+        /* Icônes symboliques (discrètes, sans surcharge) */
+        .contact-icon {
+            width: 28px;
+            text-align: center;
+            font-weight: 400;
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .contact-detail {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        /* Zone avertissement confidentiel – exactement le texte original */
+        .confidential-notice {
+            background-color: #faf9fe;
+            border-top: 1px solid #edf2f7;
+            padding: 1.2rem 2rem 1.2rem 2rem;
+            font-size: 0.7rem;
+            line-height: 1.4;
+            color: #6b7280;
+            font-family: 'Inter', ui-sans-serif, system-ui;
+            letter-spacing: 0.01em;
+        }
+
+        .confidential-text {
+            max-width: 100%;
+        }
+
+        /* petit rappel Bybrand subtil (cohérent avec le template) */
+        .brand-footer {
+            background: #ffffff;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            font-size: 0.65rem;
+            color: #9ca3af;
+            border-top: 1px solid #f0f2f5;
+            letter-spacing: 0.3px;
+        }
+
+        /* Responsive pour mobile : ajustement des marges et du texte */
+        @media (max-width: 550px) {
+            body {
+                padding: 1rem;
+            }
+            .card-content {
+                padding: 1.5rem;
+            }
+            .name {
+                font-size: 1.6rem;
+            }
+            .contact-list {
+                gap: 0.7rem;
+            }
+            .confidential-notice {
+                padding: 1rem 1.5rem;
+                font-size: 0.65rem;
+            }
+            .contact-item {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Pour une impression soignée (optionnel) */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .business-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            .confidential-notice {
+                background: #f9f9f9;
+            }
+        }
+
+        /* Petite touche de raffinement sur le lien email/telephone */
+        .contact-detail a {
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
+    <div class="business-card">
+        <div class="card-content">
+            <!-- Identité conforme au texte original : Amanda Carter, Marketing Analyst at Bybrand -->
+            <div class="name">Amanda Carter</div>
+            <div class="title">Marketing Analyst at Bybrand</div>
 
-<div class="card">
-    <div class="success-icon">✔</div>
+            <!-- Coordonnées structurées : phone, email, site -->
+            <div class="contact-list">
+                <div class="contact-item">
+                    <span class="contact-icon">📞</span>
+                    <span class="contact-detail">
+                        <a href="tel:+330000000000">+33 (00) 0 000-0000</a>
+                    </span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">✉️</span>
+                    <span class="contact-detail">
+                        <a href="mailto:contact@your-domain.com">contact@your-domain.com</a>
+                    </span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">🌐</span>
+                    <span class="contact-detail">
+                        <a href="#" target="_blank" rel="noopener noreferrer">www.your-domain.com</a>
+                    </span>
+                </div>
+            </div>
 
-    <h1>Félicitations 🎉</h1>
-    <p>Le scan des dossiers est terminé avec succès.</p>
+            <!-- optionnel: ligne fine pour délimiter (élégance) -->
+            <div class="divider-light"></div>
+            <!-- Note: le texte de confidentialité sera dans la zone dédiée, 
+            mais on garde la structure fidèle au template original -->
+        </div>
 
-    <h3>Références des dossiers</h3>
-    <ul>
-        <li>REF-2026-0001</li>
-        <li>REF-2026-0002</li>
-        <li>REF-2026-0003</li>
-        <li>REF-2026-0004</li>
-    </ul>
+        <!-- Zone confidentialité : reprend exactement le texte fourni -->
+        <div class="confidential-notice">
+            <div class="confidential-text">
+                The content of this email is strictly confidential and only intended for the specified recipient. It is forbidden to share the email or its contents with any third party without the sender’s written consent. If this email reached you by mistake, please let us know so that we can ensure that this doesn’t happen in the future and delete the message.
+            </div>
+        </div>
 
-    <a href="#" class="btn">Retour</a>
-</div>
-
+        <!-- petite signature discrète Bybrand, comme mentionnée dans le footer du fichier source -->
+        <div class="brand-footer">
+            Bybrand · Professional email signatures & branding
+        </div>
+    </div>
 </body>
 </html>

@@ -1,7 +1,10 @@
 package com.visa.demo.controller;
 
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.nojpa.bd.connexion.DbConnexe;
 import com.visa.demo.dto.PdfExportModel;
+import com.visa.demo.models.Demande;
+import com.visa.demo.models.Demandeur;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -9,16 +12,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.Connection;
 
 @RestController
 @RequestMapping("/demande/export")
 public class PdfDemandeController {
     @GetMapping("/scan-termine/{id}")
     public ResponseEntity<byte[]> generatePdfFromHtml(@PathVariable("id") String id) {
-        String html = PdfExportModel.scanTermined;
         try {
+
+            DbConnexe dbConnexe = new DbConnexe();
+            Connection c = dbConnexe.getConnection();
+            Demande demande = new Demande().findByid(c, id);
+            Demandeur demandeur = new Demandeur().findByid(c, demande.getIddemandeur());
             // Buffer mémoire
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String html = PdfExportModel.getHtml(demande, demandeur);
 
             // Conversion HTML -> PDF
             HtmlConverter.convertToPdf(html, baos);
